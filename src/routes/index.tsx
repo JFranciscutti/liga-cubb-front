@@ -62,6 +62,9 @@ const LazyAdminUsersCreatePage = withLoadingSpinner(
 const LazyAdminUsersEditPage = withLoadingSpinner(
   lazy(() => import('src/features/admin-user-crud/AdminUserEditPage'))
 );
+const LazyCategoriaListPage = withLoadingSpinner(
+  lazy(() => import('src/features/categoria/CategoriaListPage'))
+);
 
 const ROUTES: RouteObject[] = [
   {
@@ -111,10 +114,19 @@ const ROUTES: RouteObject[] = [
         children: [
           { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
           {
+            path: 'usuarios',
+            children: [
+              { element: <Navigate to="/dashboard/usuarios/list" replace />, index: true },
+              { path: 'list', element: <LazyAdminUsersListPage /> },
+              { path: 'create', element: <LazyAdminUsersCreatePage /> },
+              { path: 'edit/:id', element: <LazyAdminUsersEditPage /> },
+            ],
+          },
+          {
             path: 'categorias',
             children: [
               { element: <Navigate to="/dashboard/categorias/list" replace />, index: true },
-              { path: 'list', element: <LazyAdminUsersListPage /> },
+              { path: 'list', element: <LazyCategoriaListPage /> },
               { path: 'create', element: <LazyAdminUsersCreatePage /> },
               { path: 'edit/:id', element: <LazyAdminUsersEditPage /> },
             ],

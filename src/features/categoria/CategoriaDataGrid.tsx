@@ -18,16 +18,17 @@ import {
 
 import Iconify from 'src/components/iconify';
 import MenuPopover from 'src/components/menu-popover';
+import { Categoria } from 'src/models/Categoria';
 import { ROLES, User } from 'src/models/User';
 import { PATHS } from 'src/routes/paths';
 
 interface Props {
-  data: User[];
+  data: Categoria[];
   isLoading: boolean;
   onDelete: (id: number) => any;
 }
 
-export const AdminUsersDataGrid: React.FC<Props> = ({ data, isLoading, onDelete }) => {
+export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete }) => {
   const hf = useForm({
     defaultValues: { email: '', roles: [] },
   });
@@ -36,15 +37,18 @@ export const AdminUsersDataGrid: React.FC<Props> = ({ data, isLoading, onDelete 
 
   const columns = useColumns<typeof data[0]>([
     {
-      field: 'email',
-      headerName: 'Email',
-      type: 'string',
+      field: 'id',
+      headerName: 'ID',
+      type: 'number',
+      headerAlign: 'center',
+      align: 'center',
     },
     {
-      field: 'roles',
-      headerName: 'Roles',
-      type: 'array',
-      renderAs: 'badge',
+      field: 'nombre',
+      headerName: 'Nombre',
+      type: 'string',
+      headerAlign: 'center',
+      align: 'center',
     },
     {
       field: 'action',
@@ -66,22 +70,17 @@ export const AdminUsersDataGrid: React.FC<Props> = ({ data, isLoading, onDelete 
   ]);
 
   return (
-    <Box sx={{ height: 600 }}>
+    <Box>
       <HitDatagrid
         filter={{
           hf,
           render: (
             <HitFormGrid>
               <Controller
-                name="email"
-                render={(field) => <HitTextField {...field} label="Email" />}
+                name="nombre"
+                render={(field) => <HitTextField {...field} label="Nombre" />}
               />
-              <Controller
-                name="roles"
-                render={(field) => (
-                  <HitMultiAutocompleteField {...field} label="Roles" options={ROLES} />
-                )}
-              />
+
               <HitFormActions>
                 <HitDataGridFilterResetButton />
                 <HitDatagridFilterSubmitButton />

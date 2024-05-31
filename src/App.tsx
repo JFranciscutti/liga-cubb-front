@@ -15,6 +15,7 @@ import ScrollToTop from './components/scroll-to-top';
 import SnackbarProvider from './components/snackbar/SnackbarProvider';
 import { AuthProvider } from './features/auth/JwtContext';
 import SpanishLang from './lang/es.json';
+import { SettingsProvider } from './components/settings';
 moment.locale('es');
 // ----------------------------------------------------------------------
 
@@ -27,21 +28,23 @@ export default function App() {
       <IntlProvider messages={lang} locale={locale} defaultLocale="en">
         <MotionLazyContainer>
           <ThemeProvider>
-            <ThemeLocalization>
-              <SnackbarProvider>
-                <ConfirmActionProvider
-                  defaultProps={{
-                    title: 'Atención',
-                    content: '¿Está seguro que desea eliminar este item?',
-                    actionLabel: 'Eliminar',
-                    cancelLabel: 'Cancelar',
-                  }}
-                >
-                  <ScrollToTop />
-                  <Outlet />
-                </ConfirmActionProvider>
-              </SnackbarProvider>
-            </ThemeLocalization>
+            <SettingsProvider>
+              <ThemeLocalization>
+                <SnackbarProvider>
+                  <ConfirmActionProvider
+                    defaultProps={{
+                      title: 'Atención',
+                      content: '¿Está seguro que desea eliminar este item?',
+                      actionLabel: 'Eliminar',
+                      cancelLabel: 'Cancelar',
+                    }}
+                  >
+                    <ScrollToTop />
+                    <Outlet />
+                  </ConfirmActionProvider>
+                </SnackbarProvider>
+              </ThemeLocalization>
+            </SettingsProvider>
           </ThemeProvider>
         </MotionLazyContainer>
       </IntlProvider>

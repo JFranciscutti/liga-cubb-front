@@ -13,6 +13,12 @@ export const PATHS = {
   },
   dashboard: {
     root: '/dashboard',
+    usuarios: {
+      root: '/dashboard/usuarios',
+      list: '/dashboard/usuarios/list',
+      create: '/dashboard/usuarios/create',
+      edit: (id: number | string) => `/dashboard/usuarios/edit/${id}`,
+    },
     categorias: {
       root: '/dashboard/categorias',
       list: '/dashboard/categorias/list',
@@ -42,6 +48,10 @@ export const PATHS_PER_ROLE = [
     role: 'super_admin',
     paths: [
       PATHS.dashboard.root,
+      PATHS.dashboard.usuarios.root,
+      PATHS.dashboard.usuarios.list,
+      PATHS.dashboard.usuarios.create,
+      PATHS.dashboard.usuarios.edit(':id'),
       PATHS.dashboard.categorias.root,
       PATHS.dashboard.categorias.list,
       PATHS.dashboard.categorias.create,

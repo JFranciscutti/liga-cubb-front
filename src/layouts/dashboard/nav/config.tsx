@@ -23,9 +23,11 @@ const iconifyIcon = (name: string) => (
 );
 
 const ICONS = {
-  myCourses: iconifyIcon('eva:book-open-outline'),
   account: iconifyIcon('eva:person-outline'),
-  allCourses: iconifyIcon('eva:book-outline'),
+  usuarios: iconifyIcon('mdi:people-group'),
+  equipos: iconifyIcon('entypo:sports-club'),
+  categorias: iconifyIcon('mdi:soccer'),
+  fixtures: iconifyIcon('mdi:soccer-field'),
 };
 
 const navConfig = [
@@ -35,19 +37,24 @@ const navConfig = [
     subheader: 'LIGA CUBB',
     items: [
       {
+        title: 'Usuarios',
+        path: PATHS.dashboard.usuarios.root,
+        icon: ICONS.usuarios,
+      },
+      {
         title: 'Categorias',
         path: PATHS.dashboard.categorias.root,
-        icon: ICONS.account,
+        icon: ICONS.categorias,
       },
       {
         title: 'Equipos',
         path: PATHS.dashboard.equipos.root,
-        icon: ICONS.account,
+        icon: ICONS.equipos,
       },
       {
         title: 'Fixtures',
         path: PATHS.dashboard.fixtures.root,
-        icon: ICONS.account,
+        icon: ICONS.fixtures,
       },
     ],
   },
