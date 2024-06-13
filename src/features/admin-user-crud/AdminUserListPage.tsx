@@ -17,7 +17,7 @@ export function AdminUserListPage() {
   return (
     <>
       <Helmet>
-        <title> Panel Administrativo | Usuarios </title>
+        <title>Usuarios | LIGA CUBB</title>
       </Helmet>
 
       <Container>

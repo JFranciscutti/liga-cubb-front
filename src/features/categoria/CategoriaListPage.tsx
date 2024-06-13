@@ -1,4 +1,4 @@
-import { Button, Card, Container } from '@mui/material';
+import { Button, Card, Container, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 import { useAllUsersQuery, useDeleteUserMutation } from 'src/api/userRepository';
@@ -8,17 +8,23 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 import { CategoriaDataGrid } from './CategoriaDataGrid';
 import { Categoria } from 'src/models/Categoria';
+import { useRef, useState } from 'react';
+import DialogHeader from 'src/components/DialogHeader';
+import { CategoriaForm } from './CategoriaForm';
 
 export default function CategoriaListPage() {
   //const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
   //const usersQuery = useAllUsersQuery();
   //const deleteUserMutation = useDeleteUserMutation();
+  const [createOpen, setCreateOpen] = useState(false);
+  const editingRef = useRef<Categoria | undefined>();
+  const [editOpen, setEditOpen] = useState(false);
 
   return (
     <>
       <Helmet>
-        <title> Panel Administrativo | Categorias </title>
+        <title>Categorias | LIGA CUBB</title>
       </Helmet>
 
       <Container>
@@ -27,8 +33,7 @@ export default function CategoriaListPage() {
           links={[{ name: 'Listado' }]}
           action={
             <Button
-              to={PATHS.dashboard.categorias.create}
-              component={RouterLink}
+              onClick={() => setCreateOpen(true)}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
@@ -46,9 +51,35 @@ export default function CategoriaListPage() {
                 action: async () => {},
               })
             }
+            onEdit={(id: number) => {
+              editingRef.current = CATEGORIAS_MOCK.find((d) => d.id === id);
+              setEditOpen(true);
+            }}
           />
         </Card>
       </Container>
+      <Dialog open={createOpen} onClose={() => setCreateOpen(false)}>
+        <DialogTitle>
+          <DialogHeader label="Nueva categoria" onClick={() => setCreateOpen(false)} />
+        </DialogTitle>
+        <DialogContent sx={{ mb: 4 }}>
+          <CategoriaForm onSubmit={async () => {}} />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
+        <DialogTitle>
+          <DialogHeader label="Editar categoria" onClick={() => setEditOpen(false)} />
+        </DialogTitle>
+        <DialogContent sx={{ mb: 4 }}>
+          <CategoriaForm
+            edit
+            onSubmit={async () => {}}
+            initialValues={{
+              name: editingRef.current?.nombre || '',
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

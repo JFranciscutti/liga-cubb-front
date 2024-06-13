@@ -24,7 +24,7 @@ export const AdminUserCreatePage = () => {
   return (
     <>
       <Helmet>
-        <title> Panel Administrativo | {APP_NAME}</title>
+        <title> Crear usuario | {APP_NAME}</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>

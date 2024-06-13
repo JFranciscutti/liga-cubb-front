@@ -9,26 +9,21 @@ import {
   HitDatagridFilterSubmitButton,
   useColumns,
 } from 'src/components/datagrid';
-import {
-  HitFormActions,
-  HitFormGrid,
-  HitMultiAutocompleteField,
-  HitTextField,
-} from 'src/components/form';
+import { HitFormActions, HitFormGrid, HitTextField } from 'src/components/form';
 
 import Iconify from 'src/components/iconify';
 import MenuPopover from 'src/components/menu-popover';
 import { Categoria } from 'src/models/Categoria';
-import { ROLES, User } from 'src/models/User';
 import { PATHS } from 'src/routes/paths';
 
 interface Props {
   data: Categoria[];
   isLoading: boolean;
   onDelete: (id: number) => any;
+  onEdit: (id: number) => any;
 }
 
-export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete }) => {
+export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
   const hf = useForm({
     defaultValues: { email: '', roles: [] },
   });
@@ -42,18 +37,20 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete }
       type: 'number',
       headerAlign: 'center',
       align: 'center',
+      maxWidth: 200,
     },
     {
       field: 'nombre',
       headerName: 'Nombre',
       type: 'string',
-      headerAlign: 'center',
-      align: 'center',
     },
     {
       field: 'action',
-      headerName: 'Actions',
+      headerName: 'Acciones',
+      maxWidth: 200,
       type: 'actions',
+      align: 'center',
+      headerAlign: 'center',
       renderCell: (params) => (
         <>
           <IconButton
@@ -101,6 +98,10 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete }
         }}
         arrow="right-top"
       >
+        <MenuItem component={Link} to={PATHS.dashboard.categorias.edit(selectedIdRef.current!)}>
+          <Iconify icon="mdi:eye" />
+          Ver
+        </MenuItem>
         <MenuItem
           onClick={() => {
             setOpenPopover(null);
@@ -112,7 +113,12 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete }
           Eliminar
         </MenuItem>
 
-        <MenuItem component={Link} to={PATHS.dashboard.categorias.edit(selectedIdRef.current!)}>
+        <MenuItem
+          onClick={() => {
+            setOpenPopover(null);
+            onEdit(selectedIdRef.current!);
+          }}
+        >
           <Iconify icon="eva:edit-fill" />
           Editar
         </MenuItem>
