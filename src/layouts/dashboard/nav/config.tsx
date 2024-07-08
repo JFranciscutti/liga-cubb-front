@@ -27,7 +27,6 @@ const ICONS = {
   usuarios: iconifyIcon('mdi:people-group'),
   equipos: iconifyIcon('entypo:sports-club'),
   categorias: iconifyIcon('mdi:soccer'),
-  fixtures: iconifyIcon('mdi:soccer-field'),
 };
 
 const navConfig = [
@@ -50,11 +49,6 @@ const navConfig = [
         title: 'Equipos',
         path: PATHS.dashboard.equipos.root,
         icon: ICONS.equipos,
-      },
-      {
-        title: 'Fixtures',
-        path: PATHS.dashboard.fixtures.root,
-        icon: ICONS.fixtures,
       },
     ],
   },

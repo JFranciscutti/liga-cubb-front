@@ -68,7 +68,7 @@ export const HitSelectField = <TValue extends FieldValues>({
           {label}
         </InputLabel>
       )}
-      <FormControl fullWidth sx={{ marginTop: !floatingLabel ? 1 : undefined }}>
+      <FormControl fullWidth sx={{ marginTop: !floatingLabel ? 0 : undefined }}>
         {floatingLabel && <InputLabel id={id}>{label}</InputLabel>}
         <Select
           {...field}
@@ -80,8 +80,8 @@ export const HitSelectField = <TValue extends FieldValues>({
             if (selected.length === 0 && !floatingLabel) {
               return <Placeholder>{placeholder}</Placeholder>;
             }
-
-            return selected;
+            if (selected === 0) return <Placeholder>{placeholder}</Placeholder>;
+            return options.find((x) => x.value === selected)?.label;
           }}
         >
           {!floatingLabel ? (

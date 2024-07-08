@@ -1,9 +1,6 @@
 import { Button, Card, Container, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink } from 'react-router-dom';
-import { useAllUsersQuery, useDeleteUserMutation } from 'src/api/userRepository';
 import { useConfirm } from 'src/components/confirm-action/ConfirmAction';
-import { PATHS } from 'src/routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 import { CategoriaDataGrid } from './CategoriaDataGrid';
@@ -11,15 +8,32 @@ import { Categoria } from 'src/models/Categoria';
 import { useRef, useState } from 'react';
 import DialogHeader from 'src/components/DialogHeader';
 import { CategoriaForm } from './CategoriaForm';
+import { GeneroEnum } from 'src/utils/enums';
+import {
+  useAllCategoriasQuery,
+  useCreateCategoriaMutation,
+  useDeleteCategoriaMutation,
+  useEditCategoriaMutation,
+} from 'src/api/CategoriaRepository';
+import { enqueueSnackbar } from 'notistack';
 
 export default function CategoriaListPage() {
-  //const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
-  //const usersQuery = useAllUsersQuery();
-  //const deleteUserMutation = useDeleteUserMutation();
   const [createOpen, setCreateOpen] = useState(false);
-  const editingRef = useRef<Categoria | undefined>();
+  const [selectedId, setSelectedId] = useState<number>();
   const [editOpen, setEditOpen] = useState(false);
+  const { data: categorias } = useAllCategoriasQuery();
+  const createCategoriaMutation = useCreateCategoriaMutation();
+  const editCategoriaMutation = useEditCategoriaMutation();
+  const deleteCategoriaMutation = useDeleteCategoriaMutation();
+
+  const foundCategoria = categorias?.find((d) => d.id === selectedId);
+  const parsedCategoria =
+    foundCategoria === undefined
+      ? undefined
+      : {
+          ...foundCategoria,
+        };
 
   return (
     <>
@@ -44,15 +58,15 @@ export default function CategoriaListPage() {
 
         <Card>
           <CategoriaDataGrid
-            data={CATEGORIAS_MOCK}
+            data={categorias}
             isLoading={false}
             onDelete={(id: any) =>
               confirm({
-                action: async () => {},
+                action: async () => deleteCategoriaMutation.mutateAsync(id),
               })
             }
             onEdit={(id: number) => {
-              editingRef.current = CATEGORIAS_MOCK.find((d) => d.id === id);
+              setSelectedId(id);
               setEditOpen(true);
             }}
           />
@@ -63,7 +77,16 @@ export default function CategoriaListPage() {
           <DialogHeader label="Nueva categoria" onClick={() => setCreateOpen(false)} />
         </DialogTitle>
         <DialogContent sx={{ mb: 4 }}>
-          <CategoriaForm onSubmit={async () => {}} />
+          <CategoriaForm
+            onSubmit={async (values) =>
+              createCategoriaMutation.mutateAsync(values, {
+                onSuccess: () => {
+                  enqueueSnackbar({ variant: 'success', message: 'Categoria creada exitosamente' });
+                  setCreateOpen(false);
+                },
+              })
+            }
+          />
         </DialogContent>
       </Dialog>
       <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
@@ -73,9 +96,22 @@ export default function CategoriaListPage() {
         <DialogContent sx={{ mb: 4 }}>
           <CategoriaForm
             edit
-            onSubmit={async () => {}}
+            onSubmit={async (values) =>
+              editCategoriaMutation.mutateAsync(
+                { ...values, id: selectedId! },
+                {
+                  onSuccess: () => {
+                    enqueueSnackbar({
+                      variant: 'success',
+                      message: 'Categoria editada exitosamente',
+                    });
+                    setCreateOpen(false);
+                  },
+                }
+              )
+            }
             initialValues={{
-              name: editingRef.current?.nombre || '',
+              name: parsedCategoria?.nombre || '',
             }}
           />
         </DialogContent>
@@ -83,14 +119,3 @@ export default function CategoriaListPage() {
     </>
   );
 }
-
-export const CATEGORIAS_MOCK: Categoria[] = [
-  { id: 1, nombre: 'A' },
-  { id: 2, nombre: 'B' },
-  { id: 3, nombre: 'C' },
-  { id: 4, nombre: 'D' },
-  { id: 5, nombre: 'E' },
-  { id: 6, nombre: 'A FEM' },
-  { id: 7, nombre: 'B FEM' },
-  { id: 8, nombre: 'C FEM' },
-];

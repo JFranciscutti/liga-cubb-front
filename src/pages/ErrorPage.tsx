@@ -33,7 +33,7 @@ export default function ErrorPage() {
           </m.div>
 
           <m.div variants={varBounce().in}>
-            <Typography>There was an error, please try again later.</Typography>
+            <Typography>Se produjo un error, inténtelo nuevamente más tarde.</Typography>
           </m.div>
 
           <m.div variants={varBounce().in}>

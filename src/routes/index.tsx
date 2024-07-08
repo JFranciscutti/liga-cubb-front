@@ -16,6 +16,10 @@ import { LoadingSpinner } from 'src/components/loading-spinner';
 import RoleBasedGuard from 'src/features/auth/RoleBasedGuard';
 import ErrorPage from 'src/pages/ErrorPage';
 import NotAllowedPage from 'src/pages/NotAllowedPage';
+import ManageEquiposCategoriaPage from 'src/features/categoria/ManageEquiposCategoriaPage';
+import EquiposListPage from 'src/features/equipo/EquipoListPage';
+import EquipoEditPage from 'src/features/equipo/EquipoEditPage';
+import CategoriaPlayoffPage from 'src/features/playoffs/CategoryPlayoffPage';
 
 /**
  * This will show a full screen spinner while the component is loading.
@@ -64,6 +68,10 @@ const LazyAdminUsersEditPage = withLoadingSpinner(
 );
 const LazyCategoriaListPage = withLoadingSpinner(
   lazy(() => import('src/features/categoria/CategoriaListPage'))
+);
+
+const LazyCategoriaEditPage = withLoadingSpinner(
+  lazy(() => import('src/features/categoria/CategoriaEditPage'))
 );
 
 const ROUTES: RouteObject[] = [
@@ -127,26 +135,21 @@ const ROUTES: RouteObject[] = [
             children: [
               { element: <Navigate to="/dashboard/categorias/list" replace />, index: true },
               { path: 'list', element: <LazyCategoriaListPage /> },
-              { path: 'create', element: <LazyAdminUsersCreatePage /> },
-              { path: 'edit/:id', element: <LazyAdminUsersEditPage /> },
+              { path: 'edit/:id/playoff', element: <CategoriaPlayoffPage /> },
+              { path: 'edit/:id/equipos', element: <ManageEquiposCategoriaPage /> },
+              {
+                path: 'edit/:id',
+                element: <LazyCategoriaEditPage />,
+              },
             ],
           },
           {
             path: 'equipos',
             children: [
               { element: <Navigate to="/dashboard/equipos/list" replace />, index: true },
-              { path: 'list', element: <LazyAdminUsersListPage /> },
-              { path: 'create', element: <LazyAdminUsersCreatePage /> },
-              { path: 'edit/:id', element: <LazyAdminUsersEditPage /> },
-            ],
-          },
-          {
-            path: 'fixtures',
-            children: [
-              { element: <Navigate to="/dashboard/fixtures/list" replace />, index: true },
-              { path: 'list', element: <LazyAdminUsersListPage /> },
-              { path: 'create', element: <LazyAdminUsersCreatePage /> },
-              { path: 'edit/:id', element: <LazyAdminUsersEditPage /> },
+              { path: 'list', element: <EquiposListPage /> },
+
+              { path: 'edit/:id', element: <EquipoEditPage /> },
             ],
           },
         ],

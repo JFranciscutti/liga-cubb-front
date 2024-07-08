@@ -1,4 +1,4 @@
-import { IconButton, MenuItem, Typography, capitalize } from '@mui/material';
+import { IconButton, MenuItem, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,18 +12,19 @@ import {
 import { HitFormActions, HitFormGrid, HitTextField } from 'src/components/form';
 
 import Iconify from 'src/components/iconify';
+import Image from 'src/components/image';
 import MenuPopover from 'src/components/menu-popover';
-import { Categoria } from 'src/models/Categoria';
+import { Equipo } from 'src/models/Equipo';
 import { PATHS } from 'src/routes/paths';
 
 interface Props {
-  data: Categoria[];
+  data: Equipo[];
   isLoading: boolean;
   onDelete: (id: number) => any;
-  onEdit: (id: number) => any;
+  onEdit?: (id: number) => any;
 }
 
-export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
+export const EquipoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
   const hf = useForm({
     defaultValues: { email: '', roles: [] },
   });
@@ -33,23 +34,13 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
   const columns = useColumns<typeof data[0]>([
     {
       field: 'nombre',
-      headerName: 'Nombre',
       type: 'string',
+      align: 'center',
       renderHeader: () => <div className="mx-20">{'Nombre'}</div>,
       renderCell: (params) => (
-        <div className="w-full mx-20">
+        <div className="flex gap-5 items-center  w-full mx-20">
+          <Image src={params.row.escudo} className="w-10 h-10 rounded-full bg-gray-100 " />
           <Typography>{params.row.nombre}</Typography>
-        </div>
-      ),
-    },
-    {
-      field: 'genero',
-      headerName: 'Género',
-      type: 'string',
-      renderHeader: () => <div className="mx-20">{'Género'}</div>,
-      renderCell: (params) => (
-        <div className="w-full mx-20">
-          <Typography>{capitalize(params.row.genero)}</Typography>
         </div>
       ),
     },
@@ -107,19 +98,17 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
         }}
         arrow="right-top"
       >
-        <MenuItem component={Link} to={PATHS.dashboard.categorias.edit(selectedIdRef.current!)}>
-          <Iconify icon="mdi:eye" />
-          Administrar
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setOpenPopover(null);
-            onEdit(selectedIdRef.current!);
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Cambiar nombre
-        </MenuItem>
+        {!!onEdit && (
+          <MenuItem
+            onClick={() => {
+              setOpenPopover(null);
+              onEdit(selectedIdRef.current!);
+            }}
+          >
+            <Iconify icon="eva:edit-fill" />
+            Editar
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             setOpenPopover(null);
