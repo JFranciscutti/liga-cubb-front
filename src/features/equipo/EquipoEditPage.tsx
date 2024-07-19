@@ -6,13 +6,34 @@ import { useSettingsContext } from 'src/components/settings';
 import { PATHS } from 'src/routes/paths';
 import { NuevoEquipoForm } from './NuevoEquipoForm';
 import { useEquipoQuery } from 'src/api/EquipoRepository';
+import LoadingScreen from 'src/components/loading-screen';
+import ErrorPage from 'src/pages/ErrorPage';
+import { useAllCategoriasQuery } from 'src/api/CategoriaRepository';
 
 const EquipoEditPage = () => {
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { themeStretch } = useSettingsContext();
 
-  const { data: equipoData } = useEquipoQuery(Number(params.id));
+  const {
+    data: equipoData,
+    isLoading: equipoLoading,
+    isError: equipoError,
+  } = useEquipoQuery(Number(params.id));
+
+  const {
+    data: allCategorias,
+    isLoading: allCategoriasLoading,
+    isError: allCategoriasError,
+  } = useAllCategoriasQuery();
+
+  if (equipoLoading || allCategoriasLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (equipoError || allCategoriasError) {
+    return <ErrorPage />;
+  }
 
   return (
     <>
@@ -29,7 +50,9 @@ const EquipoEditPage = () => {
               name: equipoData.nombre,
               genero: equipoData.genero,
               image: { file: equipoData.escudo },
+              categoria: equipoData.category_id || 0,
             }}
+            categories={allCategorias}
           />
         </Card>
       </Container>

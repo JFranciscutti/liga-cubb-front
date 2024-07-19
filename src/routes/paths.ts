@@ -26,6 +26,7 @@ export const PATHS = {
       edit: (id: number | string) => `/dashboard/categorias/edit/${id}`,
       manageEquipos: (id: number | string) => `/dashboard/categorias/edit/${id}/equipos`,
       playoff: (id: number | string) => `/dashboard/categorias/edit/${id}/playoff`,
+      fixture: (id: number | string) => `/dashboard/categorias/edit/${id}/fixture`,
     },
     equipos: {
       root: '/dashboard/equipos',
@@ -60,6 +61,7 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.categorias.edit(':id'),
       PATHS.dashboard.categorias.manageEquipos(':id'),
       PATHS.dashboard.categorias.playoff(':id'),
+      PATHS.dashboard.categorias.fixture(':id'),
       PATHS.dashboard.equipos.root,
       PATHS.dashboard.equipos.list,
       PATHS.dashboard.equipos.create,

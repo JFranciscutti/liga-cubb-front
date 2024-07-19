@@ -5,5 +5,5 @@ export interface Equipo {
   nombre: string;
   escudo: string;
   genero: GeneroEnum;
-  category_id?: number;
+  category_id: number;
 }

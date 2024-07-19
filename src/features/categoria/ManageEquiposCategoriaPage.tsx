@@ -12,6 +12,7 @@ import { AgregarEquipoCategoriaForm, EquipoCategoriaFormType } from './AgregarEq
 import { EquipoDataGrid } from '../equipo/EquipoDataGrid';
 import { useCategoriaQuery } from 'src/api/CategoriaRepository';
 import { useAllEquiposQuery } from 'src/api/EquipoRepository';
+import LoadingScreen from 'src/components/loading-screen';
 
 const ManageEquiposCategoriaPage = () => {
   const params = useParams<{ id: string }>();
@@ -20,8 +21,12 @@ const ManageEquiposCategoriaPage = () => {
 
   const [addOpen, setAddOpen] = useState<boolean>(false);
 
-  const { data: categoriaData } = useCategoriaQuery(Number(params.id));
-  const { data: allEquipos } = useAllEquiposQuery();
+  const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(Number(params.id));
+  const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
+
+  if (categoriaLoading || allEquiposLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <>
@@ -30,7 +35,10 @@ const ManageEquiposCategoriaPage = () => {
           heading={`Categoria ${categoriaData.nombre} - Lista de equipos`}
           links={[
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: `Categoria ${categoriaData.nombre}`, href: PATHS.dashboard.categorias.edit(1) },
+            {
+              name: `Categoria ${categoriaData.nombre}`,
+              href: PATHS.dashboard.categorias.edit(params.id!),
+            },
             { name: 'Administrar equipos' },
           ]}
           action={

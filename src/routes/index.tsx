@@ -16,10 +16,6 @@ import { LoadingSpinner } from 'src/components/loading-spinner';
 import RoleBasedGuard from 'src/features/auth/RoleBasedGuard';
 import ErrorPage from 'src/pages/ErrorPage';
 import NotAllowedPage from 'src/pages/NotAllowedPage';
-import ManageEquiposCategoriaPage from 'src/features/categoria/ManageEquiposCategoriaPage';
-import EquiposListPage from 'src/features/equipo/EquipoListPage';
-import EquipoEditPage from 'src/features/equipo/EquipoEditPage';
-import CategoriaPlayoffPage from 'src/features/playoffs/CategoryPlayoffPage';
 
 /**
  * This will show a full screen spinner while the component is loading.
@@ -73,6 +69,24 @@ const LazyCategoriaListPage = withLoadingSpinner(
 const LazyCategoriaEditPage = withLoadingSpinner(
   lazy(() => import('src/features/categoria/CategoriaEditPage'))
 );
+
+const LazyCategoriaPlayoffPage = withLoadingSpinner(
+  lazy(() => import('src/features/playoffs/CategoryPlayoffPage'))
+);
+
+const LazyManageEquiposCategoriaPage = withLoadingSpinner(
+  lazy(() => import('src/features/categoria/ManageEquiposCategoriaPage'))
+);
+
+const LazyEquiposListPage = withLoadingSpinner(
+  lazy(() => import('src/features/equipo/EquipoListPage'))
+);
+
+const LazyEquipoEditPage = withLoadingSpinner(
+  lazy(() => import('src/features/equipo/EquipoEditPage'))
+);
+
+const LazyFixturePage = withLoadingSpinner(lazy(() => import('src/features/fixtures/FixturePage')));
 
 const ROUTES: RouteObject[] = [
   {
@@ -135,8 +149,9 @@ const ROUTES: RouteObject[] = [
             children: [
               { element: <Navigate to="/dashboard/categorias/list" replace />, index: true },
               { path: 'list', element: <LazyCategoriaListPage /> },
-              { path: 'edit/:id/playoff', element: <CategoriaPlayoffPage /> },
-              { path: 'edit/:id/equipos', element: <ManageEquiposCategoriaPage /> },
+              { path: 'edit/:id/fixture', element: <LazyFixturePage /> },
+              { path: 'edit/:id/playoff', element: <LazyCategoriaPlayoffPage /> },
+              { path: 'edit/:id/equipos', element: <LazyManageEquiposCategoriaPage /> },
               {
                 path: 'edit/:id',
                 element: <LazyCategoriaEditPage />,
@@ -147,9 +162,9 @@ const ROUTES: RouteObject[] = [
             path: 'equipos',
             children: [
               { element: <Navigate to="/dashboard/equipos/list" replace />, index: true },
-              { path: 'list', element: <EquiposListPage /> },
+              { path: 'list', element: <LazyEquiposListPage /> },
 
-              { path: 'edit/:id', element: <EquipoEditPage /> },
+              { path: 'edit/:id', element: <LazyEquipoEditPage /> },
             ],
           },
         ],

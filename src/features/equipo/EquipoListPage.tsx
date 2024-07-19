@@ -9,15 +9,43 @@ import { useNavigate } from 'react-router';
 import { PATHS } from 'src/routes/paths';
 import { NuevoEquipoForm } from './NuevoEquipoForm';
 import { EquipoDataGrid } from './EquipoDataGrid';
-import { useAllEquiposQuery } from 'src/api/EquipoRepository';
+import {
+  useAllEquiposQuery,
+  useCreateEquipoMutation,
+  useEditEquipoMutation,
+} from 'src/api/EquipoRepository';
+import LoadingScreen from 'src/components/loading-screen';
+import { enqueueSnackbar } from 'notistack';
+import { useAllCategoriasQuery } from 'src/api/CategoriaRepository';
+import ErrorPage from 'src/pages/ErrorPage';
 
 export default function EquiposListPage() {
-  //const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
 
   const [createOpen, setCreateOpen] = useState(false);
+
   const navigate = useNavigate();
-  const { data: allEquipos } = useAllEquiposQuery();
+  const {
+    data: allEquipos,
+    isLoading: allEquiposLoading,
+    isError: allEquiposError,
+  } = useAllEquiposQuery();
+
+  const {
+    data: allCategorias,
+    isLoading: allCategoriasLoading,
+    isError: allCategoriasError,
+  } = useAllCategoriasQuery();
+
+  const createEquipoMutation = useCreateEquipoMutation();
+
+  if (allEquiposLoading || allCategoriasLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (allEquiposError || allCategoriasError) {
+    return <ErrorPage />;
+  }
 
   return (
     <>
@@ -27,7 +55,7 @@ export default function EquiposListPage() {
 
       <Container>
         <CustomBreadcrumbs
-          heading="Listado - Categorias"
+          heading="Listado - Equipos"
           links={[{ name: 'Listado' }]}
           action={
             <Button
@@ -64,7 +92,24 @@ export default function EquiposListPage() {
           <DialogHeader label="Nuevo equipo" onClick={() => setCreateOpen(false)} />
         </DialogTitle>
         <DialogContent sx={{ mb: 4, width: '100%' }}>
-          <NuevoEquipoForm onSubmit={async () => {}} />
+          <NuevoEquipoForm
+            categories={allCategorias}
+            onSubmit={async (values) =>
+              await createEquipoMutation.mutateAsync(
+                {
+                  logo: '',
+                  name: values.name,
+                  gender: values.genero,
+                },
+                {
+                  onSuccess: () => {
+                    enqueueSnackbar({ variant: 'success', message: 'Equipo creado correctamente' });
+                    setCreateOpen(false);
+                  },
+                }
+              )
+            }
+          />
         </DialogContent>
       </Dialog>
     </>

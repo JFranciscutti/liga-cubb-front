@@ -12,14 +12,13 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(({ sx, ...other }, ref) => (
     ref={ref}
     component="div"
     sx={{
-      width: 40,
-      height: 40,
+      height: 50,
       display: 'inline-flex',
       ...sx,
     }}
     {...other}
   >
-    <img src={LOGO} alt="logo" />
+    <img src={LOGO} alt="logo" style={{ objectFit: 'cover' }} />
   </Box>
 ));
 

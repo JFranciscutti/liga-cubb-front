@@ -1,5 +1,5 @@
 // routes
-import LogoIcon from 'src/assets/logo2.png';
+import LogoIcon from 'src/assets/liga_cubb_logo.png';
 import { PATHS } from './routes/paths';
 
 // API
@@ -67,4 +67,4 @@ export const ENABLED_FEATURES = {
 
 export const LOGO = LogoIcon;
 
-export const APP_NAME = 'Minimal template';
+export const APP_NAME = 'LIGA CUBB';

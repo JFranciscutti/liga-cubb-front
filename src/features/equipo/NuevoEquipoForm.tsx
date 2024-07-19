@@ -15,11 +15,14 @@ import { fileSizeExceeded } from 'src/utils/fileSizeExceeded';
 import { testValidExtensionFileIfFileOrURL } from 'src/utils/testValidExtensionsFileIfFileOrUrl';
 import { Grid, capitalize } from '@mui/material';
 import { GeneroEnum } from 'src/utils/enums';
+import { Categoria } from 'src/models/Categoria';
+import { useEffect } from 'react';
 
 export type NuevoEquipoFormType = {
   name: string;
   image: { file: string | File };
   genero: string;
+  categoria: number;
 };
 
 const NuevoEquipoSchema: Yup.SchemaOf<NuevoEquipoFormType> = Yup.object().shape({
@@ -44,24 +47,28 @@ const NuevoEquipoSchema: Yup.SchemaOf<NuevoEquipoFormType> = Yup.object().shape(
     return true;
   }) as any,
   genero: Yup.string().required('Genero es requerido'),
+  categoria: Yup.number().required('Categoría es requerida'),
 });
 
 const defaultValues = {
   name: '',
   image: { file: '' },
   genero: '',
+  categoria: 0,
 };
 
 interface NuevoEquipoFormProps {
   onSubmit: (value: NuevoEquipoFormType) => Promise<any>;
   initialValues?: NuevoEquipoFormType;
   edit?: boolean;
+  categories: Categoria[];
 }
 
 export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
   onSubmit,
   initialValues,
   edit = false,
+  categories,
 }) => {
   const hf = useForm<NuevoEquipoFormType>({
     resolver: yupResolver(NuevoEquipoSchema),
@@ -69,6 +76,22 @@ export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
     mode: 'onBlur',
     values: initialValues,
   });
+
+  /**
+   * TODO: POR QUÉ CHOTA NO SE MUESTRA EL LABEL DE LA CATEGORIA EN EL SELECT???
+   */
+
+  useEffect(() => {
+    const category_id = hf.watch('categoria');
+
+    if (!!category_id) {
+      const categoria = categories.find((c) => c.id === category_id);
+
+      if (!!categoria) {
+        hf.setValue('genero', categoria.genero);
+      }
+    }
+  }, [hf.watch('categoria')]);
 
   return (
     <HitForm hf={hf} onSubmit={onSubmit}>
@@ -102,6 +125,36 @@ export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
                     label: capitalize(GeneroEnum.FEMENINO),
                   },
                 ]}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Controller
+            name="categoria"
+            control={hf.control}
+            rules={{ required: true }}
+            render={(field) => (
+              <HitSelectField
+                {...field}
+                label="Categoria"
+                placeholder="Selecciona una categoria"
+                floatingLabel={false}
+                options={categories
+                  .filter((cat) => {
+                    if (!!hf.watch('genero')) {
+                      return cat.genero === hf.watch('genero');
+                    } else {
+                      return true;
+                    }
+                  })
+                  .map((categoria) => ({
+                    value: categoria.id.toString(),
+                    label: `${categoria.nombre} - ${
+                      categoria.genero === GeneroEnum.MASCULINO ? 'MASCULINA ' : 'FEMENINA'
+                    }`,
+                  }))}
               />
             )}
           />

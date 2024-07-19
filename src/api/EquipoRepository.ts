@@ -3,21 +3,28 @@ import { Equipo } from 'src/models/Equipo';
 import { GeneroEnum } from 'src/utils/enums';
 import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
+import { EQUIPOS_MOCK } from './EquiposMock';
 
 interface ICreateEquipo {
   name: string;
-  escudo: { file: string | null };
-  genero: string;
+  logo: string;
+  gender: string;
 }
 
 interface IEditEquipo {
   id: number;
   name: string;
-  escudo: { file: string | null };
-  genero: string;
+  logo: string;
+  gender: string;
 }
 
-export const getEquipoMapper = (x: any): Equipo => x;
+export const getEquipoMapper = (x: any): Equipo => ({
+  id: x.id,
+  nombre: x.name,
+  escudo: x.logoUrl,
+  category_id: Number(x.categoryId),
+  genero: x.gender || GeneroEnum.MASCULINO,
+});
 
 export const createEquipoMapper = (x: ICreateEquipo) => x;
 
@@ -29,28 +36,28 @@ export class EquipoRepository {
   };
 
   getAll = async () => {
-    //const { data } = await httpClient.get<any[]>('equipos');
+    // const { data } = await httpClient.get<any[]>('teams');
     return EQUIPOS_MOCK.map(getEquipoMapper);
   };
 
   get = async (id: number) => {
-    //const { data } = await httpClient.get(`equipos/${id}`);
+    //const { data } = await httpClient.get(`teams/${id}`);
     const data = EQUIPOS_MOCK.find((c) => c.id === id);
     return getEquipoMapper(data);
   };
 
-  create = (category: ICreateEquipo) => httpClient.post('equipos', category);
+  create = (team: ICreateEquipo) => httpClient.post('teams', team);
 
   edit = async (category: IEditEquipo) =>
-    httpClient.put('equipos/' + category.id, { name: category.name });
+    httpClient.put('teams/' + category.id, { name: category.name });
 
-  remove = async (id: number) => httpClient.delete('equipos/' + id);
+  remove = async (id: number) => httpClient.delete('teams/' + id);
 
   getByCategoriaId = async (id: number) => {
     //const { data } = await httpClient.get(`equipos/by-category/${id}`);
     const data = EQUIPOS_MOCK.filter((equipo) => {
-      if (!!equipo.category_id) {
-        return equipo.category_id === id;
+      if (!!equipo.categoryId) {
+        return equipo.categoryId === id;
       } else {
         return false;
       }
@@ -100,124 +107,3 @@ export const useGetEquiposByCategoria = (id: number) =>
     queryKey: repo.keys.allByCategoria(id),
     queryFn: () => repo.getByCategoriaId(id),
   });
-
-const EQUIPOS_MOCK: Equipo[] = [
-  {
-    id: 1,
-    nombre: 'SIN CONTRATO',
-    escudo: 'https://ligacubb.com/imagenes/sincontrato.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 2,
-    nombre: 'RITMO Y SUSTANCIA',
-    escudo: 'https://ligacubb.com/imagenes/ritmoysustancia.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 3,
-    nombre: 'FUERTE AL MEDIO',
-    escudo: 'https://ligacubb.com/imagenes/fuertealmedio.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 4,
-    nombre: 'SUPERGEDIENTOS',
-    escudo: 'https://ligacubb.com/imagenes/supergedientos.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 5,
-    nombre: 'ANTIDEPORTIVO CACACIOLI',
-    escudo: 'https://ligacubb.com/imagenes/antideportivocacacioli.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 6,
-    nombre: 'LIVERFULL',
-    escudo: 'https://ligacubb.com/imagenes/liverfull.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 7,
-    nombre: 'REPO P.A.',
-    escudo: 'https://ligacubb.com/imagenes/repopa.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 8,
-    nombre: 'BAFANGULO',
-    escudo: 'https://ligacubb.com/imagenes/bafangulo.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 9,
-    nombre: 'THE BIRDS',
-    escudo: 'https://ligacubb.com/imagenes/thebirds.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 10,
-    nombre: 'ULTRA CUEVA FC',
-    escudo: 'https://ligacubb.com/imagenes/ultracuevafc.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 11,
-    nombre: 'LA BIGORNIA FC',
-    escudo: 'https://ligacubb.com/imagenes/labigorniafc.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 12,
-    nombre: 'FONDO BLANCO',
-    escudo: 'https://ligacubb.com/imagenes/fondoblanco.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 13,
-    nombre: 'MANDIYU´S REVENGE',
-    escudo: 'https://ligacubb.com/imagenes/mandiyusrevenge.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 14,
-    nombre: 'CUALQUIER FRUTA Y/O VERDURA',
-    escudo: 'https://ligacubb.com/imagenes/cualquierfrutayoverdura.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 15,
-    nombre: 'INQUI FC',
-    escudo: 'https://ligacubb.com/imagenes/inquifc.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 16,
-    nombre: 'FERNETBACHE',
-    escudo: 'https://ligacubb.com/imagenes/fernetbache.png',
-    genero: GeneroEnum.MASCULINO,
-    category_id: 1,
-  },
-  {
-    id: 17,
-    nombre: 'EL PINCHA',
-    escudo: 'https://ligacubb.com/imagenes/fernetbache.png',
-    genero: GeneroEnum.MASCULINO,
-  },
-];

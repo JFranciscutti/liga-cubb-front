@@ -23,9 +23,17 @@ interface Props {
   onEdit: (id: number) => any;
 }
 
+type CategoriaFilterType = {
+  nombre: string;
+};
+
+const defaultValues = {
+  nombre: '',
+};
+
 export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
-  const hf = useForm({
-    defaultValues: { email: '', roles: [] },
+  const hf = useForm<CategoriaFilterType>({
+    defaultValues: defaultValues,
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
   const selectedIdRef = useRef<number | undefined>();
@@ -35,9 +43,9 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
       field: 'nombre',
       headerName: 'Nombre',
       type: 'string',
-      renderHeader: () => <div className="mx-20">{'Nombre'}</div>,
+      renderHeader: () => <div className="px-2">{'Nombre'}</div>,
       renderCell: (params) => (
-        <div className="w-full mx-20">
+        <div className="w-full px-2">
           <Typography>{params.row.nombre}</Typography>
         </div>
       ),
@@ -46,9 +54,9 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
       field: 'genero',
       headerName: 'Género',
       type: 'string',
-      renderHeader: () => <div className="mx-20">{'Género'}</div>,
+      renderHeader: () => <div className="px-2">{'Género'}</div>,
       renderCell: (params) => (
-        <div className="w-full mx-20">
+        <div className="w-full px-2">
           <Typography>{capitalize(params.row.genero)}</Typography>
         </div>
       ),
