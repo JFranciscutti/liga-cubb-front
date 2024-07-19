@@ -88,6 +88,10 @@ const LazyEquipoEditPage = withLoadingSpinner(
 
 const LazyFixturePage = withLoadingSpinner(lazy(() => import('src/features/fixtures/FixturePage')));
 
+const LazyJugadoresListPage = withLoadingSpinner(
+  lazy(() => import('src/features/jugadores/JugadoresListPage'))
+);
+
 const ROUTES: RouteObject[] = [
   {
     path: '/',
@@ -165,6 +169,13 @@ const ROUTES: RouteObject[] = [
               { path: 'list', element: <LazyEquiposListPage /> },
 
               { path: 'edit/:id', element: <LazyEquipoEditPage /> },
+            ],
+          },
+          {
+            path: 'jugadores',
+            children: [
+              { element: <Navigate to="/dashboard/jugadores/list" replace />, index: true },
+              { path: 'list', element: <LazyJugadoresListPage /> },
             ],
           },
         ],

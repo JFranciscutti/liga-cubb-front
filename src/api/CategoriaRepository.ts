@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Categoria } from 'src/models/Categoria';
-import { GeneroEnum } from 'src/utils/enums';
+import { Categoria, CATEGORIAS_MOCK } from 'src/models/Categoria';
 import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
 
@@ -77,46 +76,3 @@ export const useEditCategoriaMutation = () => {
     },
   });
 };
-
-const CATEGORIAS_MOCK: Categoria[] = [
-  {
-    id: 1,
-    nombre: 'A',
-    genero: GeneroEnum.MASCULINO,
-  },
-  {
-    id: 2,
-    nombre: 'B',
-    genero: GeneroEnum.MASCULINO,
-  },
-  {
-    id: 3,
-    nombre: 'C',
-    genero: GeneroEnum.MASCULINO,
-  },
-  {
-    id: 4,
-    nombre: 'D',
-    genero: GeneroEnum.MASCULINO,
-  },
-  {
-    id: 5,
-    nombre: 'E',
-    genero: GeneroEnum.MASCULINO,
-  },
-  {
-    id: 6,
-    nombre: 'A',
-    genero: GeneroEnum.FEMENINO,
-  },
-  {
-    id: 7,
-    nombre: 'B',
-    genero: GeneroEnum.FEMENINO,
-  },
-  {
-    id: 8,
-    nombre: 'C',
-    genero: GeneroEnum.FEMENINO,
-  },
-];

@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Equipo } from 'src/models/Equipo';
+import { Equipo, EQUIPOS_MOCK } from 'src/models/Equipo';
 import { GeneroEnum } from 'src/utils/enums';
 import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
-import { EQUIPOS_MOCK } from './EquiposMock';
 
 interface ICreateEquipo {
   name: string;

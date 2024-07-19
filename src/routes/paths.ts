@@ -40,6 +40,10 @@ export const PATHS = {
       create: '/dashboard/fixtures/create',
       edit: (id: number | string) => `/dashboard/fixtures/edit/${id}`,
     },
+    jugadores: {
+      root: '/dashboard/jugadores',
+      list: '/dashboard/jugadores/list',
+    },
   },
 } as const;
 
@@ -66,6 +70,8 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.equipos.list,
       PATHS.dashboard.equipos.create,
       PATHS.dashboard.equipos.edit(':id'),
+      PATHS.dashboard.jugadores.root,
+      PATHS.dashboard.jugadores.list,
     ],
   },
 ];
