@@ -23,7 +23,8 @@ const CategoriaEditPage = () => {
         <CustomBreadcrumbs
           heading={`Categoria ${categoriaData.nombre}`}
           links={[
-            { name: 'Listado', href: PATHS.dashboard.categorias.list },
+            { name: 'Campeonatos', href: PATHS.dashboard.campeonatos.list },
+            { name: 'Categorías', href: PATHS.dashboard.categorias.list },
             { name: 'Administrar' },
           ]}
         />

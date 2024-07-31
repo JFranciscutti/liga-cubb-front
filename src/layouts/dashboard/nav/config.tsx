@@ -37,10 +37,15 @@ const navConfig = [
     subheader: 'LIGA CUBB',
     items: [
       {
-        title: 'Categorias',
-        path: PATHS.dashboard.categorias.root,
+        title: 'Campeonatos',
+        path: PATHS.dashboard.campeonatos.root,
         icon: ICONS.categorias,
       },
+      // {
+      //   title: 'Categorias',
+      //   path: PATHS.dashboard.categorias.root,
+      //   icon: ICONS.categorias,
+      // },
       {
         title: 'Equipos',
         path: PATHS.dashboard.equipos.root,

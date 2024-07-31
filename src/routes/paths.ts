@@ -44,6 +44,12 @@ export const PATHS = {
       root: '/dashboard/jugadores',
       list: '/dashboard/jugadores/list',
     },
+    campeonatos: {
+      root: '/dashboard/campeonatos',
+      list: '/dashboard/campeonatos/list',
+      create: '/dashboard/campeonatos/create',
+      manage: (id: number | string) => `/dashboard/campeonatos/manage/${id}`,
+    },
   },
 } as const;
 
@@ -55,6 +61,10 @@ export const PATHS_PER_ROLE = [
     role: 'super_admin',
     paths: [
       PATHS.dashboard.root,
+      PATHS.dashboard.campeonatos.root,
+      PATHS.dashboard.campeonatos.list,
+      PATHS.dashboard.campeonatos.create,
+      PATHS.dashboard.campeonatos.manage(':id'),
       PATHS.dashboard.usuarios.root,
       PATHS.dashboard.usuarios.list,
       PATHS.dashboard.usuarios.create,

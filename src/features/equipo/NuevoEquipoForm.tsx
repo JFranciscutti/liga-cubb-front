@@ -22,7 +22,6 @@ export type NuevoEquipoFormType = {
   name: string;
   image: { file: string | File };
   genero: string;
-  categoria: number;
 };
 
 const NuevoEquipoSchema: Yup.SchemaOf<NuevoEquipoFormType> = Yup.object().shape({
@@ -77,22 +76,6 @@ export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
     values: initialValues,
   });
 
-  /**
-   * TODO: POR QUÉ CHOTA NO SE MUESTRA EL LABEL DE LA CATEGORIA EN EL SELECT???
-   */
-
-  useEffect(() => {
-    const category_id = hf.watch('categoria');
-
-    if (!!category_id) {
-      const categoria = categories.find((c) => c.id === category_id);
-
-      if (!!categoria) {
-        hf.setValue('genero', categoria.genero);
-      }
-    }
-  }, [hf.watch('categoria')]);
-
   return (
     <HitForm hf={hf} onSubmit={onSubmit}>
       <Grid container spacing={2} className="p-5">
@@ -125,36 +108,6 @@ export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
                     label: capitalize(GeneroEnum.FEMENINO),
                   },
                 ]}
-              />
-            )}
-          />
-        </Grid>
-
-        <Grid item xs={12}>
-          <Controller
-            name="categoria"
-            control={hf.control}
-            rules={{ required: true }}
-            render={(field) => (
-              <HitSelectField
-                {...field}
-                label="Categoria"
-                placeholder="Selecciona una categoria"
-                floatingLabel={false}
-                options={categories
-                  .filter((cat) => {
-                    if (!!hf.watch('genero')) {
-                      return cat.genero === hf.watch('genero');
-                    } else {
-                      return true;
-                    }
-                  })
-                  .map((categoria) => ({
-                    value: categoria.id.toString(),
-                    label: `${categoria.nombre} - ${
-                      categoria.genero === GeneroEnum.MASCULINO ? 'MASCULINA ' : 'FEMENINA'
-                    }`,
-                  }))}
               />
             )}
           />

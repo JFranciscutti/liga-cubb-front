@@ -16,6 +16,7 @@ import { LoadingSpinner } from 'src/components/loading-spinner';
 import RoleBasedGuard from 'src/features/auth/RoleBasedGuard';
 import ErrorPage from 'src/pages/ErrorPage';
 import NotAllowedPage from 'src/pages/NotAllowedPage';
+import { CampeonatosPage } from 'src/features/campeonatos/CampeonatosPage';
 
 /**
  * This will show a full screen spinner while the component is loading.
@@ -90,6 +91,10 @@ const LazyFixturePage = withLoadingSpinner(lazy(() => import('src/features/fixtu
 
 const LazyJugadoresListPage = withLoadingSpinner(
   lazy(() => import('src/features/jugadores/JugadoresListPage'))
+);
+
+const LazyManageCampeonatoPage = withLoadingSpinner(
+  lazy(() => import('src/features/campeonatos/ManageCampeonatoPage'))
 );
 
 const ROUTES: RouteObject[] = [
@@ -176,6 +181,14 @@ const ROUTES: RouteObject[] = [
             children: [
               { element: <Navigate to="/dashboard/jugadores/list" replace />, index: true },
               { path: 'list', element: <LazyJugadoresListPage /> },
+            ],
+          },
+          {
+            path: 'campeonatos',
+            children: [
+              { element: <Navigate to="/dashboard/campeonatos/list" replace />, index: true },
+              { path: 'list', element: <CampeonatosPage /> },
+              { path: 'manage/:id', element: <LazyManageCampeonatoPage /> },
             ],
           },
         ],

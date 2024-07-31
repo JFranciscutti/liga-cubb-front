@@ -50,7 +50,6 @@ const EquipoEditPage = () => {
               name: equipoData.nombre,
               genero: equipoData.genero,
               image: { file: equipoData.escudo },
-              categoria: equipoData.category_id || 0,
             }}
             categories={allCategorias}
           />

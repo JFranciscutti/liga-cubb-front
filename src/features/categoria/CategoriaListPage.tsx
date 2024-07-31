@@ -4,11 +4,9 @@ import { useConfirm } from 'src/components/confirm-action/ConfirmAction';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 import { CategoriaDataGrid } from './CategoriaDataGrid';
-import { Categoria } from 'src/models/Categoria';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import DialogHeader from 'src/components/DialogHeader';
 import { CategoriaForm } from './CategoriaForm';
-import { GeneroEnum } from 'src/utils/enums';
 import {
   useAllCategoriasQuery,
   useCreateCategoriaMutation,
@@ -16,6 +14,7 @@ import {
   useEditCategoriaMutation,
 } from 'src/api/CategoriaRepository';
 import { enqueueSnackbar } from 'notistack';
+import { PATHS } from 'src/routes/paths';
 
 export default function CategoriaListPage() {
   const confirm = useConfirm();
@@ -43,8 +42,11 @@ export default function CategoriaListPage() {
 
       <Container>
         <CustomBreadcrumbs
-          heading="Listado - Categorias"
-          links={[{ name: 'Listado' }]}
+          heading="Listado de Categorias - LIGA 2024"
+          links={[
+            { name: 'Campeonatos', href: PATHS.dashboard.campeonatos.list },
+            { name: 'Categorias' },
+          ]}
           action={
             <Button
               onClick={() => setCreateOpen(true)}

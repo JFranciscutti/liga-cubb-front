@@ -3,42 +3,46 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import {
+  HitDatepickerField,
   HitFormActions,
   HitFormSubmitButton,
+  HitNumberField,
   HitPasswordField,
   HitSelectField,
   HitTextField,
 } from 'src/components/form';
 import { HitForm } from 'src/components/form/HitForm';
 
-export type CategoriaFormType = {
+export type CampeonatoFormType = {
   name: string;
-  gender: string;
+  type: string;
+  year: string;
 };
 
-const CategoriaSchema: Yup.SchemaOf<CategoriaFormType> = Yup.object().shape({
+const CampeonatoSchema: Yup.SchemaOf<CampeonatoFormType> = Yup.object().shape({
   name: Yup.string().required('Nombre es requerido'),
-  gender: Yup.string().required('Género es requerido'),
+  year: Yup.string().required('Año es requerido'),
+  type: Yup.string().required('Tipo es requerido'),
 });
 
 const defaultValues = {
   name: '',
-  gender: '',
+  type: '',
 };
 
-interface CategoriaFormProps {
-  onSubmit: (value: CategoriaFormType) => Promise<any>;
-  initialValues?: CategoriaFormType;
+interface CampeonatoFormProps {
+  onSubmit: (value: CampeonatoFormType) => Promise<any>;
+  initialValues?: CampeonatoFormType;
   edit?: boolean;
 }
 
-export const CategoriaForm: React.FC<CategoriaFormProps> = ({
+export const CampeonatoForm: React.FC<CampeonatoFormProps> = ({
   onSubmit,
   initialValues,
   edit = false,
 }) => {
-  const hf = useForm<CategoriaFormType>({
-    resolver: yupResolver(CategoriaSchema),
+  const hf = useForm<CampeonatoFormType>({
+    resolver: yupResolver(CampeonatoSchema),
     defaultValues,
     mode: 'onBlur',
     values: initialValues,
@@ -52,15 +56,20 @@ export const CategoriaForm: React.FC<CategoriaFormProps> = ({
         render={(field) => <HitTextField {...field} label="Nombre" floatingLabel={false} />}
       />
       <Controller
-        name="gender"
+        name="year"
+        control={hf.control}
+        render={(field) => <HitNumberField {...field} label="Año" floatingLabel={false} />}
+      />
+      <Controller
+        name="type"
         control={hf.control}
         render={(field) => (
           <HitSelectField
             {...field}
-            label="Género"
+            label="Tipo"
             options={[
-              { label: 'Masculino', value: 'male' },
-              { label: 'Femenino', value: 'female' },
+              { label: 'Torneo regular', value: 'regular' },
+              { label: 'Copa', value: 'copa' },
             ]}
             floatingLabel={false}
           />
