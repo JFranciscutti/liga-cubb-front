@@ -30,7 +30,7 @@ export const AUTH0_API = {
 export const MAPBOX_API = import.meta.env.VITE_MAPBOX_API;
 
 // ROOT PATH AFTER LOGIN SUCCESSFUL
-export const PATH_AFTER_LOGIN = PATHS.dashboard.categorias.root;
+export const PATH_AFTER_LOGIN = PATHS.dashboard.campeonatos.root;
 
 // LAYOUT
 // ----------------------------------------------------------------------

@@ -16,7 +16,8 @@ import { LoadingSpinner } from 'src/components/loading-spinner';
 import RoleBasedGuard from 'src/features/auth/RoleBasedGuard';
 import ErrorPage from 'src/pages/ErrorPage';
 import NotAllowedPage from 'src/pages/NotAllowedPage';
-import { CampeonatosPage } from 'src/features/campeonatos/CampeonatosPage';
+import ManageEquiposCopaPage from 'src/features/copa/ManageEquiposCopaPage';
+import ManageGruposCopaPage from 'src/features/copa/ManageGruposCopaPage';
 
 /**
  * This will show a full screen spinner while the component is loading.
@@ -95,6 +96,14 @@ const LazyJugadoresListPage = withLoadingSpinner(
 
 const LazyManageCampeonatoPage = withLoadingSpinner(
   lazy(() => import('src/features/campeonatos/ManageCampeonatoPage'))
+);
+
+const LazyCampeonatosPage = withLoadingSpinner(
+  lazy(() => import('src/features/campeonatos/CampeonatosPage'))
+);
+
+const LazyManageEquiposCopaPage = withLoadingSpinner(
+  lazy(() => import('src/features/copa/ManageEquiposCopaPage'))
 );
 
 const ROUTES: RouteObject[] = [
@@ -187,7 +196,9 @@ const ROUTES: RouteObject[] = [
             path: 'campeonatos',
             children: [
               { element: <Navigate to="/dashboard/campeonatos/list" replace />, index: true },
-              { path: 'list', element: <CampeonatosPage /> },
+              { path: 'list', element: <LazyCampeonatosPage /> },
+              { path: 'manage/:id/equipos-copa', element: <ManageEquiposCopaPage /> },
+              { path: 'manage/:id/grupos-copa', element: <ManageGruposCopaPage /> },
               { path: 'manage/:id', element: <LazyManageCampeonatoPage /> },
             ],
           },

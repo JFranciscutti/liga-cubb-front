@@ -10,8 +10,10 @@ import DialogHeader from 'src/components/DialogHeader';
 import { CategoriaForm } from '../categoria/CategoriaForm';
 import { useState } from 'react';
 import { CampeonatoForm } from './CampeonatoForm';
+import { useAllCampeonatosQuery } from 'src/api/CampeonatoRepository';
 
-export const CampeonatosPage = () => {
+const CampeonatosPage = () => {
+  const { data: campeonatos } = useAllCampeonatosQuery();
   const [createOpen, setCreateOpen] = useState<boolean>(false);
 
   return (
@@ -37,10 +39,7 @@ export const CampeonatosPage = () => {
 
         <Card>
           <CampeonatoDataGrid
-            data={[
-              { id: 1, name: 'Liga 2024' },
-              { id: 2, name: 'Copa Preparación 2024' },
-            ]}
+            data={campeonatos}
             isLoading={false}
             onDelete={(id: any) => {}}
             onEdit={(id: number) => {}}
@@ -58,3 +57,5 @@ export const CampeonatosPage = () => {
     </>
   );
 };
+
+export default CampeonatosPage;

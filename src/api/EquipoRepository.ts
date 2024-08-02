@@ -21,7 +21,6 @@ export const getEquipoMapper = (x: any): Equipo => ({
   id: x.id,
   nombre: x.name,
   escudo: x.logoUrl,
-  category_id: Number(x.categoryId),
   genero: x.gender || GeneroEnum.MASCULINO,
 });
 
@@ -51,18 +50,6 @@ export class EquipoRepository {
     httpClient.put('teams/' + category.id, { name: category.name });
 
   remove = async (id: number) => httpClient.delete('teams/' + id);
-
-  getByCategoriaId = async (id: number) => {
-    //const { data } = await httpClient.get(`equipos/by-category/${id}`);
-    const data = EQUIPOS_MOCK.filter((equipo) => {
-      if (!!equipo.categoryId) {
-        return equipo.categoryId === id;
-      } else {
-        return false;
-      }
-    });
-    return data.map(getEquipoMapper);
-  };
 }
 
 const repo = new EquipoRepository();
@@ -100,9 +87,3 @@ export const useEditEquipoMutation = () => {
     },
   });
 };
-
-export const useGetEquiposByCategoria = (id: number) =>
-  useSuspenseQuery({
-    queryKey: repo.keys.allByCategoria(id),
-    queryFn: () => repo.getByCategoriaId(id),
-  });

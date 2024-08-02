@@ -13,12 +13,8 @@ import { HitFormActions, HitFormGrid, HitTextField } from 'src/components/form';
 
 import Iconify from 'src/components/iconify';
 import MenuPopover from 'src/components/menu-popover';
+import { Campeonato, CampeonatoTypeEnum } from 'src/models/Campeonato';
 import { PATHS } from 'src/routes/paths';
-
-interface Campeonato {
-  id: number;
-  name: string;
-}
 
 interface Props {
   data: Campeonato[];
@@ -51,6 +47,18 @@ export const CampeonatoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete,
       renderCell: (params) => (
         <div className="w-full px-2">
           <Typography>{params.row.name}</Typography>
+        </div>
+      ),
+    },
+    {
+      field: 'type',
+      headerName: 'Tipo',
+      type: 'string',
+      renderCell: (params) => (
+        <div className="w-full px-2">
+          <Typography>
+            {params.row.type === CampeonatoTypeEnum.COPA ? 'Copa' : 'Torneo Regular'}
+          </Typography>
         </div>
       ),
     },

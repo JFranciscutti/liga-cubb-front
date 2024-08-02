@@ -8,23 +8,28 @@ import { useSettingsContext } from 'src/components/settings';
 import { PATHS } from 'src/routes/paths';
 import { useState } from 'react';
 import { useConfirm } from 'src/components/confirm-action/ConfirmAction';
-import { AgregarEquipoCategoriaForm, EquipoCategoriaFormType } from './AgregarEquipoCategoria';
 import { EquipoDataGrid } from '../equipo/EquipoDataGrid';
-import { useCategoriaQuery } from 'src/api/CategoriaRepository';
 import { useAllEquiposQuery } from 'src/api/EquipoRepository';
 import LoadingScreen from 'src/components/loading-screen';
+import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
+import {
+  AgregarEquipoCategoriaForm,
+  EquipoCategoriaFormType,
+} from '../categoria/AgregarEquipoCategoria';
 
-const ManageEquiposCategoriaPage = () => {
+const ManageEquiposCopaPage = () => {
   const params = useParams<{ id: string }>();
   const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
 
   const [addOpen, setAddOpen] = useState<boolean>(false);
 
-  const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(Number(params.id));
+  const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
+    Number(params.id)
+  );
   const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
 
-  if (categoriaLoading || allEquiposLoading) {
+  if (campeonatoLoading || allEquiposLoading) {
     return <LoadingScreen />;
   }
 
@@ -32,12 +37,12 @@ const ManageEquiposCategoriaPage = () => {
     <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading={`Categoria ${categoriaData.nombre} - Lista de equipos`}
+          heading={`${campeonatoData.name} - Lista de equipos`}
           links={[
-            { name: 'Listado', href: PATHS.dashboard.categorias.list },
+            { name: 'Campeonatos', href: PATHS.dashboard.campeonatos.list },
             {
-              name: `Categoria ${categoriaData.nombre}`,
-              href: PATHS.dashboard.categorias.edit(params.id!),
+              name: campeonatoData.name,
+              href: PATHS.dashboard.campeonatos.manage(params.id!),
             },
             { name: 'Administrar equipos' },
           ]}
@@ -53,7 +58,7 @@ const ManageEquiposCategoriaPage = () => {
         />
         <Card>
           <EquipoDataGrid
-            data={allEquipos}
+            data={[]}
             isLoading={false}
             onDelete={(id: any) =>
               confirm({
@@ -73,7 +78,7 @@ const ManageEquiposCategoriaPage = () => {
           <DialogContent sx={{ mb: 4, width: '100%' }}>
             <AgregarEquipoCategoriaForm
               onSubmit={async (values: EquipoCategoriaFormType) => {}}
-              equipos={[]}
+              equipos={allEquipos}
             />
           </DialogContent>
         </Dialog>
@@ -82,4 +87,4 @@ const ManageEquiposCategoriaPage = () => {
   );
 };
 
-export default ManageEquiposCategoriaPage;
+export default ManageEquiposCopaPage;
