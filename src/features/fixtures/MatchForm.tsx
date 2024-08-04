@@ -58,7 +58,7 @@ const MatchForm: React.FC<MatchFormProps> = ({ equipos }) => {
 
   return (
     <HitForm hf={hf} onSubmit={onSubmit}>
-      <Grid container xs={12}>
+      <Grid container>
         <Grid item xs={12} alignItems={'center'} justifyContent={'center'} paddingBottom={5}>
           <Typography align="center">Fecha 1</Typography>
         </Grid>

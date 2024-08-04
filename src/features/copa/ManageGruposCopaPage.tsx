@@ -8,7 +8,7 @@ import { useConfirm } from 'src/components/confirm-action/ConfirmAction';
 import { useAllEquiposQuery } from 'src/api/EquipoRepository';
 import LoadingScreen from 'src/components/loading-screen';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
-import FaseGruposGenerator from './FaseGruposGenerator';
+import FaseGruposGenerator from './components/FaseGruposGenerator';
 
 const ManageGruposCopaPage = () => {
   const params = useParams<{ id: string }>();

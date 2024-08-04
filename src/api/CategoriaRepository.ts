@@ -54,7 +54,7 @@ export const useCreateCategoriaMutation = () => {
   return useMutation({
     mutationFn: repo.create,
     onSuccess: () => {
-      qc.invalidateQueries(repo.keys.all());
+      qc.invalidateQueries({ queryKey: repo.keys.all() });
     },
   });
 };
@@ -63,7 +63,7 @@ export const useDeleteCategoriaMutation = () => {
   return useMutation({
     mutationFn: repo.remove,
     onSuccess: () => {
-      qc.invalidateQueries(repo.keys.all());
+      qc.invalidateQueries({ queryKey: repo.keys.all() });
     },
   });
 };
@@ -72,7 +72,7 @@ export const useEditCategoriaMutation = () => {
   return useMutation({
     mutationFn: repo.edit,
     onSuccess: (_, vars) => {
-      qc.invalidateQueries(repo.keys.one(vars.id));
+      qc.invalidateQueries({ queryKey: repo.keys.one(vars.id) });
     },
   });
 };

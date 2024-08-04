@@ -10,7 +10,7 @@ const ManageCategoriaPage: React.FC<ManageCategoriaPageProps> = ({ id }) => {
   const navigate = useNavigate();
 
   return (
-    <Grid container xs={12} spacing={3}>
+    <Grid container spacing={3}>
       <Grid item xs={12}>
         <Card
           sx={{ p: 2, cursor: 'pointer' }}

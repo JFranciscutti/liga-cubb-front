@@ -1,4 +1,4 @@
-import { Card, Container, Typography } from '@mui/material';
+import { Card, Container } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useParams } from 'react-router';
@@ -6,9 +6,10 @@ import { PATHS } from 'src/routes/paths';
 import { useCategoriaQuery } from 'src/api/CategoriaRepository';
 import { useSettingsContext } from 'src/components/settings';
 import LoadingScreen from 'src/components/loading-screen';
-import { useGetEquiposByCategoria } from 'src/api/EquipoRepository';
-import { Fixture16TeamsForm } from './Fixture16TeamsForm';
 import MatchForm from './MatchForm';
+import { useAllEquiposQuery } from 'src/api/EquipoRepository';
+import FixtureManagerByGroup from '../copa/components/FixtureManagerByGroup';
+import FixtureManagerBase from './FixtureManagerBase';
 
 export default function FixturePage() {
   const params = useParams<{ id: string }>();
@@ -22,7 +23,7 @@ export default function FixturePage() {
     data: equiposData,
     isLoading: equiposLoading,
     isError: equiposError,
-  } = useGetEquiposByCategoria(Number(params.id));
+  } = useAllEquiposQuery();
 
   if (categoriaLoading || equiposLoading) {
     return <LoadingScreen />;
@@ -47,9 +48,8 @@ export default function FixturePage() {
           ]}
         />
 
-        <Card sx={{ display: 'flex', justifyContent: 'center', py: 20, alignItems: 'center' }}>
-          {/* <Fixture16TeamsForm onSubmit={async () => {}} /> */}
-          <MatchForm equipos={equiposData} />
+        <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <FixtureManagerBase equipos={equiposData} />
         </Card>
       </Container>
     </>

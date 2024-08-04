@@ -1,4 +1,4 @@
-import { Card, Container, Typography } from '@mui/material';
+import { Card, Container } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useParams } from 'react-router';
@@ -32,9 +32,9 @@ export default function CategoriaPlayoffPage() {
           ]}
         />
 
-        <Card sx={{ display: 'flex', justifyContent: 'center', py: 20, alignItems: 'center' }}>
-          <Typography>coming soon </Typography>
-        </Card>
+        <Card
+          sx={{ display: 'flex', justifyContent: 'center', py: 20, alignItems: 'center' }}
+        ></Card>
       </Container>
     </>
   );
