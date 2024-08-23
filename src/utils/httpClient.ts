@@ -5,5 +5,6 @@ export const httpClient = axios.create({
   baseURL: environment.backEnd,
   headers: {
     'Access-Control-Allow-Origin': '*',
+    'ngrok-skip-browser-warning': true,
   },
 });

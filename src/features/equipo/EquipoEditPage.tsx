@@ -49,7 +49,7 @@ const EquipoEditPage = () => {
             initialValues={{
               name: equipoData.nombre,
               genero: equipoData.genero,
-              image: { file: equipoData.escudo },
+              image: equipoData.escudo,
             }}
             categories={allCategorias}
           />

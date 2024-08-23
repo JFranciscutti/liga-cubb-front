@@ -3,18 +3,17 @@ import { Helmet } from 'react-helmet-async';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import Iconify from 'src/components/iconify';
 import { CampeonatoDataGrid } from './CampeonatoDataGrid';
-import { useNavigate } from 'react-router';
-import { PATHS } from 'src/routes/paths';
 import { enqueueSnackbar } from 'notistack';
 import DialogHeader from 'src/components/DialogHeader';
-import { CategoriaForm } from '../categoria/CategoriaForm';
 import { useState } from 'react';
 import { CampeonatoForm } from './CampeonatoForm';
-import { useAllCampeonatosQuery } from 'src/api/CampeonatoRepository';
+import { useAllCampeonatosQuery, useCreateCampeonatoMutation } from 'src/api/CampeonatoRepository';
 
 const CampeonatosPage = () => {
   const { data: campeonatos } = useAllCampeonatosQuery();
   const [createOpen, setCreateOpen] = useState<boolean>(false);
+
+  const createCampeonatoMutation = useCreateCampeonatoMutation();
 
   return (
     <>
@@ -42,7 +41,7 @@ const CampeonatosPage = () => {
             data={campeonatos}
             isLoading={false}
             onDelete={(id: any) => {}}
-            onEdit={(id: number) => {}}
+            onEdit={(id: any) => {}}
           />
         </Card>
       </Container>
@@ -51,7 +50,19 @@ const CampeonatosPage = () => {
           <DialogHeader label="Nuevo campeonato" onClick={() => setCreateOpen(false)} />
         </DialogTitle>
         <DialogContent sx={{ mb: 4 }}>
-          <CampeonatoForm onSubmit={async () => {}} />
+          <CampeonatoForm
+            onSubmit={async (values) => {
+              await createCampeonatoMutation.mutateAsync(
+                { ...values, year: Number(values.year) },
+                {
+                  onSuccess: () => {
+                    setCreateOpen(false);
+                    enqueueSnackbar('jajjajs');
+                  },
+                }
+              );
+            }}
+          />
         </DialogContent>
       </Dialog>
     </>

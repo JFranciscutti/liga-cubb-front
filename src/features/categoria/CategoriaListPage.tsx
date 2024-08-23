@@ -16,17 +16,21 @@ import {
 import { enqueueSnackbar } from 'notistack';
 import { PATHS } from 'src/routes/paths';
 
-export default function CategoriaListPage() {
+interface CategoriaListPageProps {
+  campeonato: any;
+}
+
+const CategoriaListPage: React.FC<CategoriaListPageProps> = ({ campeonato }) => {
   const confirm = useConfirm();
   const [createOpen, setCreateOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number>();
+  const [selectedId, setSelectedId] = useState<string>();
   const [editOpen, setEditOpen] = useState(false);
-  const { data: categorias } = useAllCategoriasQuery();
+  const categorias = campeonato.categories || [];
   const createCategoriaMutation = useCreateCategoriaMutation();
   const editCategoriaMutation = useEditCategoriaMutation();
   const deleteCategoriaMutation = useDeleteCategoriaMutation();
 
-  const foundCategoria = categorias?.find((d) => d.id === selectedId);
+  const foundCategoria = categorias?.find((d: any) => d.id === selectedId);
   const parsedCategoria =
     foundCategoria === undefined
       ? undefined
@@ -42,7 +46,7 @@ export default function CategoriaListPage() {
 
       <Container>
         <CustomBreadcrumbs
-          heading="Listado de Categorias - LIGA 2024"
+          heading={`Listado de Categorias - ${campeonato.name}`}
           links={[
             { name: 'Campeonatos', href: PATHS.dashboard.campeonatos.list },
             { name: 'Categorias' },
@@ -67,7 +71,7 @@ export default function CategoriaListPage() {
                 action: async () => deleteCategoriaMutation.mutateAsync(id),
               })
             }
-            onEdit={(id: number) => {
+            onEdit={(id: string) => {
               setSelectedId(id);
               setEditOpen(true);
             }}
@@ -81,12 +85,18 @@ export default function CategoriaListPage() {
         <DialogContent sx={{ mb: 4 }}>
           <CategoriaForm
             onSubmit={async (values) =>
-              createCategoriaMutation.mutateAsync(values, {
-                onSuccess: () => {
-                  enqueueSnackbar({ variant: 'success', message: 'Categoria creada exitosamente' });
-                  setCreateOpen(false);
-                },
-              })
+              createCategoriaMutation.mutateAsync(
+                { ...values, leagueName: campeonato.name },
+                {
+                  onSuccess: () => {
+                    enqueueSnackbar({
+                      variant: 'success',
+                      message: 'Categoria creada exitosamente',
+                    });
+                    setCreateOpen(false);
+                  },
+                }
+              )
             }
           />
         </DialogContent>
@@ -114,10 +124,12 @@ export default function CategoriaListPage() {
             }
             initialValues={{
               name: parsedCategoria?.nombre || '',
+              gender: parsedCategoria?.genero || '',
             }}
           />
         </DialogContent>
       </Dialog>
     </>
   );
-}
+};
+export default CategoriaListPage;

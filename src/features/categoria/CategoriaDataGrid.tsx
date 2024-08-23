@@ -19,8 +19,8 @@ import { PATHS } from 'src/routes/paths';
 interface Props {
   data: Categoria[];
   isLoading: boolean;
-  onDelete: (id: number) => any;
-  onEdit: (id: number) => any;
+  onDelete: (id: string) => any;
+  onEdit: (id: string) => any;
 }
 
 type CategoriaFilterType = {
@@ -36,7 +36,7 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
     defaultValues: defaultValues,
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
-  const selectedIdRef = useRef<number | undefined>();
+  const selectedIdRef = useRef<string | undefined>();
 
   const columns = useColumns<typeof data[0]>([
     {
@@ -46,18 +46,18 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
       renderHeader: () => <div className="px-2">{'Nombre'}</div>,
       renderCell: (params) => (
         <div className="w-full px-2">
-          <Typography>{params.row.nombre}</Typography>
+          <Typography>{params.row.name}</Typography>
         </div>
       ),
     },
     {
-      field: 'genero',
+      field: 'gender',
       headerName: 'Género',
       type: 'string',
       renderHeader: () => <div className="px-2">{'Género'}</div>,
       renderCell: (params) => (
         <div className="w-full px-2">
-          <Typography>{capitalize(params.row.genero)}</Typography>
+          <Typography>{capitalize(params.row.gender)}</Typography>
         </div>
       ),
     },
@@ -72,7 +72,7 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = Number(params.id);
+              selectedIdRef.current = params.row.id;
               setOpenPopover(e.currentTarget);
             }}
           >

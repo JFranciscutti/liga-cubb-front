@@ -1,5 +1,5 @@
 import { Button, Card, Container, Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import DialogHeader from 'src/components/DialogHeader';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import Iconify from 'src/components/iconify';
@@ -18,6 +18,7 @@ const ManageEquiposCategoriaPage = () => {
   const params = useParams<{ id: string }>();
   const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
+  const navigate = useNavigate();
 
   const [addOpen, setAddOpen] = useState<boolean>(false);
 
@@ -55,6 +56,7 @@ const ManageEquiposCategoriaPage = () => {
           <EquipoDataGrid
             data={allEquipos}
             isLoading={false}
+            onViewPlayers={(id: any) => navigate('')}
             onDelete={(id: any) =>
               confirm({
                 action: async () => {},

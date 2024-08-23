@@ -68,8 +68,8 @@ export const CampeonatoForm: React.FC<CampeonatoFormProps> = ({
             {...field}
             label="Tipo"
             options={[
-              { label: 'Torneo regular', value: 'regular' },
-              { label: 'Copa', value: 'copa' },
+              { label: 'Torneo regular', value: 'league' },
+              { label: 'Copa', value: 'cup' },
             ]}
             floatingLabel={false}
           />

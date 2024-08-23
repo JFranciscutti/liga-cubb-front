@@ -20,38 +20,20 @@ import { useEffect } from 'react';
 
 export type NuevoEquipoFormType = {
   name: string;
-  image: { file: string | File };
+  image: string;
   genero: string;
 };
 
 const NuevoEquipoSchema: Yup.SchemaOf<NuevoEquipoFormType> = Yup.object().shape({
   name: Yup.string().required('Nombre es requerido'),
-  image: Yup.mixed().test('is-file-selected', 'La imagen es requerida', function (value) {
-    if (!value || !value.file) {
-      return this.createError({ message: 'La imagen es requerida' });
-    }
-    if (fileSizeExceeded(value.file)) {
-      return this.createError({ message: 'El tamaño de la imagen es mayor a 2MB' });
-    }
-
-    if (
-      !testValidExtensionFileIfFileOrURL(
-        value.file,
-        ['image/jpeg', 'image/jpg', 'image/png'],
-        ['jpg', 'jpeg', 'png']
-      )
-    ) {
-      return this.createError({ message: 'Solo se permiten archivos JPG, JPEG y PNG' });
-    }
-    return true;
-  }) as any,
+  image: Yup.string().required('Imagen es requerida'),
   genero: Yup.string().required('Genero es requerido'),
   categoria: Yup.number().required('Categoría es requerida'),
 });
 
 const defaultValues = {
   name: '',
-  image: { file: '' },
+  image: '',
   genero: '',
   categoria: 0,
 };
@@ -118,9 +100,7 @@ export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
             name="image"
             control={hf.control}
             rules={{ required: true }}
-            render={(field) => (
-              <HitImageField {...field} label="Imagen" colSpan={12} floatingLabel={false} />
-            )}
+            render={(field) => <HitTextField {...field} label="Nombre" floatingLabel={false} />}
           />
         </Grid>
       </Grid>

@@ -46,11 +46,11 @@ const navConfig = [
       //   path: PATHS.dashboard.categorias.root,
       //   icon: ICONS.categorias,
       // },
-      {
-        title: 'Equipos',
-        path: PATHS.dashboard.equipos.root,
-        icon: ICONS.equipos,
-      },
+      // {
+      //   title: 'Equipos',
+      //   path: PATHS.dashboard.equipos.root,
+      //   icon: ICONS.equipos,
+      // },
       {
         title: 'Jugadores',
         path: PATHS.dashboard.jugadores.root,

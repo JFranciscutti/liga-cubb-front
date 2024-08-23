@@ -97,7 +97,7 @@ export default function EquiposListPage() {
             onSubmit={async (values) =>
               await createEquipoMutation.mutateAsync(
                 {
-                  logo: '',
+                  logo: values.image,
                   name: values.name,
                   gender: values.genero,
                 },

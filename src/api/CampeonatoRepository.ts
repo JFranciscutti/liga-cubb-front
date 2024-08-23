@@ -5,10 +5,12 @@ import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
 
 interface ICreateCampeonato {
   name: string;
+  year: number;
+  type: string;
 }
 
 interface IEditCampeonato {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -19,26 +21,26 @@ export const createCampeonatoMapper = (x: ICreateCampeonato) => x;
 export class CampeonatoRepository {
   keys = {
     all: () => ['campeonatos'],
-    one: (id: number) => ['campeonatos', id],
+    one: (id: string) => ['campeonatos', id],
   };
 
   getAll = async () => {
-    //const { data } = await httpClient.get<any[]>('campeonatos');
-    return CAMPEONATOS_MOCK.map(getCampeonatoMapper);
+    const { data } = await httpClient.get<any[]>('tournament/all');
+    return data.map(getCampeonatoMapper);
   };
 
-  get = async (id: number) => {
-    //const { data } = await httpClient.get(`campeonatos/${id}`);
-    const data = CAMPEONATOS_MOCK.find((c) => c.id === id);
-    return getCampeonatoMapper(data);
+  get = async (id: string) => {
+    const { data } = await httpClient.get(`tournament?tournamentId=${id}`);
+    //const data = CAMPEONATOS_MOCK.find((c) => c.id === id);
+    return data;
   };
 
-  create = (category: ICreateCampeonato) => httpClient.post('campeonatos', category);
+  create = (category: ICreateCampeonato) => httpClient.post('tournament', category);
 
   edit = async (category: IEditCampeonato) =>
     httpClient.put('campeonatos/' + category.id, { name: category.name });
 
-  remove = async (id: number) => httpClient.delete('campeonatos/' + id);
+  remove = async (id: string) => httpClient.delete('campeonatos/' + id);
 }
 
 const repo = new CampeonatoRepository();
@@ -46,7 +48,7 @@ const repo = new CampeonatoRepository();
 export const useAllCampeonatosQuery = () =>
   useSuspenseQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
 
-export const useCampeonatoQuery = (id: number) =>
+export const useCampeonatoQuery = (id: string) =>
   useSuspenseQuery({ queryKey: repo.keys.one(id), queryFn: () => repo.get(id) });
 
 export const useCreateCampeonatoMutation = () => {
@@ -72,7 +74,7 @@ export const useEditCampeonatoMutation = () => {
   return useMutation({
     mutationFn: repo.edit,
     onSuccess: (_, vars) => {
-      qc.invalidateQueries(repo.keys.one(vars.id));
+      qc.invalidateQueries(repo.keys.one(vars.id.toString()));
     },
   });
 };

@@ -1,14 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Categoria, CATEGORIAS_MOCK } from 'src/models/Categoria';
+import { Categoria } from 'src/models/Categoria';
 import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
 
 interface ICreateCategoria {
   name: string;
+  gender: string;
+  leagueName: string;
 }
 
 interface IEditCategoria {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -19,26 +21,27 @@ export const createCategoriaMapper = (x: ICreateCategoria) => x;
 export class CategoriaRepository {
   keys = {
     all: () => ['categorias'],
-    one: (id: number) => ['categorias', id],
+    one: (id: string) => ['categorias', id],
   };
 
   getAll = async () => {
-    //const { data } = await httpClient.get<any[]>('categorias');
-    return CATEGORIAS_MOCK.map(getCategoriaMapper);
+    const { data } = await httpClient.get<any[]>('categorias');
+    //return CATEGORIAS_MOCK.map(getCategoriaMapper);
   };
 
-  get = async (id: number) => {
-    //const { data } = await httpClient.get(`categorias/${id}`);
-    const data = CATEGORIAS_MOCK.find((c) => c.id === id);
+  get = async (id: string) => {
+    const { data } = await httpClient.get(`categorias/${id}`);
+    //const data = CATEGORIAS_MOCK.find((c) => c.id === id);
     return getCategoriaMapper(data);
   };
 
-  create = (category: ICreateCategoria) => httpClient.post('categorias', category);
+  create = (category: ICreateCategoria) =>
+    httpClient.post('tournament/league/categories/createCategory', category);
 
   edit = async (category: IEditCategoria) =>
     httpClient.put('categorias/' + category.id, { name: category.name });
 
-  remove = async (id: number) => httpClient.delete('categorias/' + id);
+  remove = async (id: string) => httpClient.delete('categorias/' + id);
 }
 
 const repo = new CategoriaRepository();
@@ -46,7 +49,7 @@ const repo = new CategoriaRepository();
 export const useAllCategoriasQuery = () =>
   useSuspenseQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
 
-export const useCategoriaQuery = (id: number) =>
+export const useCategoriaQuery = (id: string) =>
   useSuspenseQuery({ queryKey: repo.keys.one(id), queryFn: () => repo.get(id) });
 
 export const useCreateCategoriaMutation = () => {

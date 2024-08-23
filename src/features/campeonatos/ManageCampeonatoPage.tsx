@@ -10,11 +10,11 @@ import { useSettingsContext } from 'src/components/settings';
 
 const ManageCampeonatoPage = () => {
   const { id } = useParams();
-  const { data: campeonato } = useCampeonatoQuery(Number(id));
+  const { data: campeonato } = useCampeonatoQuery(id || '');
   const { themeStretch } = useSettingsContext();
 
   if (campeonato.type === CampeonatoTypeEnum.REGULAR) {
-    return <CategoriaListPage />;
+    return <CategoriaListPage campeonato={campeonato} />;
   }
 
   return (

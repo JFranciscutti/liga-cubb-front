@@ -19,8 +19,8 @@ import { PATHS } from 'src/routes/paths';
 interface Props {
   data: Campeonato[];
   isLoading: boolean;
-  onDelete: (id: number) => any;
-  onEdit: (id: number) => any;
+  onDelete: (id: string) => any;
+  onEdit: (id: string) => any;
 }
 
 type CampeonatoFilterType = {
@@ -36,7 +36,7 @@ export const CampeonatoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete,
     defaultValues: defaultValues,
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
-  const selectedIdRef = useRef<number | undefined>();
+  const selectedIdRef = useRef<string | undefined>();
 
   const columns = useColumns<typeof data[0]>([
     {
@@ -73,7 +73,7 @@ export const CampeonatoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete,
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = Number(params.id);
+              selectedIdRef.current = params.row.id;
               setOpenPopover(e.currentTarget);
             }}
           >
