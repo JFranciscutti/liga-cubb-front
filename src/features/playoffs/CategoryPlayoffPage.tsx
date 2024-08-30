@@ -6,17 +6,11 @@ import { PATHS } from 'src/routes/paths';
 import { useCategoriaQuery } from 'src/api/CategoriaRepository';
 import { useSettingsContext } from 'src/components/settings';
 import LoadingScreen from 'src/components/loading-screen';
-import {
-  SingleEliminationBracket,
-  Match,
-  MATCH_STATES,
-  SVGViewer,
-} from '@g-loot/react-tournament-brackets';
 
 export default function CategoriaPlayoffPage() {
   const params = useParams<{ id: string }>();
   const { themeStretch } = useSettingsContext();
-  const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(Number(params.id));
+  const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(params.id || '');
 
   if (categoriaLoading) {
     return <LoadingScreen />;
@@ -33,7 +27,7 @@ export default function CategoriaPlayoffPage() {
           heading={`Playoffs - Categoria ${categoriaData.nombre}`}
           links={[
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(Number(params.id)) },
+            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(params.id || '') },
             { name: 'Cruces playoff' },
           ]}
         />

@@ -1,20 +1,28 @@
 import { Card, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { PATHS } from 'src/routes/paths';
 
 interface ManageCategoriaPageProps {
-  id: number;
+  id: string;
 }
 const ManageCategoriaPage: React.FC<ManageCategoriaPageProps> = ({ id }) => {
   const navigate = useNavigate();
+  const params = useParams<{ idCampeonato: string; idCategoria: string }>();
 
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Card
           sx={{ p: 2, cursor: 'pointer' }}
-          onClick={() => navigate(PATHS.dashboard.categorias.manageEquipos(id))}
+          onClick={() =>
+            navigate(
+              PATHS.dashboard.campeonatos.manageEquiposCategoria(
+                params.idCampeonato || '',
+                params.idCategoria || ''
+              )
+            )
+          }
         >
           <div className="flex flex-col gap-2">
             <Typography fontSize={18}>Equipos</Typography>

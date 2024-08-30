@@ -25,16 +25,16 @@ export const AdminUserEditPage = () => {
 
   const editUsuarioMutation = useEditUserMutation();
   const changePasswordMutation = useChangePasswordMutation();
-  const userQuery = useUserQuery(Number(params.id));
+  const userQuery = useUserQuery(params.id || '');
 
   const handlePasswordChange = async (values: ChangePasswordFormType) => {
-    await changePasswordMutation.mutateAsync({ ...values, id: Number(params.id) });
+    await changePasswordMutation.mutateAsync({ ...values, id: params.id || '' });
     enqueueSnackbar({ message: 'Password Changed!' });
     navigate(PATHS.dashboard.categorias.list);
   };
 
   const handleUserUpdate = async (values: EditUserFormType) => {
-    await editUsuarioMutation.mutateAsync({ ...values, id: Number(params.id) });
+    await editUsuarioMutation.mutateAsync({ ...values, id: params.id || '' });
     enqueueSnackbar({ message: 'User Updated!' });
     navigate(PATHS.dashboard.categorias.list);
   };

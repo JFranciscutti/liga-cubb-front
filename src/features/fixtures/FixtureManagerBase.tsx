@@ -23,7 +23,7 @@ interface Fecha {
 }
 
 interface FixtureManagerBaseProps {
-  equipos: Equipo[];
+  equipos: any[];
 }
 
 const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos }) => {
@@ -110,13 +110,6 @@ const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos }) => {
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Box className="w-full flex justify-between items-center pr-10">
               <Typography>{fecha.title}</Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleSaveFecha(fecha)} // Llama a la función handleSaveFecha
-              >
-                Guardar
-              </Button>
             </Box>
           </AccordionSummary>
           <AccordionDetails className="flex flex-col gap-4">
@@ -128,10 +121,10 @@ const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos }) => {
                       <MenuItem key={e.id} value={e.id}>
                         <Box className="flex items-center gap-2">
                           <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                            <Image src={e.escudo} className="h-10 w-10 min-w-10" />
+                            <Image src={e.logoUrl} className="h-10 w-10 min-w-10" />
                           </Box>
                           <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
-                            {e.nombre}
+                            {e.name}
                           </p>
                         </Box>
                       </MenuItem>
@@ -145,10 +138,10 @@ const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos }) => {
                       <MenuItem key={e.id} value={e.id}>
                         <Box className="flex items-center gap-2">
                           <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                            <Image src={e.escudo} className="h-10 w-10 min-w-10" />
+                            <Image src={e.logoUrl} className="h-10 w-10 min-w-10" />
                           </Box>
                           <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
-                            {e.nombre}
+                            {e.name}
                           </p>
                         </Box>
                       </MenuItem>
@@ -164,8 +157,19 @@ const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos }) => {
           </AccordionDetails>
         </Accordion>
       ))}
+      <Box className="flex w-full mt-2 justify-end">
+        <Button variant="contained" onClick={() => console.log(fechas)}>
+          Guardar fechas
+        </Button>
+      </Box>
     </Card>
   );
 };
 
 export default FixtureManagerBase;
+
+interface Partido {
+  dateNumber: number;
+  homeTeamId: string;
+  awayTeamId: string;
+}

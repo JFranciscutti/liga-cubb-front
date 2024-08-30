@@ -2,39 +2,23 @@ import * as Yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  HitFormActions,
-  HitFormSubmitButton,
-  HitImageField,
-  HitPasswordField,
-  HitSelectField,
-  HitTextField,
-} from 'src/components/form';
+import { HitFormActions, HitFormSubmitButton, HitTextField } from 'src/components/form';
 import { HitForm } from 'src/components/form/HitForm';
-import { fileSizeExceeded } from 'src/utils/fileSizeExceeded';
-import { testValidExtensionFileIfFileOrURL } from 'src/utils/testValidExtensionsFileIfFileOrUrl';
-import { Grid, capitalize } from '@mui/material';
-import { GeneroEnum } from 'src/utils/enums';
-import { Categoria } from 'src/models/Categoria';
-import { useEffect } from 'react';
+import { Grid } from '@mui/material';
 
 export type NuevoEquipoFormType = {
   name: string;
   image: string;
-  genero: string;
 };
 
 const NuevoEquipoSchema: Yup.SchemaOf<NuevoEquipoFormType> = Yup.object().shape({
   name: Yup.string().required('Nombre es requerido'),
   image: Yup.string().required('Imagen es requerida'),
-  genero: Yup.string().required('Genero es requerido'),
-  categoria: Yup.number().required('Categoría es requerida'),
 });
 
 const defaultValues = {
   name: '',
   image: '',
-  genero: '',
   categoria: 0,
 };
 
@@ -42,14 +26,12 @@ interface NuevoEquipoFormProps {
   onSubmit: (value: NuevoEquipoFormType) => Promise<any>;
   initialValues?: NuevoEquipoFormType;
   edit?: boolean;
-  categories: Categoria[];
 }
 
 export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
   onSubmit,
   initialValues,
   edit = false,
-  categories,
 }) => {
   const hf = useForm<NuevoEquipoFormType>({
     resolver: yupResolver(NuevoEquipoSchema),
@@ -69,38 +51,15 @@ export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
             render={(field) => <HitTextField {...field} label="Nombre" floatingLabel={false} />}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Controller
-            name="genero"
-            control={hf.control}
-            rules={{ required: true }}
-            render={(field) => (
-              <HitSelectField
-                {...field}
-                label="Genero"
-                placeholder="Selecciona un genero"
-                floatingLabel={false}
-                options={[
-                  {
-                    value: GeneroEnum.MASCULINO,
-                    label: capitalize(GeneroEnum.MASCULINO),
-                  },
-                  {
-                    value: GeneroEnum.FEMENINO,
-                    label: capitalize(GeneroEnum.FEMENINO),
-                  },
-                ]}
-              />
-            )}
-          />
-        </Grid>
 
         <Grid item xs={12}>
           <Controller
             name="image"
             control={hf.control}
             rules={{ required: true }}
-            render={(field) => <HitTextField {...field} label="Nombre" floatingLabel={false} />}
+            render={(field) => (
+              <HitTextField {...field} label="URL del logo" floatingLabel={false} />
+            )}
           />
         </Grid>
       </Grid>

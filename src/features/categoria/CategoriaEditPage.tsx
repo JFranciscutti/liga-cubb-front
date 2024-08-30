@@ -7,13 +7,19 @@ import { PATHS } from 'src/routes/paths';
 import ManageCategoriaPage from './ManageCategoriaPage';
 import { useCategoriaQuery } from 'src/api/CategoriaRepository';
 import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
+import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 
 const CategoriaEditPage = () => {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ idCampeonato: string; idCategoria: string }>();
   const { themeStretch } = useSettingsContext();
-  const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(Number(params.id));
+  const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
+    params.idCampeonato || ''
+  );
 
-  if (categoriaLoading) {
+  const categoriaName =
+    campeonatoData?.categories?.filter((c: any) => c.id === params.idCategoria)[0].name || '';
+
+  if (campeonatoLoading) {
     return <LoadingScreen />;
   }
 
@@ -21,15 +27,18 @@ const CategoriaEditPage = () => {
     <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading={`Categoria ${categoriaData.nombre}`}
+          heading={`Categoria ${categoriaName}`}
           links={[
             { name: 'Campeonatos', href: PATHS.dashboard.campeonatos.list },
-            { name: 'Categorías', href: PATHS.dashboard.categorias.list },
+            {
+              name: 'Categorías',
+              href: PATHS.dashboard.campeonatos.manage(params.idCampeonato || ''),
+            },
             { name: 'Administrar' },
           ]}
         />
 
-        <ManageCategoriaPage id={categoriaData.id} />
+        <ManageCategoriaPage id={params.idCategoria || ''} />
       </Container>
     </>
   );

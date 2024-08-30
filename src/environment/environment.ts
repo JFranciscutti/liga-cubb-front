@@ -1,12 +1,12 @@
-const prod = window.location.href.includes('academy.whalemate.com');
 const dev = {
-  backEnd: 'https://2354-190-246-222-24.ngrok-free.app/',
+  backEnd: 'https://165c-190-246-222-24.ngrok-free.app',
   production: false,
 };
 
 const _prod = {
-  backEnd: 'https://backend.com/api/academy/',
+  backEnd: 'https://660f3510356b87a55c50f6fc.mockapi.io/',
   production: true,
 };
 
-export const environment = prod ? _prod : dev;
+export const environment = _prod;
+//export const environment = dev;

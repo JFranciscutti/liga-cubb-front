@@ -7,11 +7,21 @@ import { Container } from '@mui/material';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { PATHS } from 'src/routes/paths';
 import { useSettingsContext } from 'src/components/settings';
+import { LoadingSpinner } from 'src/components/loading-spinner';
+import ErrorPage from 'src/pages/ErrorPage';
 
 const ManageCampeonatoPage = () => {
   const { id } = useParams();
-  const { data: campeonato } = useCampeonatoQuery(id || '');
+  const { data: campeonato, isLoading, isError } = useCampeonatoQuery(id || '');
   const { themeStretch } = useSettingsContext();
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (isError) {
+    return <ErrorPage />;
+  }
 
   if (campeonato.type === CampeonatoTypeEnum.REGULAR) {
     return <CategoriaListPage campeonato={campeonato} />;

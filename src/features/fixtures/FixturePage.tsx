@@ -10,27 +10,11 @@ import MatchForm from './MatchForm';
 import { useAllEquiposQuery } from 'src/api/EquipoRepository';
 import FixtureManagerByGroup from '../copa/components/FixtureManagerByGroup';
 import FixtureManagerBase from './FixtureManagerBase';
+import { EQUIPOS_MOCK } from 'src/models/Equipo';
 
 export default function FixturePage() {
   const params = useParams<{ id: string }>();
   const { themeStretch } = useSettingsContext();
-  const {
-    data: categoriaData,
-    isLoading: categoriaLoading,
-    isError: categoriaError,
-  } = useCategoriaQuery(Number(params.id));
-  const {
-    data: equiposData,
-    isLoading: equiposLoading,
-    isError: equiposError,
-  } = useAllEquiposQuery();
-
-  if (categoriaLoading || equiposLoading) {
-    return <LoadingScreen />;
-  }
-  if (categoriaLoading || equiposLoading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <>
@@ -40,16 +24,16 @@ export default function FixturePage() {
 
       <Container>
         <CustomBreadcrumbs
-          heading={`Fixture - Categoria ${categoriaData.nombre}`}
+          heading={`Fixture - Categoria`}
           links={[
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(Number(params.id)) },
+            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(params.id || '') },
             { name: 'Fixture' },
           ]}
         />
 
         <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <FixtureManagerBase equipos={equiposData} />
+          <FixtureManagerBase equipos={EQUIPOS_MOCK} />
         </Card>
       </Container>
     </>

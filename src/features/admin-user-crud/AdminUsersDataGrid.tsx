@@ -54,7 +54,7 @@ export const AdminUsersDataGrid: React.FC<Props> = ({ data, isLoading, onDelete 
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = Number(params.id);
+              selectedIdRef.current = params.id || '';
               setOpenPopover(e.currentTarget);
             }}
           >

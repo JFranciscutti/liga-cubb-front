@@ -5,21 +5,17 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 import { useState } from 'react';
 import DialogHeader from 'src/components/DialogHeader';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { PATHS } from 'src/routes/paths';
-import { NuevoEquipoForm } from './NuevoEquipoForm';
 import { EquipoDataGrid } from './EquipoDataGrid';
-import {
-  useAllEquiposQuery,
-  useCreateEquipoMutation,
-  useEditEquipoMutation,
-} from 'src/api/EquipoRepository';
+import { useAllEquiposByCategory, useCreateEquipoMutation } from 'src/api/EquipoRepository';
 import LoadingScreen from 'src/components/loading-screen';
-import { enqueueSnackbar } from 'notistack';
-import { useAllCategoriasQuery } from 'src/api/CategoriaRepository';
 import ErrorPage from 'src/pages/ErrorPage';
+import { enqueueSnackbar } from 'notistack';
+import { NuevoEquipoForm } from './NuevoEquipoForm';
 
 export default function EquiposListPage() {
+  const params = useParams<{ idCampeonato: string; idCategoria: string }>();
   const confirm = useConfirm();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -29,21 +25,15 @@ export default function EquiposListPage() {
     data: allEquipos,
     isLoading: allEquiposLoading,
     isError: allEquiposError,
-  } = useAllEquiposQuery();
-
-  const {
-    data: allCategorias,
-    isLoading: allCategoriasLoading,
-    isError: allCategoriasError,
-  } = useAllCategoriasQuery();
+  } = useAllEquiposByCategory(params.idCategoria || '');
 
   const createEquipoMutation = useCreateEquipoMutation();
 
-  if (allEquiposLoading || allCategoriasLoading) {
+  if (allEquiposLoading) {
     return <LoadingScreen />;
   }
 
-  if (allEquiposError || allCategoriasError) {
+  if (allEquiposError) {
     return <ErrorPage />;
   }
 
@@ -55,8 +45,24 @@ export default function EquiposListPage() {
 
       <Container>
         <CustomBreadcrumbs
-          heading="Listado - Equipos"
-          links={[{ name: 'Listado' }]}
+          heading={`Categoria ${allEquipos.categoryName} - Equipos`}
+          links={[
+            { name: 'Campeonatos', href: PATHS.dashboard.campeonatos.list },
+            {
+              name: 'Categorias',
+              href: PATHS.dashboard.campeonatos.manage(params.idCampeonato || ''),
+            },
+            {
+              name: allEquipos.categoryName,
+              href: PATHS.dashboard.campeonatos.manageCategoria(
+                params.idCampeonato || '',
+                params.idCategoria || ''
+              ),
+            },
+            {
+              name: 'Equipos',
+            },
+          ]}
           action={
             <Button
               onClick={() => setCreateOpen(true)}
@@ -70,15 +76,21 @@ export default function EquiposListPage() {
 
         <Card>
           <EquipoDataGrid
-            data={allEquipos}
+            data={allEquipos.teams || []}
             isLoading={false}
             onDelete={(id: any) =>
               confirm({
                 action: async () => {},
               })
             }
-            onEdit={(id: number) => {
-              navigate(PATHS.dashboard.equipos.edit(id));
+            onEdit={(id: string) => {
+              navigate(
+                PATHS.dashboard.campeonatos.manageEquipoFromCategoria(
+                  params.idCampeonato || '',
+                  params.idCategoria || '',
+                  id
+                )
+              );
             }}
           />
         </Card>
@@ -93,13 +105,12 @@ export default function EquiposListPage() {
         </DialogTitle>
         <DialogContent sx={{ mb: 4, width: '100%' }}>
           <NuevoEquipoForm
-            categories={allCategorias}
             onSubmit={async (values) =>
               await createEquipoMutation.mutateAsync(
                 {
                   logo: values.image,
                   name: values.name,
-                  gender: values.genero,
+                  categoryId: params.idCategoria || '',
                 },
                 {
                   onSuccess: () => {

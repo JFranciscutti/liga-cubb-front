@@ -2,7 +2,7 @@ import { IconButton, MenuItem, Typography, capitalize } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   HitDataGridFilterResetButton,
   HitDatagrid,
@@ -32,6 +32,7 @@ const defaultValues = {
 };
 
 export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
+  const params = useParams<any>();
   const hf = useForm<CategoriaFilterType>({
     defaultValues: defaultValues,
   });
@@ -115,7 +116,10 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
         }}
         arrow="right-top"
       >
-        <MenuItem component={Link} to={PATHS.dashboard.categorias.edit(selectedIdRef.current!)}>
+        <MenuItem
+          component={Link}
+          to={PATHS.dashboard.campeonatos.manageCategoria(params.id || '', selectedIdRef.current!)}
+        >
           <Iconify icon="mdi:eye" />
           Administrar
         </MenuItem>

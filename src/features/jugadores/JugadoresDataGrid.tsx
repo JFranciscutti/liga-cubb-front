@@ -64,7 +64,7 @@ export const JugadorDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, on
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = Number(params.id);
+              selectedIdRef.current = params.id || '';
               setOpenPopover(e.currentTarget);
             }}
           >

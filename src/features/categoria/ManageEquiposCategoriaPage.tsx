@@ -22,7 +22,7 @@ const ManageEquiposCategoriaPage = () => {
 
   const [addOpen, setAddOpen] = useState<boolean>(false);
 
-  const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(Number(params.id));
+  const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(params.id || '');
   const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
 
   if (categoriaLoading || allEquiposLoading) {
@@ -33,11 +33,11 @@ const ManageEquiposCategoriaPage = () => {
     <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading={`Categoria ${categoriaData.nombre} - Lista de equipos`}
+          heading={`Categoria ${categoriaData.name} - Lista de equipos`}
           links={[
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
             {
-              name: `Categoria ${categoriaData.nombre}`,
+              name: `Categoria ${categoriaData.name}`,
               href: PATHS.dashboard.categorias.edit(params.id!),
             },
             { name: 'Administrar equipos' },
@@ -56,7 +56,6 @@ const ManageEquiposCategoriaPage = () => {
           <EquipoDataGrid
             data={allEquipos}
             isLoading={false}
-            onViewPlayers={(id: any) => navigate('')}
             onDelete={(id: any) =>
               confirm({
                 action: async () => {},

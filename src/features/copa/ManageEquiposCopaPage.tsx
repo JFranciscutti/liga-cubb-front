@@ -25,7 +25,7 @@ const ManageEquiposCopaPage = () => {
   const [addOpen, setAddOpen] = useState<boolean>(false);
 
   const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
-    Number(params.id)
+    params.id || ''
   );
   const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
 

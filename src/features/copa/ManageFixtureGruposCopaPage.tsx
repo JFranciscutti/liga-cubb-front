@@ -16,7 +16,7 @@ const ManageFixtureGruposCopaPage = () => {
   const params = useParams<{ id: string }>();
   const { themeStretch } = useSettingsContext();
   const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
-    Number(params.id)
+    params.id || ''
   );
   const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
 

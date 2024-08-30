@@ -182,15 +182,15 @@ const ROUTES: RouteObject[] = [
               },
             ],
           },
-          {
-            path: 'equipos',
-            children: [
-              { element: <Navigate to="/dashboard/equipos/list" replace />, index: true },
-              { path: 'list', element: <LazyEquiposListPage /> },
+          // {
+          //   path: 'equipos',
+          //   children: [
+          //     { element: <Navigate to="/dashboard/equipos/list" replace />, index: true },
+          //     { path: 'list', element: <LazyEquiposListPage /> },
 
-              { path: 'edit/:id', element: <LazyEquipoEditPage /> },
-            ],
-          },
+          //     { path: 'edit/:id', element: <LazyEquipoEditPage /> },
+          //   ],
+          // },
           {
             path: 'jugadores',
             children: [
@@ -208,6 +208,18 @@ const ROUTES: RouteObject[] = [
               {
                 path: 'manage/:id/fixture-grupos-copa',
                 element: <LazyManageFixtureGruposCopaPage />,
+              },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria/equipos/:idEquipo',
+                element: <LazyEquipoEditPage />,
+              },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria/equipos',
+                element: <LazyEquiposListPage />,
+              },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria',
+                element: <LazyCategoriaEditPage />,
               },
               { path: 'manage/:id', element: <LazyManageCampeonatoPage /> },
             ],

@@ -1,8 +1,7 @@
-import { capitalize, IconButton, MenuItem, Typography } from '@mui/material';
+import { IconButton, MenuItem, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import {
   HitDataGridFilterResetButton,
   HitDatagrid,
@@ -15,13 +14,12 @@ import Iconify from 'src/components/iconify';
 import Image from 'src/components/image';
 import MenuPopover from 'src/components/menu-popover';
 import { Equipo } from 'src/models/Equipo';
-import { PATHS } from 'src/routes/paths';
 
 interface Props {
   data: Equipo[];
   isLoading: boolean;
-  onDelete: (id: number) => any;
-  onEdit?: (id: number) => any;
+  onDelete: (id: string) => any;
+  onEdit?: (id: string) => any;
 }
 
 export const EquipoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
@@ -29,7 +27,8 @@ export const EquipoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onE
     defaultValues: { email: '', roles: [] },
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
-  const selectedIdRef = useRef<number | undefined>();
+  const selectedIdRef = useRef<string | undefined>();
+  console.log(data);
 
   const columns = useColumns<typeof data[0]>([
     {
@@ -39,22 +38,12 @@ export const EquipoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onE
       renderHeader: () => <div className="px-2">{'Nombre'}</div>,
       renderCell: (params) => (
         <div className="flex gap-5 items-center w-full px-2">
-          <Image src={params.row.escudo} className="w-10 h-10 rounded-full bg-gray-100 " />
-          <Typography>{params.row.nombre}</Typography>
+          <Image src={params.row.logoUrl} className="w-10 h-10 rounded-full bg-gray-100 " />
+          <Typography>{params.row.name}</Typography>
         </div>
       ),
     },
-    {
-      field: 'genero',
-      type: 'string',
-      align: 'center',
-      renderHeader: () => <div className="mx-20">{'Género'}</div>,
-      renderCell: (params) => (
-        <div className="w-full mx-20">
-          <Typography>{capitalize(params.row.genero)}</Typography>
-        </div>
-      ),
-    },
+
     {
       field: 'action',
       headerName: 'Acciones',
@@ -66,7 +55,7 @@ export const EquipoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onE
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = Number(params.id);
+              selectedIdRef.current = params.id.toString() || '';
               setOpenPopover(e.currentTarget);
             }}
           >

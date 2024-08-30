@@ -7,21 +7,19 @@ import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
 interface ICreateEquipo {
   name: string;
   logo: string;
-  gender: string;
+  categoryId: string;
 }
 
 interface IEditEquipo {
-  id: number;
+  id: string;
   name: string;
   logo: string;
   gender: string;
 }
 
 export const getEquipoMapper = (x: any): Equipo => ({
-  id: x.id,
-  nombre: x.name,
-  escudo: x.logoUrl,
-  genero: x.gender || GeneroEnum.MASCULINO,
+  ...x,
+  genero: x.gender === 'male' ? GeneroEnum.MASCULINO : GeneroEnum.FEMENINO,
 });
 
 export const createEquipoMapper = (x: ICreateEquipo) => x;
@@ -29,8 +27,8 @@ export const createEquipoMapper = (x: ICreateEquipo) => x;
 export class EquipoRepository {
   keys = {
     all: () => ['equipos'],
-    one: (id: number) => ['equipos', id],
-    allByCategoria: (id: number) => ['equipos-by-cat'],
+    one: (id: string) => ['equipos', id],
+    allByCategoria: (id: string) => ['equipos-by-cat', id],
   };
 
   getAll = async () => {
@@ -38,18 +36,27 @@ export class EquipoRepository {
     return EQUIPOS_MOCK.map(getEquipoMapper);
   };
 
-  get = async (id: number) => {
+  get = async (id: string) => {
     //const { data } = await httpClient.get(`teams/${id}`);
     const data = EQUIPOS_MOCK.find((c) => c.id === id);
     return getEquipoMapper(data);
   };
 
-  create = (team: ICreateEquipo) => httpClient.post('teams', team);
+  create = (team: ICreateEquipo) =>
+    httpClient.post('tournament/league/categories/create-team', team);
 
   edit = async (category: IEditEquipo) =>
     httpClient.put('teams/' + category.id, { name: category.name });
 
   remove = async (id: number) => httpClient.delete('teams/' + id);
+
+  getAllByCategoryId = async (id: string) => {
+    // const { data } = await httpClient.get<any>(
+    //   `tournament/league/categories/get-teams-by-id?categoryId=${id}`
+    // );
+    const data1 = { teams: EQUIPOS_MOCK.map(getEquipoMapper), categoryName: 'A' };
+    return data1;
+  };
 }
 
 const repo = new EquipoRepository();
@@ -57,7 +64,7 @@ const repo = new EquipoRepository();
 export const useAllEquiposQuery = () =>
   useSuspenseQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
 
-export const useEquipoQuery = (id: number) =>
+export const useEquipoQuery = (id: string) =>
   useSuspenseQuery({ queryKey: repo.keys.one(id), queryFn: () => repo.get(id) });
 
 export const useCreateEquipoMutation = () => {
@@ -87,3 +94,9 @@ export const useEditEquipoMutation = () => {
     },
   });
 };
+
+export const useAllEquiposByCategory = (id: string) =>
+  useSuspenseQuery({
+    queryKey: repo.keys.allByCategoria(id),
+    queryFn: () => repo.getAllByCategoryId(id),
+  });

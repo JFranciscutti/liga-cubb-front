@@ -15,9 +15,10 @@ import {
 } from 'src/api/CategoriaRepository';
 import { enqueueSnackbar } from 'notistack';
 import { PATHS } from 'src/routes/paths';
+import { Campeonato } from 'src/models/Campeonato';
 
 interface CategoriaListPageProps {
-  campeonato: any;
+  campeonato: Campeonato;
 }
 
 const CategoriaListPage: React.FC<CategoriaListPageProps> = ({ campeonato }) => {
@@ -123,8 +124,8 @@ const CategoriaListPage: React.FC<CategoriaListPageProps> = ({ campeonato }) => 
               )
             }
             initialValues={{
-              name: parsedCategoria?.nombre || '',
-              gender: parsedCategoria?.genero || '',
+              name: parsedCategoria?.name || '',
+              gender: parsedCategoria?.gender || '',
             }}
           />
         </DialogContent>

@@ -15,7 +15,7 @@ const ManageGruposCopaPage = () => {
   const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
   const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
-    Number(params.id)
+    params.id || ''
   );
   const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
 

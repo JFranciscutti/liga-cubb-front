@@ -49,6 +49,12 @@ export const PATHS = {
       list: '/dashboard/campeonatos/list',
       create: '/dashboard/campeonatos/create',
       manage: (id: number | string) => `/dashboard/campeonatos/manage/${id}`,
+      manageCategoria: (idCampeonato: string, idCategoria: string) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}`,
+      manageEquiposCategoria: (idCampeonato: string, idCategoria: string) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/equipos`,
+      manageEquipoFromCategoria: (idCampeonato: string, idCategoria: string, idEquipo: string) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/equipos/${idEquipo}`,
       manageEquiposCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/equipos-copa`,
       manageGroupsCopa: (id: number | string) => `/dashboard/campeonatos/manage/${id}/grupos-copa`,
@@ -86,6 +92,13 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.equipos.edit(':id'),
       PATHS.dashboard.jugadores.root,
       PATHS.dashboard.jugadores.list,
+      PATHS.dashboard.campeonatos.manageCategoria(':idCampeonato', ':idCategoria'),
+      PATHS.dashboard.campeonatos.manageEquiposCategoria(':idCampeonato', ':idCategoria'),
+      PATHS.dashboard.campeonatos.manageEquipoFromCategoria(
+        ':idCampeonato',
+        ':idCategoria',
+        ':idEquipo'
+      ),
     ],
   },
 ];
