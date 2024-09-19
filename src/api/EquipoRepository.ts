@@ -51,11 +51,11 @@ export class EquipoRepository {
   remove = async (id: number) => httpClient.delete('teams/' + id);
 
   getAllByCategoryId = async (id: string) => {
-    // const { data } = await httpClient.get<any>(
-    //   `tournament/league/categories/get-teams-by-id?categoryId=${id}`
-    // );
-    const data1 = { teams: EQUIPOS_MOCK.map(getEquipoMapper), categoryName: 'A' };
-    return data1;
+    const { data } = await httpClient.get<any>(
+      `tournament/league/categories/get-teams-by-id?categoryId=${id}`
+    );
+    //const data1 = { teams: EQUIPOS_MOCK.map(getEquipoMapper), categoryName: 'A' };
+    return data;
   };
 }
 

@@ -13,18 +13,13 @@ import {
 import { FC, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from 'src/components/image';
-import { Equipo } from 'src/models/Equipo';
 import EditMatchModal from './components/EditMatchModal';
-
-interface Fecha {
-  id: number;
-  title: string; // Label de la fecha
-  partidos: { equipoLocal: Equipo; equipoVisitante: Equipo }[];
-}
+import { Fecha, useGenerateEquipos } from 'src/hooks/useGenerateEquipos';
 
 interface FixtureManagerBaseProps {
   equipos: any[];
   exists?: boolean;
+  handleSave: (values: any[]) => void;
 }
 
 type MapeoPartido = {
@@ -33,75 +28,15 @@ type MapeoPartido = {
   awayTeamId: string;
 };
 
-const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos, exists = false }) => {
-  const cantidadEquipos = equipos.length;
-  const cantidadPartidosPorFecha = cantidadEquipos / 2; // Cada fecha tendrá la mitad de partidos
-  const cantidadFechas = cantidadEquipos - 1; // Número de fechas
+const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave, exists = false }) => {
+  const { fechas, handleAutocompletar } = useGenerateEquipos(equipos);
   const [expanded, setExpanded] = useState<number | false>(false);
-  const [fechas, setFechas] = useState<Fecha[]>([]);
   const currentMatchSelected = useRef<any | undefined>();
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   // Función para manejar la expansión de los accordions
   const handleChange = (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
-  };
-  // HOOOOOOOKKKKK
-  // Generar partidos para cada fecha, asegurando que no se repitan y que no juegue dos veces el mismo equipo
-  const generarPartidos = (
-    equipos: Equipo[],
-    partidosPrevios: Set<string>,
-    equiposUsados: Set<string>
-  ): { equipoLocal: Equipo; equipoVisitante: Equipo }[] => {
-    const partidos: { equipoLocal: Equipo; equipoVisitante: Equipo }[] = [];
-
-    for (let i = 0; i < cantidadEquipos; i++) {
-      for (let j = i + 1; j < cantidadEquipos; j++) {
-        const emparejamiento = `${equipos[i].id}-${equipos[j].id}`;
-        const emparejamientoInverso = `${equipos[j].id}-${equipos[i].id}`;
-
-        if (
-          !partidosPrevios.has(emparejamiento) &&
-          !partidosPrevios.has(emparejamientoInverso) &&
-          !equiposUsados.has(equipos[i].id) &&
-          !equiposUsados.has(equipos[j].id)
-        ) {
-          partidos.push({ equipoLocal: equipos[i], equipoVisitante: equipos[j] });
-          partidosPrevios.add(emparejamiento);
-          partidosPrevios.add(emparejamientoInverso);
-          equiposUsados.add(equipos[i].id);
-          equiposUsados.add(equipos[j].id);
-
-          // Limitar a la cantidad necesaria de partidos
-          if (partidos.length >= cantidadPartidosPorFecha) {
-            return partidos;
-          }
-        }
-      }
-    }
-    return partidos; // Retorna los partidos generados
-  };
-
-  const handleSaveFecha = (fecha: Fecha) => {
-    if (fecha.partidos.every((partido) => partido.equipoLocal && partido.equipoVisitante)) {
-      console.log(fecha); // Muestra el objeto Fecha en la consola
-    } else {
-      alert('Todos los partidos deben tener equipos seleccionados.');
-    }
-  };
-
-  const handleAutocompletar = () => {
-    const partidosPrevios = new Set<string>(); // Almacena partidos jugados en fechas anteriores
-    const nuevasFechas = Array.from({ length: cantidadFechas }, (_, fechaIndex) => {
-      const equiposUsados = new Set<string>();
-      const partidos = generarPartidos(equipos, partidosPrevios, equiposUsados);
-      return {
-        id: fechaIndex + 1,
-        title: `Fecha ${fechaIndex + 1}`,
-        partidos: partidos,
-      } as Fecha; // Retorna un objeto de tipo Fecha
-    });
-    setFechas(nuevasFechas);
   };
 
   function mapearPartidos(fechas: Fecha[]): MapeoPartido[] {
@@ -203,7 +138,7 @@ const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos, exists = fal
           <Button
             variant="contained"
             disabled={fechas.length === 0}
-            onClick={() => console.log(mapearPartidos(fechas))}
+            onClick={() => handleSave(mapearPartidos(fechas))}
           >
             Guardar fechas
           </Button>
@@ -222,4 +157,4 @@ const FixtureManagerBase: FC<FixtureManagerBaseProps> = ({ equipos, exists = fal
   );
 };
 
-export default FixtureManagerBase;
+export default CreateFixture;

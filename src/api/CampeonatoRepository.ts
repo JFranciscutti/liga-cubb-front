@@ -25,14 +25,14 @@ export class CampeonatoRepository {
   };
 
   getAll = async () => {
-    //const { data } = await httpClient.get<any[]>('tournament/all');
-    return CAMPEONATOS_MOCK;
-    //return data.map(getCampeonatoMapper);
+    const { data } = await httpClient.get<any[]>('tournament/all');
+    //return CAMPEONATOS_MOCK;
+    return data.map(getCampeonatoMapper);
   };
 
   get = async (id: string) => {
-    //const { data } = await httpClient.get(`tournament?tournamentId=${id}`);
-    const data = CAMPEONATOS_MOCK.find((c) => c.id === id);
+    const { data } = await httpClient.get(`tournament?tournamentId=${id}`);
+    //const data = CAMPEONATOS_MOCK.find((c) => c.id === id);
     return data;
   };
 

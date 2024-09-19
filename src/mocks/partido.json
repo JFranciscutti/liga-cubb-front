@@ -1,0 +1,32 @@
+{
+    "date": null,
+    "dateNumber": 1,
+    "field": null,
+    "linemenTeam": null,
+    "scorer": null,
+    "comments": null,
+    "homeTeam": {
+        "id": "66d0f984684a731c7781781c",
+        "name": "la masturbandeja",
+        "gender": "male",
+        "logo": "logodepruebarda.com",
+        "categoryName": null,
+        "leagueName": null
+    },
+    "awayTeam": {
+        "id": "66d0fc30f406d04e37770982",
+        "name": "el rojo los putos del rojo",
+        "gender": "male",
+        "logo": "todorojo.com",
+        "categoryName": null,
+        "leagueName": null
+    },
+    "homeTeamGoals": 0,
+    "awayTeamGoals": 0,
+    "homeTeamPlayerGoals": [],
+    "awayTeamPlayerGoals": [],
+    "homeTeamYellowCards": [],
+    "awayTeamYellowCards": [],
+    "homeTeamRedCards": [],
+    "awayTeamRedCards": []
+}

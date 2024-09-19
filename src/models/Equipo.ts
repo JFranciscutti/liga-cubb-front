@@ -27,7 +27,7 @@ export const EQUIPOS_MOCK: Equipo[] = [
     gender: GeneroEnum.MASCULINO,
   },
   {
-    id: ' 4',
+    id: '4',
     name: 'SUPERGEDIENTOS',
     logoUrl: 'https://ligacubb.com/imagenes/supergedientos.png',
     gender: GeneroEnum.MASCULINO,

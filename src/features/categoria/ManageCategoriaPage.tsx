@@ -1,6 +1,7 @@
 import { Card, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { useAllFasesByCategory } from 'src/api/CategoriaRepository';
 import { PATHS } from 'src/routes/paths';
 
 interface ManageCategoriaPageProps {
@@ -9,6 +10,8 @@ interface ManageCategoriaPageProps {
 const ManageCategoriaPage: React.FC<ManageCategoriaPageProps> = ({ id }) => {
   const navigate = useNavigate();
   const params = useParams<{ idCampeonato: string; idCategoria: string }>();
+
+  const { data: fases } = useAllFasesByCategory(id);
 
   return (
     <Grid container spacing={3}>
@@ -32,35 +35,39 @@ const ManageCategoriaPage: React.FC<ManageCategoriaPageProps> = ({ id }) => {
           </div>
         </Card>
       </Grid>
-      <Grid item xs={12}>
-        <Card
-          sx={{ p: 2, cursor: 'pointer' }}
-          onClick={() => navigate(PATHS.dashboard.categorias.fixture(id))}
-        >
-          <div className="flex flex-col gap-2">
-            <Typography fontSize={18}>Fixture actual</Typography>
-            <Typography variant="subtitle1" className="line-clamp-1">
-              Administra el fixture de la fase regular
-            </Typography>
-          </div>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12}>
-        <Card
-          sx={{ p: 2, cursor: 'pointer' }}
-          onClick={() => navigate(PATHS.dashboard.categorias.playoff(id))}
-        >
-          <div className="flex flex-col gap-2 ">
-            <Typography fontSize={18}>Playoffs</Typography>
-            <Typography variant="subtitle1" className="line-clamp-1">
-              Administra el fixture de la fase de playoffs
-            </Typography>
-          </div>
-        </Card>
-      </Grid>
+      {fases.phases?.map((fase: any) => (
+        <Grid item xs={12}>
+          <Card
+            sx={{ p: 2, cursor: 'pointer' }}
+            onClick={() => navigate(FASES[fase.type]?.navigateTo(fase.id))}
+          >
+            <div className="flex flex-col gap-2">
+              <Typography fontSize={18}>{FASES[fase.type]?.title}</Typography>
+              <Typography variant="subtitle1" className="line-clamp-1">
+                {FASES[fase.type]?.subtitle}
+              </Typography>
+            </div>
+          </Card>
+        </Grid>
+      ))}
     </Grid>
   );
 };
 
 export default ManageCategoriaPage;
+
+const FASES: Record<
+  string,
+  { title: string; subtitle: string; navigateTo: (id: string) => string }
+> = {
+  general: {
+    title: 'Fixture actual',
+    subtitle: 'Administra el fixture de la fase regular',
+    navigateTo: (id) => PATHS.dashboard.categorias.editFaseRegular(id),
+  },
+  playoff: {
+    title: 'Playoff',
+    subtitle: 'Administra el fixture de la fase de playoff',
+    navigateTo: (id) => PATHS.dashboard.categorias.editFasePlayoff(id),
+  },
+};

@@ -1,5 +1,5 @@
 const dev = {
-  backEnd: 'https://165c-190-246-222-24.ngrok-free.app',
+  backEnd: 'https://0eed-190-109-48-252.ngrok-free.app',
   production: false,
 };
 
@@ -8,5 +8,5 @@ const _prod = {
   production: true,
 };
 
-export const environment = _prod;
-//export const environment = dev;
+//export const environment = _prod;
+export const environment = dev;

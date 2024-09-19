@@ -88,6 +88,10 @@ const LazyEquipoEditPage = withLoadingSpinner(
 
 const LazyFixturePage = withLoadingSpinner(lazy(() => import('src/features/fixtures/FixturePage')));
 
+const LazyEditFixturePage = withLoadingSpinner(
+  lazy(() => import('src/features/fixtures/EditFixturePage'))
+);
+
 const LazyJugadoresListPage = withLoadingSpinner(
   lazy(() => import('src/features/jugadores/JugadoresListPage'))
 );
@@ -110,6 +114,12 @@ const LazyManageGruposCopaPage = withLoadingSpinner(
 
 const LazyManageFixtureGruposCopaPage = withLoadingSpinner(
   lazy(() => import('src/features/copa/ManageFixtureGruposCopaPage'))
+);
+
+const LazyPlayoffPage = withLoadingSpinner(lazy(() => import('src/features/playoffs/PlayoffPage')));
+
+const LazyEditPlayoffPage = withLoadingSpinner(
+  lazy(() => import('src/features/playoffs/EditPlayoffPage'))
 );
 
 const ROUTES: RouteObject[] = [
@@ -173,7 +183,10 @@ const ROUTES: RouteObject[] = [
             children: [
               { element: <Navigate to="/dashboard/categorias/list" replace />, index: true },
               { path: 'list', element: <LazyCategoriaListPage /> },
-              { path: 'edit/:id/fixture', element: <LazyFixturePage /> },
+              { path: 'edit/:id/create-fase-regular', element: <LazyFixturePage /> },
+              { path: 'edit/:id/create-fase-playoff', element: <LazyPlayoffPage /> },
+              { path: 'edit/:id/edit-fase-regular', element: <LazyEditFixturePage /> },
+              { path: 'edit/:id/edit-fase-playoff', element: <LazyEditPlayoffPage /> },
               { path: 'edit/:id/playoff', element: <LazyCategoriaPlayoffPage /> },
               { path: 'edit/:id/equipos', element: <LazyManageEquiposCategoriaPage /> },
               {

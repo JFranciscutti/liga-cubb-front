@@ -25,6 +25,7 @@ export default function EquiposListPage() {
     data: allEquipos,
     isLoading: allEquiposLoading,
     isError: allEquiposError,
+    refetch
   } = useAllEquiposByCategory(params.idCategoria || '');
 
   const createEquipoMutation = useCreateEquipoMutation();
@@ -113,9 +114,10 @@ export default function EquiposListPage() {
                   categoryId: params.idCategoria || '',
                 },
                 {
-                  onSuccess: () => {
+                  onSuccess: async () => {
                     enqueueSnackbar({ variant: 'success', message: 'Equipo creado correctamente' });
                     setCreateOpen(false);
+                    await refetch();
                   },
                 }
               )

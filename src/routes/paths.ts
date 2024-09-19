@@ -26,7 +26,14 @@ export const PATHS = {
       edit: (id: number | string) => `/dashboard/categorias/edit/${id}`,
       manageEquipos: (id: number | string) => `/dashboard/categorias/edit/${id}/equipos`,
       playoff: (id: number | string) => `/dashboard/categorias/edit/${id}/playoff`,
-      fixture: (id: number | string) => `/dashboard/categorias/edit/${id}/fixture`,
+      createFaseRegular: (id: number | string) =>
+        `/dashboard/categorias/edit/${id}/create-fase-regular`,
+      createFasePlayoff: (id: number | string) =>
+        `/dashboard/categorias/edit/${id}/create-fase-playoff`,
+      editFaseRegular: (id: number | string) =>
+        `/dashboard/categorias/edit/${id}/edit-fase-regular`,
+      editFasePlayoff: (id: number | string) =>
+        `/dashboard/categorias/edit/${id}/edit-fase-playoff`,
     },
     equipos: {
       root: '/dashboard/equipos',
@@ -85,7 +92,10 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.categorias.edit(':id'),
       PATHS.dashboard.categorias.manageEquipos(':id'),
       PATHS.dashboard.categorias.playoff(':id'),
-      PATHS.dashboard.categorias.fixture(':id'),
+      PATHS.dashboard.categorias.createFaseRegular(':id'),
+      PATHS.dashboard.categorias.createFasePlayoff(':id'),
+      PATHS.dashboard.categorias.editFaseRegular(':id'),
+      PATHS.dashboard.categorias.editFasePlayoff(':id'),
       PATHS.dashboard.equipos.root,
       PATHS.dashboard.equipos.list,
       PATHS.dashboard.equipos.create,
