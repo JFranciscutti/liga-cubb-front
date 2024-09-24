@@ -104,11 +104,11 @@ export const NuevoJugadorForm: React.FC<NuevoJugadorFormProps> = ({
                 floatingLabel={false}
                 options={[
                   {
-                    value: GeneroEnum.MASCULINO,
+                    value: "male",
                     label: capitalize(GeneroEnum.MASCULINO),
                   },
                   {
-                    value: GeneroEnum.FEMENINO,
+                    value: "female",
                     label: capitalize(GeneroEnum.FEMENINO),
                   },
                 ]}

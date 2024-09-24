@@ -1,61 +1,14 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { Moment } from 'moment';
-import { FinalTeamBox, InvertedTeamBox, TeamBox } from './TeamBox';
-
-export enum MatchStatus {
-  PENDING = 'Upcoming',
-  PLAYED = 'Played',
-  IN_PROGRESS = 'Suspended',
-}
-
-export interface Match {
-  date: Moment;
-  dateNumber: number;
-  field: string;
-  linemenTeam: string;
-  scorer: string;
-  comments: string;
-  homeTeam: Team;
-  awayTeam: Team;
-  homeTeamGoals: number | null;
-  awayTeamGoals: number | null;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: any[];
-  awayTeamYellowCards: any[];
-  homeTeamRedCards: any[];
-  awayTeamRedCards: any[];
-  status: MatchStatus;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  gender: string;
-  logo: string;
-  categoryName: string | null;
-  leagueName: string | null;
-}
-
-export interface RoundMatch {
-  id: string;
-  awayMatch: Match;
-  homeMatch: Match;
-  teamWinner?: Team | null;
-  nextMatchId: string;
-}
-
-export interface Round {
-  matchesPlayoff: RoundMatch[];
-}
+import { FinalTeamBox, TeamBox } from './TeamBox';
+import { MatchStatus, Round } from './CuadroPlayoff';
 
 interface CuadroPlayoffProps {
   rondas: Round[];
 }
 
 const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
-  const teams = {
+  const matches = {
     r16: rondas[3].matchesPlayoff,
     qf: rondas[2].matchesPlayoff,
     sf: rondas[1].matchesPlayoff,
@@ -66,7 +19,7 @@ const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
     <>
       <Box className="bg-[url('/assets/background/soccer_background.jpg')] bg-cover overflow-auto relative h-[950px] w-[1100px]">
         {/* Round of 16 - Left */}
-        {teams.r16.map((match, i) => (
+        {matches.r16.map((match, i) => (
           <Box
             key={`r16-left-${i}`}
             className="absolute"
@@ -100,7 +53,7 @@ const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         ))}
 
         {/* Quarter-finals - Left */}
-        {teams.qf.map((match, i) => (
+        {matches.qf.map((match, i) => (
           <Box
             key={`qf-left-${i}`}
             className="absolute"
@@ -134,7 +87,7 @@ const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         ))}
 
         {/* Semi-finals - Left */}
-        {teams.sf.map((match, i) => (
+        {matches.sf.map((match, i) => (
           <Box
             key={`sf-left-${i}`}
             className="absolute"
@@ -170,10 +123,10 @@ const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         {/* Final */}
         <Box className="absolute" style={{ top: '440px', left: '800px', paddingRight: '100px' }}>
           <FinalTeamBox
-            nameHome={teams.f.homeMatch?.homeTeam}
-            nameAway={teams.f.homeMatch?.awayTeam}
-            resultHome={teams.f.homeMatch?.homeTeamGoals}
-            resultAway={teams.f.awayMatch?.homeTeamGoals}
+            nameHome={matches.f.homeMatch?.homeTeam}
+            nameAway={matches.f.homeMatch?.awayTeam}
+            resultHome={matches.f.homeMatch?.homeTeamGoals}
+            resultAway={matches.f.awayMatch?.homeTeamGoals}
           />
         </Box>
       </Box>

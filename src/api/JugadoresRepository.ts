@@ -21,9 +21,9 @@ interface IEditJugador {
 
 export const getJugadorMapper = (x: any): Jugador => ({
   id: x.id,
-  nombre: x.nombre,
-  apellido: x.apellido,
-  nro_socio: x.nro_socio,
+  nombre: x.name,
+  apellido: x.lastName,
+  nro_socio: x.membershipNumber,
   genero: x.gender || GeneroEnum.MASCULINO,
 });
 
@@ -37,21 +37,21 @@ export class JugadoresRepository {
   };
 
   getAll = async () => {
-    // const { data } = await httpClient.get<any[]>('teams');
-    return JUGADORES_MOCK.map(getJugadorMapper);
+    const { data } = await httpClient.get<any[]>('players/get-all-players');
+    return data.map(getJugadorMapper);
   };
 
   get = async (id: number) => {
-    //const { data } = await httpClient.get(`teams/${id}`);
-    const data = JUGADORES_MOCK.find((c) => c.id === id);
+    const { data } = await httpClient.get(`teams/${id}`);
+    //const data = JUGADORES_MOCK.find((c) => c.id === id);
     return getJugadorMapper(data);
   };
 
   create = (jugador: ICreateJugador) => {
-    return new Promise((res) => {
-      setTimeout(() => res('OK'), 1000);
-    });
-    //return httpClient.post('teams', team);
+    // return new Promise((res) => {
+    //   setTimeout(() => res('OK'), 1000);
+    // });
+    return httpClient.post('players/create-player', {name: jugador.nombre, lastName: jugador.apellido, membershipNumber: jugador.nro_socio, gender: jugador.gender});
   };
 
   createList = (jugadores: ICreateJugador[]) => {

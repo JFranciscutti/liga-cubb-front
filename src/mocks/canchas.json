@@ -1,0 +1,19 @@
+{
+    "canchas": [
+        { "value": "SINTETICO 1", "label": "SINTETICO 1" },
+        { "value": "SINTETICO 2", "label": "SINTETICO 2" },
+        { "value": "SINTETICO 3", "label": "SINTETICO 3" },
+        { "value": "SINTETICO 4", "label": "SINTETICO 4" },
+        { "value": "CANCHA 1", "label": "CANCHA 1" },
+        { "value": "CANCHA 2", "label": "CANCHA 2" },
+        { "value": "CANCHA 3", "label": "CANCHA 3" },
+        { "value": "CANCHA 4", "label": "CANCHA 4" },
+        { "value": "CANCHA 5", "label": "CANCHA 5" },
+        { "value": "CANCHA 6", "label": "CANCHA 6" },
+        { "value": "CANCHA 7", "label": "CANCHA 7" },
+        { "value": "CANCHA 8", "label": "CANCHA 8" },
+        { "value": "CANCHA 9", "label": "CANCHA 9" },
+        { "value": "CANCHA 10", "label": "CANCHA 10" },
+        { "value": "CANCHA 11", "label": "CANCHA 11" }
+    ]
+}

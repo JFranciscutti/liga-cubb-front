@@ -1,16 +1,19 @@
-import { Card, Container } from '@mui/material';
+import { Box, Card, Container, IconButton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { PATHS } from 'src/routes/paths';
-import { useAllEquiposByCategory } from 'src/api/EquipoRepository';
 import EditCreatedFixture from './EditCreatedFixture';
 import { useOneFaseQuery } from 'src/api/CategoriaRepository';
+import { useState } from 'react';
+import Iconify from 'src/components/iconify';
 
 export default function EditFixturePage() {
   const params = useParams<{ id: string }>();
-  const { data, isLoading, isError } = useOneFaseQuery(params.id || '');
-
+  const [selectedFecha, setSelectedFecha] = useState<number>(1);
+  const { data, isLoading, isError } = useOneFaseQuery(params.id || '', selectedFecha);
+  const idCampeonato = localStorage.getItem("idCampeonato") || "";
+  const idCategoria = localStorage.getItem("idCategoria") || "";
   return (
     <>
       <Helmet>
@@ -22,13 +25,35 @@ export default function EditFixturePage() {
           heading={`Fixture - Categoria`}
           links={[
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(params.id || '') },
+            { name: 'Administrar', href: PATHS.dashboard.campeonatos.manageCategoria(idCampeonato, idCategoria) },
             { name: 'Fixture' },
           ]}
         />
 
-        <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <EditCreatedFixture fechas={data || []} />
+        <Card
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Box className="flex w-full p-4 justify-between items-center">
+            <IconButton
+              disabled={selectedFecha === 1}
+              onClick={() => setSelectedFecha((prev) => prev - 1)}
+            >
+              <Iconify icon={'ion:caret-back'} />
+            </IconButton>
+            <Typography className="font-bold">Fecha {selectedFecha}</Typography>
+            <IconButton
+              disabled={selectedFecha === 15}
+              onClick={() => setSelectedFecha((prev) => prev + 1)}
+            >
+              <Iconify icon={'ion:caret-forward'} />
+            </IconButton>
+          </Box>
+          <EditCreatedFixture fecha={data || []} isLoading={isLoading} />
         </Card>
       </Container>
     </>

@@ -18,7 +18,7 @@ import ManageCategoriaPage from './ManageCategoriaPage';
 import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import Iconify from 'src/components/iconify';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DialogHeader from 'src/components/DialogHeader';
 
 const CategoriaEditPage = () => {
@@ -37,6 +37,11 @@ const CategoriaEditPage = () => {
   if (campeonatoLoading) {
     return <LoadingScreen />;
   }
+
+  useEffect(()=> {
+    localStorage.setItem('idCampeonato', params.idCampeonato || '');
+    localStorage.setItem('idCategoria', params.idCategoria || '');
+  },[params.idCampeonato]);
 
   return (
     <>

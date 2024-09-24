@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Equipo, EQUIPOS_MOCK } from 'src/models/Equipo';
 import { GeneroEnum } from 'src/utils/enums';
 import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
+import { getJugadorMapper } from './JugadoresRepository';
 
 interface ICreateEquipo {
   name: string;
@@ -20,6 +21,7 @@ interface IEditEquipo {
 export const getEquipoMapper = (x: any): Equipo => ({
   ...x,
   genero: x.gender === 'male' ? GeneroEnum.MASCULINO : GeneroEnum.FEMENINO,
+  jugadores: x.players.map(getJugadorMapper),
 });
 
 export const createEquipoMapper = (x: ICreateEquipo) => x;
@@ -27,18 +29,18 @@ export const createEquipoMapper = (x: ICreateEquipo) => x;
 export class EquipoRepository {
   keys = {
     all: () => ['equipos'],
-    one: (id: string) => ['equipos', id],
+    oneById: (id: string) => ["one-equipo",id],
     allByCategoria: (id: string) => ['equipos-by-cat', id],
   };
 
   getAll = async () => {
-    // const { data } = await httpClient.get<any[]>('teams');
-    return EQUIPOS_MOCK.map(getEquipoMapper);
+    const { data } = await httpClient.get<any[]>('teams');
+    return data.map(getEquipoMapper);
   };
 
   get = async (id: string) => {
-    //const { data } = await httpClient.get(`teams/${id}`);
-    const data = EQUIPOS_MOCK.find((c) => c.id === id);
+    const { data } = await httpClient.get(`teams/get-team-by-id?teamId=${id}`);
+    //const data = EQUIPOS_MOCK.find((c) => c.id === id);
     return getEquipoMapper(data);
   };
 
@@ -57,6 +59,10 @@ export class EquipoRepository {
     //const data1 = { teams: EQUIPOS_MOCK.map(getEquipoMapper), categoryName: 'A' };
     return data;
   };
+
+  addListOfPlayersToTeam = async ({teamId, players}:{teamId: string, players: string[]}) =>
+     httpClient.post('tournament/league/categories/team/add-list-players', players.map(x => ({teamId, membershipNumber: x})));
+  
 }
 
 const repo = new EquipoRepository();
@@ -65,7 +71,7 @@ export const useAllEquiposQuery = () =>
   useSuspenseQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
 
 export const useEquipoQuery = (id: string) =>
-  useSuspenseQuery({ queryKey: repo.keys.one(id), queryFn: () => repo.get(id) });
+  useSuspenseQuery({ queryKey: repo.keys.oneById(id), queryFn: () => repo.get(id) });
 
 export const useCreateEquipoMutation = () => {
   const qc = useQueryClient();
@@ -90,7 +96,7 @@ export const useEditEquipoMutation = () => {
   return useMutation({
     mutationFn: repo.edit,
     onSuccess: (_, vars) => {
-      qc.invalidateQueries(repo.keys.one(vars.id));
+      qc.invalidateQueries(repo.keys.oneById(vars.id));
     },
   });
 };
@@ -100,3 +106,13 @@ export const useAllEquiposByCategory = (id: string) =>
     queryKey: repo.keys.allByCategoria(id),
     queryFn: () => repo.getAllByCategoryId(id),
   });
+
+export const useAddListOfPlayersToTeamMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.addListOfPlayersToTeam,
+    onSuccess: (_,vars) => {
+      qc.invalidateQueries(repo.keys.oneById(vars.teamId));
+    },
+  });
+}

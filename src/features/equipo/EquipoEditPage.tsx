@@ -11,11 +11,10 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-
 import { useSettingsContext } from 'src/components/settings';
 import { PATHS } from 'src/routes/paths';
 import { NuevoEquipoForm } from './NuevoEquipoForm';
-import { useEquipoQuery } from 'src/api/EquipoRepository';
+import { useAddListOfPlayersToTeamMutation, useEquipoQuery } from 'src/api/EquipoRepository';
 import LoadingScreen from 'src/components/loading-screen';
 import ErrorPage from 'src/pages/ErrorPage';
 import { JugadorDataGrid } from '../jugadores/JugadoresDataGrid';
@@ -29,6 +28,10 @@ import { useAllJugadoresQuery } from 'src/api/JugadoresRepository';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 
 const EquipoEditPage = () => {
+  const navigate = useNavigate();
+  const { themeStretch } = useSettingsContext();
+  const [loadOpen, setLoadOpen] = useState<boolean>(false);
+
   const params = useParams<{ idCampeonato: string; idCategoria: string; idEquipo: string }>();
 
   const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
@@ -38,9 +41,6 @@ const EquipoEditPage = () => {
   const categoriaName =
     campeonatoData?.categories?.filter((c: any) => c.id === params.idCategoria)[0].name || '';
 
-  const navigate = useNavigate();
-  const { themeStretch } = useSettingsContext();
-  const [loadOpen, setLoadOpen] = useState<boolean>(false);
   const {
     data: equipoData,
     isLoading: equipoLoading,
@@ -52,6 +52,8 @@ const EquipoEditPage = () => {
     isLoading: jugadoresLoading,
     isError: jugadoresError,
   } = useAllJugadoresQuery();
+
+  const cargarJugadoresMutation = useAddListOfPlayersToTeamMutation();
 
   if (equipoLoading || jugadoresLoading) {
     return <LoadingScreen />;
@@ -104,7 +106,7 @@ const EquipoEditPage = () => {
             onSubmit={async () => {}}
             initialValues={{
               name: equipoData.name,
-              image: equipoData.logoUrl,
+              image: equipoData.logo,
             }}
           />
         </Card>
@@ -127,7 +129,7 @@ const EquipoEditPage = () => {
             }
           />
           <JugadorDataGrid
-            data={[]}
+            data={equipoData.jugadores || []}
             isLoading={equipoLoading}
             onDelete={function (id: number) {
               throw new Error('Function not implemented.');
@@ -144,7 +146,15 @@ const EquipoEditPage = () => {
           <DialogHeader label="Cargar jugadores" onClick={() => setLoadOpen(false)} />
         </DialogTitle>
         <DialogContent sx={{ mb: 4, width: '100%' }}>
-          <SelectJugadoresForm onSubmit={async (values) => {}} jugadores={jugadoresData} />
+          <SelectJugadoresForm
+            onSubmit={async (values) =>
+              await cargarJugadoresMutation.mutateAsync({
+                teamId: params.idEquipo || '',
+                players: values.ids,
+              })
+            }
+            jugadores={jugadoresData}
+          />
         </DialogContent>
       </Dialog>
     </>
