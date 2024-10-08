@@ -70,10 +70,6 @@ const LazyCategoriaEditPage = withLoadingSpinner(
   lazy(() => import('src/features/categoria/CategoriaEditPage'))
 );
 
-const LazyCategoriaPlayoffPage = withLoadingSpinner(
-  lazy(() => import('src/features/playoffs/CategoryPlayoffPage'))
-);
-
 const LazyManageEquiposCategoriaPage = withLoadingSpinner(
   lazy(() => import('src/features/categoria/ManageEquiposCategoriaPage'))
 );
@@ -189,9 +185,6 @@ const ROUTES: RouteObject[] = [
 
               { path: 'edit/:id/edit-fase-regular', element: <LazyEditFixturePage /> },
               { path: 'edit/:id/edit-fase-playoff', element: <LazyEditPlayoffPage /> },
-              // { path: 'edit/:id/edit-fase-grupos', element: <LazyEditFaseGruposPage /> },
-
-              { path: 'edit/:id/playoff', element: <LazyCategoriaPlayoffPage /> },
               { path: 'edit/:id/equipos', element: <LazyManageEquiposCategoriaPage /> },
               {
                 path: 'edit/:id',

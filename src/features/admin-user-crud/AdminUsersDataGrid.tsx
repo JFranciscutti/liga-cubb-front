@@ -24,7 +24,7 @@ import { PATHS } from 'src/routes/paths';
 interface Props {
   data: User[];
   isLoading: boolean;
-  onDelete: (id: number) => any;
+  onDelete: (id: string) => any;
 }
 
 export const AdminUsersDataGrid: React.FC<Props> = ({ data, isLoading, onDelete }) => {
@@ -32,7 +32,7 @@ export const AdminUsersDataGrid: React.FC<Props> = ({ data, isLoading, onDelete 
     defaultValues: { email: '', roles: [] },
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
-  const selectedIdRef = useRef<number | undefined>();
+  const selectedIdRef = useRef<string | undefined>();
 
   const columns = useColumns<typeof data[0]>([
     {
@@ -54,7 +54,7 @@ export const AdminUsersDataGrid: React.FC<Props> = ({ data, isLoading, onDelete 
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = params.id || '';
+              selectedIdRef.current = String(params.id) || '';
               setOpenPopover(e.currentTarget);
             }}
           >

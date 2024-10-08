@@ -143,7 +143,7 @@ const EquipoEditPage = () => {
           <JugadorDataGrid
             data={equipoData.jugadores || []}
             isLoading={equipoLoading}
-            onDelete={function (id: number) {
+            onDelete={function (id: string) {
               throw new Error('Function not implemented.');
             }}
           />

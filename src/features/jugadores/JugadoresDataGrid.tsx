@@ -20,8 +20,8 @@ import { PATHS } from 'src/routes/paths';
 interface Props {
   data: Jugador[];
   isLoading: boolean;
-  onDelete: (id: number) => any;
-  onEdit?: (id: number) => any;
+  onDelete: (id: string) => any;
+  onEdit?: (id: string) => any;
 }
 
 export const JugadorDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
@@ -29,7 +29,7 @@ export const JugadorDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, on
     defaultValues: { email: '', roles: [] },
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
-  const selectedIdRef = useRef<number | undefined>();
+  const selectedIdRef = useRef<string | undefined>();
 
   const columns = useColumns<typeof data[0]>([
     {
@@ -64,7 +64,7 @@ export const JugadorDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, on
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = params.id || '';
+              selectedIdRef.current = String(params.id) || '';
               setOpenPopover(e.currentTarget);
             }}
           >

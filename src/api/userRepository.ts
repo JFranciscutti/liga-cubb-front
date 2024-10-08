@@ -13,13 +13,13 @@ interface ICreateAdminUser {
 interface IEditUser {
   email: string;
   roles: string[];
-  id: number;
+  id: string;
 }
 
 interface IChangePasswordUser {
   password: string;
   password_confirmation: string;
-  id: number;
+  id: string;
 }
 
 export const getUserMapper = (x: any): User => x;
@@ -29,7 +29,7 @@ export const createUserMapper = (x: ICreateAdminUser) => x;
 export class UserRepository {
   keys = {
     all: () => ['users'],
-    one: (id: number) => ['users', id],
+    one: (id: string) => ['users', id],
   };
 
   getAll = async () => {
@@ -37,7 +37,7 @@ export class UserRepository {
     return data.map(getUserMapper);
   };
 
-  find = async (id: number) => {
+  find = async (id: string) => {
     const { data } = await httpClient.get(`admin-users/${id}`);
     return getUserMapper(data);
   };
@@ -57,7 +57,7 @@ const repo = new UserRepository();
 export const useAllUsersQuery = () =>
   useSuspenseQuery({ queryKey: repo.keys.all(), queryFn: repo.getAll });
 
-export const useUserQuery = (id: number) =>
+export const useUserQuery = (id: string) =>
   useSuspenseQuery({ queryKey: repo.keys.one(id), queryFn: () => repo.find(id) });
 
 export const useCreateUserMutation = () => {

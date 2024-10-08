@@ -9,6 +9,7 @@ import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import { useState } from 'react';
 import Iconify from 'src/components/iconify';
 import { GeneroEnum } from 'src/utils/enums';
+import { Grupo } from './components/FaseGruposGenerator';
 
 const ManageFixtureGruposCopaPage = () => {
   const params = useParams<{ id: string }>();
@@ -18,11 +19,11 @@ const ManageFixtureGruposCopaPage = () => {
   );
   const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
 
-  const [tab, setTab] = useState(grupos[0].id);
+  //const [tab, setTab] = useState(grupos[0].id);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
-  };
+  // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  //   setTab(newValue);
+  // };
 
   if (campeonatoLoading || allEquiposLoading) {
     return <LoadingScreen />;
@@ -42,7 +43,7 @@ const ManageFixtureGruposCopaPage = () => {
             { name: 'Fixture de fase de grupos' },
           ]}
         />
-        <Tabs value={tab} onChange={handleChange}>
+        {/* <Tabs value={tab} onChange={handleChange}>
           {grupos.map((g) => (
             <Tab label={`Grupo ${g.label}`} value={g.id} />
           ))}
@@ -52,7 +53,7 @@ const ManageFixtureGruposCopaPage = () => {
             return <></>;
           }
           return <FixtureManagerByGroup grupo={g} />;
-        })}
+        })} */}
       </Container>
     </>
   );
@@ -60,125 +61,125 @@ const ManageFixtureGruposCopaPage = () => {
 
 export default ManageFixtureGruposCopaPage;
 
-const grupos: Grupo[] = [
-  {
-    id: 0,
-    label: 'A',
-    equipos: [
-      {
-        id: 6,
-        nombre: 'LIVERFULL',
-        escudo: 'https://ligacubb.com/imagenes/liverfull.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 3,
-        nombre: 'FUERTE AL MEDIO',
-        escudo: 'https://ligacubb.com/imagenes/fuertealmedio.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 7,
-        nombre: 'REPO P.A.',
-        escudo: 'https://ligacubb.com/imagenes/repopa.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 8,
-        nombre: 'BAFANGULO',
-        escudo: 'https://ligacubb.com/imagenes/bafangulo.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-    ],
-  },
-  {
-    id: 1,
-    label: 'B',
-    equipos: [
-      {
-        id: 5,
-        nombre: 'ANTIDEPORTIVO CACACIOLI',
-        escudo: 'https://ligacubb.com/imagenes/antideportivocacacioli.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 2,
-        nombre: 'RITMO Y SUSTANCIA',
-        escudo: 'https://ligacubb.com/imagenes/ritmoysustancia.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 14,
-        nombre: 'CUALQUIER FRUTA Y/O VERDURA',
-        escudo: 'https://ligacubb.com/imagenes/cualquierfrutayoverdura.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 1,
-        nombre: 'SIN CONTRATO',
-        escudo: 'https://ligacubb.com/imagenes/sincontrato.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-    ],
-  },
-  {
-    id: 2,
-    label: 'C',
-    equipos: [
-      {
-        id: 15,
-        nombre: 'INQUI FC',
-        escudo: 'https://ligacubb.com/imagenes/inquifc.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 9,
-        nombre: 'THE BIRDS',
-        escudo: 'https://ligacubb.com/imagenes/thebirds.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 12,
-        nombre: 'FONDO BLANCO',
-        escudo: 'https://ligacubb.com/imagenes/fondoblanco.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 16,
-        nombre: 'FERNETBACHE',
-        escudo: 'https://ligacubb.com/imagenes/fernetbache.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-    ],
-  },
-  {
-    id: 3,
-    label: 'D',
-    equipos: [
-      {
-        id: 13,
-        nombre: 'MANDIYU´S REVENGE',
-        escudo: 'https://ligacubb.com/imagenes/mandiyusrevenge.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 11,
-        nombre: 'LA BIGORNIA FC',
-        escudo: 'https://ligacubb.com/imagenes/labigorniafc.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 4,
-        nombre: 'SUPERGEDIENTOS',
-        escudo: 'https://ligacubb.com/imagenes/supergedientos.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-      {
-        id: 10,
-        nombre: 'ULTRA CUEVA FC',
-        escudo: 'https://ligacubb.com/imagenes/ultracuevafc.png',
-        genero: GeneroEnum.MASCULINO,
-      },
-    ],
-  },
-];
+// const grupos: Grupo[] = [
+//   {
+//     id: 0,
+//     label: 'A',
+//     equipos: [
+//       {
+//         id: 6,
+//         nombre: 'LIVERFULL',
+//         escudo: 'https://ligacubb.com/imagenes/liverfull.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 3,
+//         nombre: 'FUERTE AL MEDIO',
+//         escudo: 'https://ligacubb.com/imagenes/fuertealmedio.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 7,
+//         nombre: 'REPO P.A.',
+//         escudo: 'https://ligacubb.com/imagenes/repopa.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 8,
+//         nombre: 'BAFANGULO',
+//         escudo: 'https://ligacubb.com/imagenes/bafangulo.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//     ],
+//   },
+//   {
+//     id: 1,
+//     label: 'B',
+//     equipos: [
+//       {
+//         id: 5,
+//         nombre: 'ANTIDEPORTIVO CACACIOLI',
+//         escudo: 'https://ligacubb.com/imagenes/antideportivocacacioli.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 2,
+//         nombre: 'RITMO Y SUSTANCIA',
+//         escudo: 'https://ligacubb.com/imagenes/ritmoysustancia.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 14,
+//         nombre: 'CUALQUIER FRUTA Y/O VERDURA',
+//         escudo: 'https://ligacubb.com/imagenes/cualquierfrutayoverdura.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 1,
+//         nombre: 'SIN CONTRATO',
+//         escudo: 'https://ligacubb.com/imagenes/sincontrato.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     label: 'C',
+//     equipos: [
+//       {
+//         id: 15,
+//         nombre: 'INQUI FC',
+//         escudo: 'https://ligacubb.com/imagenes/inquifc.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 9,
+//         nombre: 'THE BIRDS',
+//         escudo: 'https://ligacubb.com/imagenes/thebirds.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 12,
+//         nombre: 'FONDO BLANCO',
+//         escudo: 'https://ligacubb.com/imagenes/fondoblanco.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 16,
+//         nombre: 'FERNETBACHE',
+//         escudo: 'https://ligacubb.com/imagenes/fernetbache.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//     ],
+//   },
+//   {
+//     id: 3,
+//     label: 'D',
+//     equipos: [
+//       {
+//         id: 13,
+//         nombre: 'MANDIYU´S REVENGE',
+//         escudo: 'https://ligacubb.com/imagenes/mandiyusrevenge.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 11,
+//         nombre: 'LA BIGORNIA FC',
+//         escudo: 'https://ligacubb.com/imagenes/labigorniafc.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 4,
+//         nombre: 'SUPERGEDIENTOS',
+//         escudo: 'https://ligacubb.com/imagenes/supergedientos.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//       {
+//         id: 10,
+//         nombre: 'ULTRA CUEVA FC',
+//         escudo: 'https://ligacubb.com/imagenes/ultracuevafc.png',
+//         genero: GeneroEnum.MASCULINO,
+//       },
+//     ],
+//   },
+// ];

@@ -49,7 +49,7 @@ export const AgregarEquipoCategoriaForm: React.FC<EquipoFormProps> = ({
             {...field}
             label="Equipo"
             floatingLabel={false}
-            options={equipos.map((e) => ({ value: e.id.toString(), label: e.nombre }))}
+            options={equipos.map((e) => ({ value: e.id.toString(), label: e.name }))}
           />
         )}
       />

@@ -37,7 +37,7 @@ export default function JugadoresListPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [loadOpen, setLoadOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number>();
+  const [selectedId, setSelectedId] = useState<string>();
 
   const navigate = useNavigate();
   const {
@@ -104,7 +104,7 @@ export default function JugadoresListPage() {
                 action: async () => {},
               })
             }
-            onEdit={(id: number) => {
+            onEdit={(id: string) => {
               setSelectedId(id);
               setEditOpen(true);
             }}

@@ -79,7 +79,7 @@ const MatchForm: React.FC<MatchFormProps> = ({ equipos }) => {
                   <HitSelectField
                     {...field}
                     label={'Local'}
-                    options={equipos.map((e) => ({ label: e.nombre, value: e.id }))}
+                    options={equipos.map((e) => ({ label: e.name, value: e.id }))}
                     floatingLabel={false}
                   />
                 )}
