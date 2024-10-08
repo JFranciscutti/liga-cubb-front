@@ -18,8 +18,6 @@ const ManageEquiposCategoriaPage = () => {
   const params = useParams<{ id: string }>();
   const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
-  const navigate = useNavigate();
-
   const [addOpen, setAddOpen] = useState<boolean>(false);
 
   const { data: categoriaData, isLoading: categoriaLoading } = useCategoriaQuery(params.id || '');

@@ -5,7 +5,11 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { useSettingsContext } from 'src/components/settings';
 import { PATHS } from 'src/routes/paths';
 import { useConfirm } from 'src/components/confirm-action/ConfirmAction';
-import { useAllEquiposQuery } from 'src/api/EquipoRepository';
+import {
+  useAllEquiposByCategory,
+  useAllEquiposByCopa,
+  useAllEquiposQuery,
+} from 'src/api/EquipoRepository';
 import LoadingScreen from 'src/components/loading-screen';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import FaseGruposGenerator from './components/FaseGruposGenerator';
@@ -15,9 +19,10 @@ const ManageGruposCopaPage = () => {
   const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
   const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
-    params.id || ''
+    localStorage.getItem('idCampeonato') || ''
   );
-  const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposQuery();
+
+  const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposByCopa(params.id || '');
 
   if (campeonatoLoading || allEquiposLoading) {
     return <LoadingScreen />;
@@ -29,16 +34,13 @@ const ManageGruposCopaPage = () => {
         <CustomBreadcrumbs
           heading={`${campeonatoData.name} - Fase de grupos`}
           links={[
-            { name: 'Campeonatos', href: PATHS.dashboard.campeonatos.list },
-            {
-              name: campeonatoData.name,
-              href: PATHS.dashboard.campeonatos.manage(params.id!),
-            },
+            { name: 'Listado', href: PATHS.dashboard.categorias.list },
+            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(params.id || '') },
             { name: 'Fase de grupos' },
           ]}
         />
         <Card>
-          <FaseGruposGenerator equipos={allEquipos} />
+          <FaseGruposGenerator equipos={allEquipos.teams || []} />
         </Card>
       </Container>
     </>

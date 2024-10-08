@@ -8,10 +8,9 @@ import {
   Grid,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from 'src/components/image';
 import EditMatchModal from './components/EditMatchModal';
@@ -19,8 +18,9 @@ import { Fecha, useGenerateEquipos } from 'src/hooks/useGenerateEquipos';
 
 interface FixtureManagerBaseProps {
   equipos: any[];
+  fechas: Fecha[];
+  handleAutocompletar: () => void;
   exists?: boolean;
-  handleSave: (values: any[]) => void;
 }
 
 type MapeoPartido = {
@@ -29,53 +29,20 @@ type MapeoPartido = {
   awayTeamId: string;
 };
 
-const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => {
-  const { fechas: generatedFechas, handleAutocompletar } = useGenerateEquipos(equipos);
-  const [fechas, setFechas] = useState<Fecha[]>([]);
+const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({
+  equipos,
+  fechas,
+  handleAutocompletar,
+  exists = false,
+}) => {
   const [expanded, setExpanded] = useState<number | false>(false);
   const currentMatchSelected = useRef<any | undefined>();
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    setFechas(generatedFechas);
-  }, [generatedFechas]);
-
-  console.log(fechas);
-
   // Función para manejar la expansión de los accordions
-  const handleChangeAccordion =
-    (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
-
-  const handleSelectChange =
-    (fechaIndex: number, partidoIndex: number, teamType: 'home' | 'away') =>
-    (event: SelectChangeEvent<string>) => {
-      console.log(fechaIndex, partidoIndex, teamType);
-
-      setFechas((prevFechas) =>
-        prevFechas.map((fecha, fIndex) => {
-          if (fIndex !== fechaIndex) return fecha;
-          return {
-            ...fecha,
-            partidos: fecha.partidos.map((partido, pIndex) => {
-              if (pIndex !== partidoIndex) return partido;
-              return {
-                ...partido,
-                equipoLocal:
-                  teamType === 'home'
-                    ? { ...partido.equipoLocal, id: event.target.value as string }
-                    : partido.equipoLocal,
-                equipoVisitante:
-                  teamType === 'away'
-                    ? { ...partido.equipoVisitante, id: event.target.value as string }
-                    : partido.equipoVisitante,
-              };
-            }),
-          };
-        })
-      );
-    };
+  const handleChange = (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   function mapearPartidos(fechas: Fecha[]): MapeoPartido[] {
     return fechas.flatMap((fecha) =>
@@ -94,7 +61,7 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
           <Accordion
             key={fechaIndex}
             expanded={expanded === fechaIndex}
-            onChange={handleChangeAccordion(fechaIndex)}
+            onChange={handleChange(fechaIndex)}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box className="w-full flex justify-between items-center pr-10">
@@ -108,17 +75,13 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
                   className="flex items-center justify-center gap-2"
                   key={partidoIndex}
                 >
-                  <Grid item xs={5}>
-                    <Select
-                      fullWidth
-                      value={partido.equipoLocal.id}
-                      onChange={handleSelectChange(fechaIndex, partidoIndex, 'home')}
-                    >
+                  <Grid item xs={exists ? 4 : 5}>
+                    <Select fullWidth defaultValue={partido.equipoLocal.id} disabled={exists}>
                       {equipos.map((e) => (
                         <MenuItem key={e.id} value={e.id}>
                           <Box className="flex items-center gap-2">
                             <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                              <Image src={e.logo} className="h-10 w-10 min-w-10" />
+                              <Image src={e.logoUrl} className="h-10 w-10 min-w-10" />
                             </Box>
                             <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
                               {e.name}
@@ -129,17 +92,13 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
                     </Select>
                   </Grid>
                   <Typography>VS</Typography>
-                  <Grid item xs={5}>
-                    <Select
-                      fullWidth
-                      value={partido.equipoVisitante.id}
-                      onChange={handleSelectChange(fechaIndex, partidoIndex, 'away')}
-                    >
+                  <Grid item xs={exists ? 4 : 5}>
+                    <Select fullWidth defaultValue={partido.equipoVisitante.id} disabled={exists}>
                       {equipos.map((e) => (
                         <MenuItem key={e.id} value={e.id}>
                           <Box className="flex items-center gap-2">
                             <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                              <Image src={e.logo} className="h-10 w-10 min-w-10" />
+                              <Image src={e.logoUrl} className="h-10 w-10 min-w-10" />
                             </Box>
                             <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
                               {e.name}
@@ -149,6 +108,24 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
                       ))}
                     </Select>
                   </Grid>
+                  {exists && (
+                    <Grid item xs={3} className="flex gap-2 justify-end">
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          currentMatchSelected.current = {
+                            dateNumber: fechaIndex,
+                            homeTeam: partido.equipoLocal,
+                            awayTeam: partido.equipoVisitante,
+                          };
+                          setEditModalOpen(true);
+                        }}
+                      >
+                        Editar
+                      </Button>
+                      <Button variant="contained">Ver</Button>
+                    </Grid>
+                  )}
                 </Grid>
               ))}
             </AccordionDetails>
@@ -162,15 +139,6 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
             </Button>
           </Box>
         )}
-        <Box className="flex w-full mt-2 justify-end">
-          <Button
-            variant="contained"
-            disabled={fechas.length === 0}
-            onClick={() => handleSave(mapearPartidos(fechas))}
-          >
-            Guardar fechas
-          </Button>
-        </Box>
       </Card>
       <EditMatchModal
         open={editModalOpen}
@@ -185,4 +153,4 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
   );
 };
 
-export default CreateFixture;
+export default CreateFixtureForCopa;

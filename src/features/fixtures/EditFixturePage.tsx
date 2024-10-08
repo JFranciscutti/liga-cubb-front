@@ -12,8 +12,9 @@ export default function EditFixturePage() {
   const params = useParams<{ id: string }>();
   const [selectedFecha, setSelectedFecha] = useState<number>(1);
   const { data, isLoading, isError } = useOneFaseQuery(params.id || '', selectedFecha);
-  const idCampeonato = localStorage.getItem("idCampeonato") || "";
-  const idCategoria = localStorage.getItem("idCategoria") || "";
+  const idCampeonato = localStorage.getItem('idCampeonato') || '';
+  const idCategoria = localStorage.getItem('idCategoria') || '';
+
   return (
     <>
       <Helmet>
@@ -25,7 +26,10 @@ export default function EditFixturePage() {
           heading={`Fixture - Categoria`}
           links={[
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: 'Administrar', href: PATHS.dashboard.campeonatos.manageCategoria(idCampeonato, idCategoria) },
+            {
+              name: 'Administrar',
+              href: PATHS.dashboard.campeonatos.manageCategoria(idCampeonato, idCategoria),
+            },
             { name: 'Fixture' },
           ]}
         />

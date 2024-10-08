@@ -30,10 +30,13 @@ export const PATHS = {
         `/dashboard/categorias/edit/${id}/create-fase-regular`,
       createFasePlayoff: (id: number | string) =>
         `/dashboard/categorias/edit/${id}/create-fase-playoff`,
+      createFaseGrupos: (id: number | string) =>
+        `/dashboard/categorias/edit/${id}/create-fase-grupos`,
       editFaseRegular: (id: number | string) =>
         `/dashboard/categorias/edit/${id}/edit-fase-regular`,
       editFasePlayoff: (id: number | string) =>
         `/dashboard/categorias/edit/${id}/edit-fase-playoff`,
+      editFaseGrupos: (id: number | string) => `/dashboard/categorias/edit/${id}/edit-fase-grupos`,
     },
     equipos: {
       root: '/dashboard/equipos',
@@ -64,7 +67,7 @@ export const PATHS = {
         `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/equipos/${idEquipo}`,
       manageEquiposCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/equipos-copa`,
-      manageGroupsCopa: (id: number | string) => `/dashboard/campeonatos/manage/${id}/grupos-copa`,
+      createFaseGrupos: (id: number | string) => `/dashboard/campeonatos/manage/${id}/grupos-copa`,
       manageFixtureGroupsCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/fixture-grupos-copa`,
     },
@@ -84,7 +87,7 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.campeonatos.create,
       PATHS.dashboard.campeonatos.manage(':id'),
       PATHS.dashboard.campeonatos.manageEquiposCopa(':id'),
-      PATHS.dashboard.campeonatos.manageGroupsCopa(':id'),
+      PATHS.dashboard.campeonatos.createFaseGrupos(':id'),
       PATHS.dashboard.campeonatos.manageFixtureGroupsCopa(':id'),
       PATHS.dashboard.categorias.root,
       PATHS.dashboard.categorias.list,
@@ -94,8 +97,10 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.categorias.playoff(':id'),
       PATHS.dashboard.categorias.createFaseRegular(':id'),
       PATHS.dashboard.categorias.createFasePlayoff(':id'),
+      PATHS.dashboard.categorias.createFaseGrupos(':id'),
       PATHS.dashboard.categorias.editFaseRegular(':id'),
       PATHS.dashboard.categorias.editFasePlayoff(':id'),
+      PATHS.dashboard.categorias.editFaseGrupos(':id'),
       PATHS.dashboard.equipos.root,
       PATHS.dashboard.equipos.list,
       PATHS.dashboard.equipos.create,

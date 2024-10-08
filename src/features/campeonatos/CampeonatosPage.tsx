@@ -57,7 +57,7 @@ const CampeonatosPage = () => {
                 {
                   onSuccess: () => {
                     setCreateOpen(false);
-                    enqueueSnackbar('jajjajs');
+                    enqueueSnackbar('Campeonato creado correctamente', { variant: 'success' });
                   },
                 }
               );

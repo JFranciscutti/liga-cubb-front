@@ -8,8 +8,6 @@ import LoadingScreen from 'src/components/loading-screen';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import { useState } from 'react';
 import Iconify from 'src/components/iconify';
-import FixtureManagerByGroup from './components/FixtureManagerByGroup';
-import { Grupo } from './components/FaseGruposGenerator';
 import { GeneroEnum } from 'src/utils/enums';
 
 const ManageFixtureGruposCopaPage = () => {

@@ -28,7 +28,6 @@ export const EquipoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onE
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
   const selectedIdRef = useRef<string | undefined>();
-  console.log(data);
 
   const columns = useColumns<typeof data[0]>([
     {
@@ -38,7 +37,7 @@ export const EquipoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onE
       renderHeader: () => <div className="px-2">{'Nombre'}</div>,
       renderCell: (params) => (
         <div className="flex gap-5 items-center w-full px-2">
-          <Image src={params.row.logoUrl} className="w-10 h-10 rounded-full bg-gray-100 " />
+          <Image src={params.row.logo} className="w-10 h-10 rounded-full bg-gray-100 " />
           <Typography>{params.row.name}</Typography>
         </div>
       ),

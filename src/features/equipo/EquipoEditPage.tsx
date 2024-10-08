@@ -14,7 +14,11 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { useSettingsContext } from 'src/components/settings';
 import { PATHS } from 'src/routes/paths';
 import { NuevoEquipoForm } from './NuevoEquipoForm';
-import { useAddListOfPlayersToTeamMutation, useEquipoQuery } from 'src/api/EquipoRepository';
+import {
+  useAddListOfPlayersToTeamMutation,
+  useEditEquipoMutation,
+  useEquipoQuery,
+} from 'src/api/EquipoRepository';
 import LoadingScreen from 'src/components/loading-screen';
 import ErrorPage from 'src/pages/ErrorPage';
 import { JugadorDataGrid } from '../jugadores/JugadoresDataGrid';
@@ -54,6 +58,7 @@ const EquipoEditPage = () => {
   } = useAllJugadoresQuery();
 
   const cargarJugadoresMutation = useAddListOfPlayersToTeamMutation();
+  const editarEquipoMutation = useEditEquipoMutation();
 
   if (equipoLoading || jugadoresLoading) {
     return <LoadingScreen />;
@@ -103,7 +108,14 @@ const EquipoEditPage = () => {
           </Box>
           <NuevoEquipoForm
             edit
-            onSubmit={async () => {}}
+            onSubmit={async (values) => {
+              await editarEquipoMutation.mutateAsync({
+                id: params.idEquipo || '',
+                name: values.name,
+                logo: values.image,
+              });
+              enqueueSnackbar('Equipo editado correctamente', { variant: 'success' });
+            }}
             initialValues={{
               name: equipoData.name,
               image: equipoData.logo,

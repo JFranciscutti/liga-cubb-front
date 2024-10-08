@@ -11,11 +11,16 @@ interface ICreateEquipo {
   categoryId: string;
 }
 
+interface ICreateEquipoCopa {
+  name: string;
+  logo: string;
+  cupId: string;
+}
+
 interface IEditEquipo {
   id: string;
   name: string;
   logo: string;
-  gender: string;
 }
 
 export const getEquipoMapper = (x: any): Equipo => ({
@@ -29,8 +34,9 @@ export const createEquipoMapper = (x: ICreateEquipo) => x;
 export class EquipoRepository {
   keys = {
     all: () => ['equipos'],
-    oneById: (id: string) => ["one-equipo",id],
+    oneById: (id: string) => ['one-equipo', id],
     allByCategoria: (id: string) => ['equipos-by-cat', id],
+    allByCopa: (id: string) => ['equipos-by-copa', id],
   };
 
   getAll = async () => {
@@ -47,8 +53,7 @@ export class EquipoRepository {
   create = (team: ICreateEquipo) =>
     httpClient.post('tournament/league/categories/create-team', team);
 
-  edit = async (category: IEditEquipo) =>
-    httpClient.put('teams/' + category.id, { name: category.name });
+  edit = async (team: IEditEquipo) => httpClient.put('teams/' + team.id, { team });
 
   remove = async (id: number) => httpClient.delete('teams/' + id);
 
@@ -60,9 +65,20 @@ export class EquipoRepository {
     return data;
   };
 
-  addListOfPlayersToTeam = async ({teamId, players}:{teamId: string, players: string[]}) =>
-     httpClient.post('tournament/league/categories/team/add-list-players', players.map(x => ({teamId, membershipNumber: x})));
-  
+  addListOfPlayersToTeam = async ({ teamId, players }: { teamId: string; players: string[] }) =>
+    httpClient.post(
+      'tournament/league/categories/team/add-list-players',
+      players.map((x) => ({ teamId, membershipNumber: x }))
+    );
+
+  createForCopa = (team: ICreateEquipoCopa) =>
+    httpClient.post('tournament/cup/phase-group/add-teams', team);
+
+  getAllByCopaId = async (id: string) => {
+    const { data } = await httpClient.get<any>(`tournament/cup/get-teams-by-id?cupId=${id}`);
+    //const data1 = { teams: EQUIPOS_MOCK.map(getEquipoMapper), categoryName: 'A' };
+    return data;
+  };
 }
 
 const repo = new EquipoRepository();
@@ -82,6 +98,17 @@ export const useCreateEquipoMutation = () => {
     },
   });
 };
+
+export const useCreateEquipoCopaMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.createForCopa,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries(repo.keys.allByCopa(vars.cupId));
+    },
+  });
+};
+
 export const useDeleteEquipoMutation = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -111,8 +138,14 @@ export const useAddListOfPlayersToTeamMutation = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: repo.addListOfPlayersToTeam,
-    onSuccess: (_,vars) => {
+    onSuccess: (_, vars) => {
       qc.invalidateQueries(repo.keys.oneById(vars.teamId));
     },
   });
-}
+};
+
+export const useAllEquiposByCopa = (id: string) =>
+  useSuspenseQuery({
+    queryKey: repo.keys.allByCopa(id),
+    queryFn: () => repo.getAllByCopaId(id),
+  });

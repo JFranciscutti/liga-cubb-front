@@ -185,8 +185,12 @@ const ROUTES: RouteObject[] = [
               { path: 'list', element: <LazyCategoriaListPage /> },
               { path: 'edit/:id/create-fase-regular', element: <LazyFixturePage /> },
               { path: 'edit/:id/create-fase-playoff', element: <LazyPlayoffPage /> },
+              { path: 'edit/:id/create-fase-grupos', element: <LazyManageGruposCopaPage /> },
+
               { path: 'edit/:id/edit-fase-regular', element: <LazyEditFixturePage /> },
               { path: 'edit/:id/edit-fase-playoff', element: <LazyEditPlayoffPage /> },
+              // { path: 'edit/:id/edit-fase-grupos', element: <LazyEditFaseGruposPage /> },
+
               { path: 'edit/:id/playoff', element: <LazyCategoriaPlayoffPage /> },
               { path: 'edit/:id/equipos', element: <LazyManageEquiposCategoriaPage /> },
               {
@@ -202,10 +206,6 @@ const ROUTES: RouteObject[] = [
               { path: 'list', element: <LazyCampeonatosPage /> },
               { path: 'manage/:id/equipos-copa', element: <LazyManageEquiposCopaPage /> },
               { path: 'manage/:id/grupos-copa', element: <LazyManageGruposCopaPage /> },
-              {
-                path: 'manage/:id/fixture-grupos-copa',
-                element: <LazyManageFixtureGruposCopaPage />,
-              },
               {
                 path: 'manage/:idCampeonato/categoria/:idCategoria/equipos/:idEquipo',
                 element: <LazyEquipoEditPage />,
@@ -237,7 +237,6 @@ const ROUTES: RouteObject[] = [
               { path: 'list', element: <LazyJugadoresListPage /> },
             ],
           },
-        
         ],
       },
       {

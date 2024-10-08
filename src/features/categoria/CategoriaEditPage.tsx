@@ -38,10 +38,10 @@ const CategoriaEditPage = () => {
     return <LoadingScreen />;
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     localStorage.setItem('idCampeonato', params.idCampeonato || '');
     localStorage.setItem('idCategoria', params.idCategoria || '');
-  },[params.idCampeonato]);
+  }, [params.idCampeonato]);
 
   return (
     <>
@@ -99,7 +99,13 @@ const CategoriaEditPage = () => {
             </Card>
           </Grid>
           <Grid item xs={12}>
-            <Card className="bg-sky-800" sx={{ p: 2, cursor: 'pointer' }} onClick={() => {}}>
+            <Card
+              className="bg-sky-800"
+              sx={{ p: 2, cursor: 'pointer' }}
+              onClick={() =>
+                navigate(PATHS.dashboard.categorias.createFaseGrupos(params.idCategoria || ''))
+              }
+            >
               <div className="flex flex-col gap-2">
                 <Typography fontSize={18}>Fase de grupos</Typography>
                 <Typography variant="subtitle1" className="line-clamp-1">
