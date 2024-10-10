@@ -1,4 +1,10 @@
-import { createHashRouter, Navigate, Outlet, RouteObject } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  createHashRouter,
+  Navigate,
+  Outlet,
+  RouteObject,
+} from 'react-router-dom';
 // auth
 import AuthGuard from '../features/auth/AuthGuard';
 import GuestGuard from '../features/auth/GuestGuard';
@@ -244,4 +250,4 @@ const ROUTES: RouteObject[] = [
   },
 ];
 
-export const router = createHashRouter(ROUTES);
+export const router = createBrowserRouter(ROUTES, { basename: '/liga-cubb-front' });
