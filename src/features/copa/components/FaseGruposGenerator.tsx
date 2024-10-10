@@ -7,19 +7,18 @@ import {
   SelectChangeEvent,
   Button,
   IconButton,
-  Card,
+  Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import { Equipo } from 'src/models/Equipo';
 import Image from 'src/components/image';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CreateFixture from 'src/features/fixtures/CreateFixtureV1';
-import { c } from 'msw/lib/glossary-de6278a9';
-import { useGenerateEquipos } from 'src/hooks/useGenerateEquipos';
+// import { useGenerateEquipos } from 'src/hooks/useGenerateEquipos';
 import CreateFixtureForCopa from 'src/features/fixtures/CreateFixtureForCopa';
+import useGeneratePartidosFaseGrupos, { Fecha } from 'src/hooks/useGeneratePartidosFaseGrupos';
 
-const CANTIDADES_VALIDAS = ['2', '3', '4'];
-const GRUPOS = ['A', 'B', 'C', 'D'];
+const CANTIDADES_VALIDAS = ['2', '3', '4', '6', '8', '12', '16'];
+const GRUPOS = Array.from({ length: 18 }, (_, i) => (i + 1).toString());
 
 export interface Grupo {
   id: number;
@@ -100,6 +99,10 @@ const FaseGruposGenerator = ({ equipos }: { equipos: Equipo[] }) => {
 
   const handleGuardar = () => {
     setShowFechas(true);
+  };
+
+  const handleSaveFechas = (fechas: Fecha[]) => {
+    console.log(fechas);
   };
 
   // Crea una función para verificar si los grupos están llenos
@@ -203,25 +206,52 @@ const FaseGruposGenerator = ({ equipos }: { equipos: Equipo[] }) => {
         </Grid>
       </Grid>
 
-      {showFechas &&
-        grupos.map((grupo) => {
-          const { fechas, handleAutocompletar: handleAutocompletarFechas } = useGenerateEquipos(
-            grupo.equipos
-          );
-
-          return (
-            <Box key={grupo.id} className="p-4">
-              <h2>Grupo {grupo.label}</h2>
-              <CreateFixtureForCopa
-                equipos={grupo.equipos || []}
-                fechas={fechas}
-                handleAutocompletar={handleAutocompletarFechas}
-              />
-            </Box>
-          );
-        })}
+      <FaseGruposFixture grupos={grupos} enabled={showFechas} handleSaveFechas={handleSaveFechas} />
     </>
   );
 };
 
 export default FaseGruposGenerator;
+
+const FaseGruposFixture = ({
+  grupos,
+  enabled = false,
+  handleSaveFechas,
+}: {
+  grupos: Grupo[];
+  enabled: boolean;
+  handleSaveFechas: (fechas: Fecha[]) => void;
+}) => {
+  const { fechas } = useGeneratePartidosFaseGrupos(grupos);
+
+  if (!enabled) {
+    return null; // Retorna null en lugar de un fragmento vacío
+  }
+
+  return (
+    <>
+      {grupos.map((grupo) => (
+        <Box className="flex flex-col gap-2 ">
+          <Box className="flex bg-slate-100 rounded-sm w-full items-center justify-center">
+            <Typography sx={{ color: 'black' }}>Fixture - Grupo {grupo.label}</Typography>
+          </Box>
+          <CreateFixtureForCopa
+            key={grupo.id}
+            equipos={grupo.equipos}
+            fechas={fechas.filter((f) => f.groupId === grupo.id)} // Filtra fechas por grupo
+          />
+        </Box>
+      ))}
+      <Box>
+        <Button
+          variant="contained"
+          onClick={() => handleSaveFechas(fechas)}
+          fullWidth
+          sx={{ p: 2 }}
+        >
+          Guardar Grupos
+        </Button>
+      </Box>
+    </>
+  );
+};

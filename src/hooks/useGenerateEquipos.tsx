@@ -1,17 +1,25 @@
 import { useState } from 'react';
 import { Equipo } from 'src/models/Equipo';
 
+export interface Match {
+  id?: string;
+  equipoLocal: Equipo;
+  equipoVisitante: Equipo;
+}
+
 export interface Fecha {
   id: number;
   title: string; // Label de la fecha
-  partidos: { equipoLocal: Equipo; equipoVisitante: Equipo }[];
+  groupId?: number; // Índice del grupo al que pertenece la fecha
+  partidos: Match[];
 }
 
 export const useGenerateEquipos = (equipos: any[]) => {
+  const [fechas, setFechas] = useState<Fecha[]>([]);
+
   const cantidadEquipos = equipos.length;
   const cantidadFechas = cantidadEquipos - 1; // Número de fechas
   const cantidadPartidosPorFecha = cantidadEquipos / 2; // Cada fecha tendrá la mitad de partidos
-  const [fechas, setFechas] = useState<Fecha[]>([]);
 
   // Generar partidos para cada fecha, asegurando que no se repitan y que no juegue dos veces el mismo equipo
   const generarPartidos = (

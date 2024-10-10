@@ -14,27 +14,31 @@ import { FC, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from 'src/components/image';
 import EditMatchModal from './components/EditMatchModal';
-import { Fecha, useGenerateEquipos } from 'src/hooks/useGenerateEquipos';
+import { Fecha } from 'src/hooks/useGenerateEquipos';
 
 interface FixtureManagerBaseProps {
   equipos: any[];
   fechas: Fecha[];
-  handleAutocompletar: () => void;
   exists?: boolean;
 }
 
-type MapeoPartido = {
+export type MapeoPartido = {
   dateNumber: number;
   homeTeamId: string;
   awayTeamId: string;
 };
 
-const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({
-  equipos,
-  fechas,
-  handleAutocompletar,
-  exists = false,
-}) => {
+export function mapearPartidos(fechas: Fecha[]): MapeoPartido[] {
+  return fechas.flatMap((fecha) =>
+    fecha.partidos.map((partido) => ({
+      dateNumber: fecha.id,
+      homeTeamId: partido.equipoLocal.id,
+      awayTeamId: partido.equipoVisitante.id,
+    }))
+  );
+}
+
+const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({ equipos, fechas, exists = false }) => {
   const [expanded, setExpanded] = useState<number | false>(false);
   const currentMatchSelected = useRef<any | undefined>();
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
@@ -44,19 +48,9 @@ const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({
     setExpanded(isExpanded ? panel : false);
   };
 
-  function mapearPartidos(fechas: Fecha[]): MapeoPartido[] {
-    return fechas.flatMap((fecha) =>
-      fecha.partidos.map((partido) => ({
-        dateNumber: fecha.id,
-        homeTeamId: partido.equipoLocal.id,
-        awayTeamId: partido.equipoVisitante.id,
-      }))
-    );
-  }
-
   return (
     <>
-      <Card className="w-full py-4 px-2">
+      <Box className="w-full py-4 px-2">
         {fechas.map((fecha, fechaIndex) => (
           <Accordion
             key={fechaIndex}
@@ -131,15 +125,7 @@ const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({
             </AccordionDetails>
           </Accordion>
         ))}
-        {fechas.length === 0 && (
-          <Box className="flex flex-col p-4 items-center justify-center gap-5">
-            <Typography>Esta categoría aún no tiene fechas creadas.</Typography>
-            <Button variant="contained" onClick={handleAutocompletar}>
-              Autocompletar equipos
-            </Button>
-          </Box>
-        )}
-      </Card>
+      </Box>
       <EditMatchModal
         open={editModalOpen}
         match={currentMatchSelected.current}

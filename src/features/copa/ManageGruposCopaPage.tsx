@@ -35,7 +35,7 @@ const ManageGruposCopaPage = () => {
           heading={`${campeonatoData.name} - Fase de grupos`}
           links={[
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(params.id || '') },
+            { name: 'Administrar', href: PATHS.dashboard.campeonatos.manage(params.id || '') },
             { name: 'Fase de grupos' },
           ]}
         />
