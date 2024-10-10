@@ -15,7 +15,7 @@ export default function ErrorPage() {
   return (
     <>
       <Helmet>
-        <title> Error | Whalemate</title>
+        <title> Error | Liga CUBB</title>
       </Helmet>
       <Container maxWidth="lg">
         <MotionContainer
