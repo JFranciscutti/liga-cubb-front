@@ -1,1 +1,0 @@
-import{j as s,a as e,B as t,z as n}from"./index-64306fc9.js";function r({label:i,onClick:o}){return s("div",{style:{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"center"},children:[e("p",{children:i}),e(t,{onClick:o,sx:{minWidth:0,px:1,color:"black"},children:e(n,{icon:"material-symbols:close",color:"white"})})]})}export{r as D};
