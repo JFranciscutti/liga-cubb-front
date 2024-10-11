@@ -11,9 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 import moment from 'moment';
-import { Moment } from 'moment';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 import { useOnePartidoQuery } from 'src/api/CategoriaRepository';
 import DialogHeader from 'src/components/DialogHeader';
 import {
@@ -30,6 +28,8 @@ import Iconify from 'src/components/iconify';
 import Image from 'src/components/image';
 import * as Yup from 'yup';
 import canchasData from 'src/mocks/canchas.json';
+import { MatchData } from 'src/features/fixtures/components/EditMatchModal';
+import { useOnePartidoCopaQuery } from 'src/api/CampeonatoRepository';
 interface EditMatchModalProps {
   open: boolean;
   match: any;
@@ -76,13 +76,13 @@ const initialData = {
   awayTeamRedCards: [],
 };
 
-const EditMatchModal: React.FC<EditMatchModalProps> = ({
+const EditMatchCupModal: React.FC<EditMatchModalProps> = ({
   open,
   match,
   handleClose,
   handleSave,
 }) => {
-  const { data } = useOnePartidoQuery(
+  const { data } = useOnePartidoCopaQuery(
     match?.homeTeam,
     match?.awayTeam,
     match?.phaseId || '',
@@ -418,56 +418,4 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
   );
 };
 
-export default EditMatchModal;
-
-// const data = {
-//   date: null,
-//   dateNumber: 1,
-//   field: null,
-//   linemenTeam: null,
-//   scorer: null,
-//   comments: null,
-//   homeTeam: {
-//     id: '66d0f984684a731c7781781c',
-//     name: 'la masturbandeja',
-//     gender: 'male',
-//     logo: 'logodepruebarda.com',
-//     categoryName: null,
-//     leagueName: null,
-//   },
-//   awayTeam: {
-//     id: '66d0fc30f406d04e37770982',
-//     name: 'el rojo los putos del rojo',
-//     gender: 'male',
-//     logo: 'todorojo.com',
-//     categoryName: null,
-//     leagueName: null,
-//   },
-//   homeTeamGoals: 0,
-//   awayTeamGoals: 0,
-//   homeTeamPlayerGoals: [],
-//   awayTeamPlayerGoals: [],
-//   homeTeamYellowCards: [],
-//   awayTeamYellowCards: [],
-//   homeTeamRedCards: [],
-//   awayTeamRedCards: [],
-// };
-
-export interface MatchData {
-  date: Moment;
-  dateNumber: number;
-  field: string;
-  homeTeam: string;
-  awayTeam: string;
-  linemenTeam: string;
-  scorer: string; //planillero
-  comments: string;
-  homeTeamGoals: string;
-  awayTeamGoals: string;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: string[];
-  awayTeamYellowCards: string[];
-  homeTeamRedCards: string[];
-  awayTeamRedCards: string[];
-}
+export default EditMatchCupModal;

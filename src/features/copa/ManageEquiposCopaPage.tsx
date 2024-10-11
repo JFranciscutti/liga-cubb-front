@@ -1,5 +1,5 @@
 import { Button, Card, Container, Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import DialogHeader from 'src/components/DialogHeader';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import Iconify from 'src/components/iconify';
@@ -9,7 +9,11 @@ import { PATHS } from 'src/routes/paths';
 import { useState } from 'react';
 import { useConfirm } from 'src/components/confirm-action/ConfirmAction';
 import { EquipoDataGrid } from '../equipo/EquipoDataGrid';
-import { useAllEquiposByCopa, useCreateEquipoCopaMutation } from 'src/api/EquipoRepository';
+import {
+  useAllEquiposByCopa,
+  useCreateEquipoCopaMutation,
+  useDeleteEquipoMutation,
+} from 'src/api/EquipoRepository';
 import LoadingScreen from 'src/components/loading-screen';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import { enqueueSnackbar } from 'notistack';
@@ -19,15 +23,13 @@ const ManageEquiposCopaPage = () => {
   const params = useParams<{ id: string }>();
   const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
+  const navigate = useNavigate();
 
   const [createOpen, setCreateOpen] = useState(false);
   const createEquipoMutation = useCreateEquipoCopaMutation();
-  const {
-    data: allEquipos,
-    isLoading: allEquiposLoading,
-    isError: allEquiposError,
-    refetch,
-  } = useAllEquiposByCopa(params.id || '');
+  const deleteEquipoMutation = useDeleteEquipoMutation();
+
+  const { data: allEquipos, refetch: refetchAllEquipos } = useAllEquiposByCopa(params.id || '');
 
   const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
     params.id || ''
@@ -64,9 +66,19 @@ const ManageEquiposCopaPage = () => {
           <EquipoDataGrid
             data={allEquipos.teams || []}
             isLoading={false}
-            onDelete={(id: any) =>
+            onEdit={(id: string) =>
+              navigate(PATHS.dashboard.campeonatos.manageOneEquipoCopa(campeonatoData.id, id))
+            }
+            onDelete={(id: string) =>
               confirm({
-                action: async () => {},
+                action: async () => {
+                  await deleteEquipoMutation.mutateAsync(id);
+                  enqueueSnackbar({
+                    variant: 'success',
+                    message: 'Equipo eliminado correctamente',
+                  });
+                  refetchAllEquipos();
+                },
               })
             }
           />

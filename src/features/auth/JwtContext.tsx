@@ -10,11 +10,8 @@ const initialState: AuthStateType = {
   isInitialized: false,
   isAuthenticated: false,
   userId: undefined,
-  roles: [],
   user: {
     displayName: '',
-    role: '',
-    photoURL: '',
     email: '',
   },
 };

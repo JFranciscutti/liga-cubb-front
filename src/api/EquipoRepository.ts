@@ -50,12 +50,11 @@ export class EquipoRepository {
     return getEquipoMapper(data);
   };
 
-  create = (team: ICreateEquipo) =>
-    httpClient.post('tournament/league/categories/create-team', team);
+  create = (team: ICreateEquipo) => httpClient.post('teams/create-team', team);
 
-  edit = async (team: IEditEquipo) => httpClient.put('teams/' + team.id, { team });
+  edit = async (team: IEditEquipo) => httpClient.put('teams/edit-team', team);
 
-  remove = async (id: number) => httpClient.delete('teams/' + id);
+  remove = async (id: string) => httpClient.delete(`teams/delete-team?teamId=${id}`);
 
   getAllByCategoryId = async (id: string) => {
     const { data } = await httpClient.get<any>(
@@ -67,7 +66,7 @@ export class EquipoRepository {
 
   addListOfPlayersToTeam = async ({ teamId, players }: { teamId: string; players: string[] }) =>
     httpClient.post(
-      'tournament/league/categories/team/add-list-players',
+      '/teams/add-list-players',
       players.map((x) => ({ teamId, membershipNumber: x }))
     );
 

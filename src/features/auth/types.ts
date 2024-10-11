@@ -17,14 +17,11 @@ export type AuthStateType = {
   isAuthenticated: boolean;
   isInitialized: boolean;
   userId: string | number | undefined;
-  roles: Role[];
   user: LoggedUser;
 };
 
 export type LoggedUser = {
   displayName: string;
-  role: string;
-  photoURL: string;
   email: string;
 };
 

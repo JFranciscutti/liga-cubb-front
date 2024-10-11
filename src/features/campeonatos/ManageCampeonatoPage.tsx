@@ -1,4 +1,4 @@
-import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
+import { useAllFasesByCampeonato, useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import CategoriaListPage from '../categoria/CategoriaListPage';
 import { useNavigate, useParams } from 'react-router';
 import { CampeonatoTypeEnum } from 'src/models/Campeonato';

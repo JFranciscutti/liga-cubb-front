@@ -237,7 +237,7 @@ const FaseGruposFixture = ({
   const { fechas } = useGeneratePartidosFaseGrupos(grupos);
 
   const groupedData = grupos.map((grupo) => ({
-    groupName: grupo.label,
+    name: grupo.label,
     teamsIds: grupo.equipos.map((equipo) => equipo.id),
     matches: mapearPartidos(fechas.filter((f) => f.groupId === grupo.id)),
   }));

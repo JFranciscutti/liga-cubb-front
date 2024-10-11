@@ -60,10 +60,15 @@ export class JugadoresRepository {
   };
 
   createList = (jugadores: ICreateJugador[]) => {
-    return new Promise((res) => {
-      setTimeout(() => res('OK'), 1000);
-    });
-    //return httpClient.post('teams', team);
+    return httpClient.post(
+      'players/create-list-player',
+      jugadores.map((x) => ({
+        name: x.nombre,
+        lastName: x.apellido,
+        membershipNumber: x.nro_socio,
+        gender: x.gender,
+      }))
+    );
   };
 
   edit = async (jugador: IEditJugador) => {
@@ -108,6 +113,16 @@ export const useEditJugadorMutation = () => {
     mutationFn: repo.edit,
     onSuccess: (_, vars) => {
       qc.invalidateQueries(repo.keys.one(vars.id));
+    },
+  });
+};
+
+export const useCreateJugadoresListMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.createList,
+    onSuccess: () => {
+      qc.invalidateQueries(repo.keys.all());
     },
   });
 };

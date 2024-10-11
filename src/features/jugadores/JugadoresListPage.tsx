@@ -22,6 +22,7 @@ import { JugadorDataGrid } from './JugadoresDataGrid';
 import {
   ICreateJugador,
   useAllJugadoresQuery,
+  useCreateJugadoresListMutation,
   useCreateJugadorMutation,
   useEditJugadorMutation,
 } from 'src/api/JugadoresRepository';
@@ -47,6 +48,7 @@ export default function JugadoresListPage() {
   } = useAllJugadoresQuery();
 
   const createJugadorMutation = useCreateJugadorMutation();
+  const createListJugadoresMutation = useCreateJugadoresListMutation();
   const editarJugadorMutation = useEditJugadorMutation();
 
   const foundJugador = allJugadores?.find((j) => j.id === selectedId);
@@ -187,8 +189,8 @@ export default function JugadoresListPage() {
       <CargarJugadoresModal
         open={loadOpen}
         onClose={() => setLoadOpen(false)}
-        onComplete={(data: UploadCSVProps) => {
-          console.log(
+        onComplete={async (data: UploadCSVProps) => {
+          await createListJugadoresMutation.mutateAsync(
             data.rows.map(
               ({ values }): ICreateJugador => ({
                 nombre: values.nombre,
@@ -196,7 +198,16 @@ export default function JugadoresListPage() {
                 gender: values.genero === 'F' ? GeneroEnum.FEMENINO : GeneroEnum.MASCULINO,
                 nro_socio: values.nro_socio,
               })
-            )
+            ),
+            {
+              onSuccess: () => {
+                enqueueSnackbar({
+                  variant: 'success',
+                  message: 'Jugadores creados correctamente',
+                });
+                setLoadOpen(false);
+              },
+            }
           );
         }}
       />

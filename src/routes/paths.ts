@@ -67,9 +67,15 @@ export const PATHS = {
         `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/equipos/${idEquipo}`,
       manageEquiposCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/equipos-copa`,
+      manageOneEquipoCopa: (id: string, idEquipo: string) =>
+        `/dashboard/campeonatos/manage/${id}/equipos-copa/${idEquipo}`,
       createFaseGrupos: (id: number | string) => `/dashboard/campeonatos/manage/${id}/grupos-copa`,
       manageFixtureGroupsCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/fixture-grupos-copa`,
+      editFaseGrupos: (idCampeonato: string, idFase: string) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/edit-fase-grupos/${idFase}`,
+      editFasePlayoff: (idCampeonato: string, idFase: string) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/edit-fase-playoff/${idFase}`,
     },
   },
 } as const;
@@ -114,6 +120,9 @@ export const PATHS_PER_ROLE = [
         ':idCategoria',
         ':idEquipo'
       ),
+      PATHS.dashboard.campeonatos.manageOneEquipoCopa(':idCampeonato', ':idEquipo'),
+      PATHS.dashboard.campeonatos.editFaseGrupos(':idCampeonato', ':idFase'),
+      PATHS.dashboard.campeonatos.editFasePlayoff(':idCampeonato', ':idFase'),
     ],
   },
 ];
