@@ -42,6 +42,19 @@ export class CampeonatoRepository {
     httpClient.put('campeonatos/' + category.id, { name: category.name });
 
   remove = async (id: string) => httpClient.delete('campeonatos/' + id);
+
+  createFaseGruposCopa = async ({
+    campeonatoId,
+    grupos,
+  }: {
+    campeonatoId: string;
+    grupos: { groupName: string; matches: any[]; teamsIds: string[] }[];
+  }) => {
+    await httpClient.post('tournament/cup/create-phase-group', {
+      tournamentId: campeonatoId,
+      groupTeams: grupos,
+    });
+  };
 }
 
 const repo = new CampeonatoRepository();
@@ -76,6 +89,16 @@ export const useEditCampeonatoMutation = () => {
     mutationFn: repo.edit,
     onSuccess: (_, vars) => {
       qc.invalidateQueries(repo.keys.one(vars.id.toString()));
+    },
+  });
+};
+
+export const useCreateFaseGruposCopaMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.createFaseGruposCopa,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries(repo.keys.one(vars.campeonatoId));
     },
   });
 };

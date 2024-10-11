@@ -14,8 +14,12 @@ import { Equipo } from 'src/models/Equipo';
 import Image from 'src/components/image';
 import DeleteIcon from '@mui/icons-material/Delete';
 // import { useGenerateEquipos } from 'src/hooks/useGenerateEquipos';
-import CreateFixtureForCopa from 'src/features/fixtures/CreateFixtureForCopa';
+import CreateFixtureForCopa, { mapearPartidos } from 'src/features/fixtures/CreateFixtureForCopa';
 import useGeneratePartidosFaseGrupos, { Fecha } from 'src/hooks/useGeneratePartidosFaseGrupos';
+import { useCreateFaseGruposCopaMutation } from 'src/api/CampeonatoRepository';
+import { useNavigate, useParams } from 'react-router';
+import { enqueueSnackbar } from 'notistack';
+import { PATHS } from 'src/routes/paths';
 
 const CANTIDADES_VALIDAS = ['2', '3', '4', '6', '8', '12', '16'];
 const GRUPOS = Array.from({ length: 18 }, (_, i) => (i + 1).toString());
@@ -28,8 +32,11 @@ export interface Grupo {
 
 const FaseGruposGenerator = ({ equipos }: { equipos: Equipo[] }) => {
   const cantidades_validas_v2 = CANTIDADES_VALIDAS.filter((c) => equipos.length % Number(c) === 0);
-
+  const { id: campeonatoId } = useParams();
   const [cantidadGrupos, setCantidadGrupos] = useState(cantidades_validas_v2[0]);
+  const createFaseGruposMutation = useCreateFaseGruposCopaMutation();
+  const navigate = useNavigate();
+
   const [grupos, setGrupos] = useState<Grupo[]>(
     GRUPOS.map((grupo, index) => ({ id: index, label: grupo, equipos: [] as Equipo[] }))
   );
@@ -101,8 +108,13 @@ const FaseGruposGenerator = ({ equipos }: { equipos: Equipo[] }) => {
     setShowFechas(true);
   };
 
-  const handleSaveFechas = (fechas: Fecha[]) => {
-    console.log(fechas);
+  const handleSaveFechas = async (grupos: any[]) => {
+    await createFaseGruposMutation.mutateAsync({
+      campeonatoId: campeonatoId || '',
+      grupos: grupos,
+    });
+    enqueueSnackbar('Fase creada correctamente', { variant: 'success' });
+    navigate(PATHS.dashboard.campeonatos.manage(campeonatoId || ''));
   };
 
   // Crea una función para verificar si los grupos están llenos
@@ -220,9 +232,15 @@ const FaseGruposFixture = ({
 }: {
   grupos: Grupo[];
   enabled: boolean;
-  handleSaveFechas: (fechas: Fecha[]) => void;
+  handleSaveFechas: (fechas: any[]) => void;
 }) => {
   const { fechas } = useGeneratePartidosFaseGrupos(grupos);
+
+  const groupedData = grupos.map((grupo) => ({
+    groupName: grupo.label,
+    teamsIds: grupo.equipos.map((equipo) => equipo.id),
+    matches: mapearPartidos(fechas.filter((f) => f.groupId === grupo.id)),
+  }));
 
   if (!enabled) {
     return null; // Retorna null en lugar de un fragmento vacío
@@ -233,7 +251,9 @@ const FaseGruposFixture = ({
       {grupos.map((grupo) => (
         <Box className="flex flex-col gap-2 ">
           <Box className="flex bg-slate-100 rounded-sm w-full items-center justify-center">
-            <Typography sx={{ color: 'black' }}>Fixture - Grupo {grupo.label}</Typography>
+            <Typography variant="h6" sx={{ color: 'black' }}>
+              Fixture - Grupo {grupo.label}
+            </Typography>
           </Box>
           <CreateFixtureForCopa
             key={grupo.id}
@@ -245,11 +265,11 @@ const FaseGruposFixture = ({
       <Box>
         <Button
           variant="contained"
-          onClick={() => handleSaveFechas(fechas)}
+          onClick={() => handleSaveFechas(groupedData)}
           fullWidth
           sx={{ p: 2 }}
         >
-          Guardar Grupos
+          Guardar Fixture
         </Button>
       </Box>
     </>
