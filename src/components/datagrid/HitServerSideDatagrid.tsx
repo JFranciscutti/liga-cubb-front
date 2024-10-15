@@ -9,7 +9,6 @@ import {
 } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { FormProvider, useFormContext } from 'react-hook-form';
-import noresults from 'src/assets/noresults.png';
 import { FilterContext } from './HitDatagrid';
 import { ServerSideDatagridOptions } from './useTableQuery';
 
@@ -102,7 +101,6 @@ export const HitServerSideDatagrid = ({ filter, ...props }: HitServerSideDatgrid
             toolbar: CustomServerSideToolbar,
             noResultsOverlay: () => (
               <Stack height="100%" alignItems="center" justifyContent="center">
-                <img src={noresults} alt="Sin Resultados" />
                 <Typography>No hay resultados para tu búsqueda</Typography>
               </Stack>
             ),
