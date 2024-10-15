@@ -111,8 +111,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "@babel/eslint-parser": "^7.19.1",
+    "@babel/core": "^7.22.5",
+    "@babel/eslint-parser": "^7.22.5",
     "@svgr/webpack": "^6.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
