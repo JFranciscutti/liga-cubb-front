@@ -24,10 +24,9 @@ type IRegister = {
   lastName: string;
 };
 export class AuthRepository {
-  login = (x: { email: string; password: string }) =>
-    httpClient.post<{ token: string }>('login', x);
+  login = (x: { username: string; password: string }) => httpClient.post<string>('login', x);
 
-  getLoggedUser = () => httpClient.get<User>('users/me');
+  getLoggedUser = () => httpClient.get<{ username: string }>('users/me');
 
   updatePassword = (args: IUpdatePassword) =>
     new Promise((res) => {

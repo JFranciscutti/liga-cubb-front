@@ -11,7 +11,8 @@ import { HitPasswordField } from 'src/components/form/HitPasswordField';
 import { HitTextField } from 'src/components/form/HitTextField';
 import { ENABLED_FEATURES } from 'src/config';
 import { PATHS } from 'src/routes/paths';
-import { useAuthContext } from '../useAuthContext';
+import { useAuth } from '../BasicContext';
+import { useState } from 'react';
 // routes
 
 // ----------------------------------------------------------------------
@@ -23,9 +24,7 @@ type FormValuesProps = {
 };
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Email debe ser un correo electrónico válido')
-    .required('Email es requerido'),
+  email: Yup.string().required('Usuario es requerido'),
   password: Yup.string().required('Contraseña es requerida'),
 });
 
@@ -35,7 +34,8 @@ const defaultValues = {
 };
 
 export default function AuthLoginForm() {
-  const { login } = useAuthContext();
+  const [isLogging, setIsLogging] = useState(false);
+  const { login } = useAuth();
 
   const hf = useForm<FormValuesProps>({
     resolver: yupResolver(LoginSchema),
@@ -44,7 +44,9 @@ export default function AuthLoginForm() {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await login({ email: data.email, password: data.password });
+      setIsLogging(true);
+      await login(data.email, data.password);
+      setIsLogging(false);
     } catch (error) {
       console.error(error);
 
@@ -54,6 +56,8 @@ export default function AuthLoginForm() {
         ...error,
         message: error.message,
       });
+
+      setIsLogging(false);
     }
   };
 
@@ -67,32 +71,19 @@ export default function AuthLoginForm() {
       <HitForm hf={hf} onSubmit={onSubmit}>
         <Controller
           name="email"
-          render={(props) => <HitTextField {...props} label="Email" floatingLabel={false} />}
+          render={(props) => <HitTextField {...props} label="Usuario" floatingLabel={false} />}
         />
         <Controller
           name="password"
-          render={(props) => <HitPasswordField {...props} label="Password" floatingLabel={false} />}
+          render={(props) => (
+            <HitPasswordField {...props} label="Contraseña" floatingLabel={false} />
+          )}
         />
-
-        {ENABLED_FEATURES.FORGOT_PASSWORD && (
-          <Grid item xs={12}>
-            <Stack alignItems="flex-end">
-              <Link
-                to={PATHS.auth.resetPassword}
-                component={RouterLink}
-                variant="body2"
-                color="inherit"
-                underline="always"
-              >
-                Forgot password?
-              </Link>
-            </Stack>
-          </Grid>
-        )}
 
         <HitFormActions>
           <HitFormSubmitButton
             fullWidth
+            loading={isLogging}
             size="large"
             sx={{
               bgcolor: 'text.primary',

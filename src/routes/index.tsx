@@ -163,9 +163,7 @@ const ROUTES: RouteObject[] = [
         errorElement: <ErrorPage />,
         element: (
           <AuthGuard>
-            <RoleBasedGuard>
-              <DashboardLayout />
-            </RoleBasedGuard>
+            <DashboardLayout />
           </AuthGuard>
         ),
         children: [

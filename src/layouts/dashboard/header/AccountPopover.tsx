@@ -5,20 +5,19 @@ import { Box, Divider, MenuItem, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 // routes
 import { PATHS } from '../../../routes/paths';
-// auth
-import { useAuthContext } from '../../../features/auth/useAuthContext';
 // components
 import { IconButtonAnimate } from '../../../components/animate';
 import { CustomAvatar } from '../../../components/custom-avatar';
 import MenuPopover from '../../../components/menu-popover';
 import { useSnackbar } from '../../../components/snackbar';
+import { useAuth } from 'src/features/auth/BasicContext';
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const navigate = useNavigate();
 
-  const { username, logout } = useAuthContext();
+  const { username, logout } = useAuth();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -73,7 +72,7 @@ export default function AccountPopover() {
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 200, p: 0 }}>
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {username || 'User'}
+            ¡Bienvenido, {username || 'User'}!
           </Typography>
         </Box>
 

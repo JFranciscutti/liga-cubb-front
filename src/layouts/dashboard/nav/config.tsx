@@ -2,8 +2,6 @@
 import { PATHS } from '../../../routes/paths';
 // components
 import Iconify from 'src/components/iconify';
-import { useAuthContext } from 'src/features/auth/useAuthContext';
-import { isPathAuthorized } from 'src/features/auth/utils';
 import SvgColor from '../../../components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -41,16 +39,6 @@ const navConfig = [
         path: PATHS.dashboard.campeonatos.root,
         icon: ICONS.categorias,
       },
-      // {
-      //   title: 'Categorias',
-      //   path: PATHS.dashboard.categorias.root,
-      //   icon: ICONS.categorias,
-      // },
-      // {
-      //   title: 'Equipos',
-      //   path: PATHS.dashboard.equipos.root,
-      //   icon: ICONS.equipos,
-      // },
       {
         title: 'Jugadores',
         path: PATHS.dashboard.jugadores.root,
@@ -61,7 +49,6 @@ const navConfig = [
 ];
 
 const useNavConfig = () => {
-  const authCtx = useAuthContext();
   const visibleNavConfig: typeof navConfig = [];
   navConfig.forEach((nav) => {
     if (nav.items.length > 0) {

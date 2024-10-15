@@ -60,9 +60,9 @@ export const ICON = {
 };
 
 export const ENABLED_FEATURES = {
-  FORGOT_PASSWORD: true,
-  REGISTER: true,
-  LOGIN_SOCIAL: true,
+  FORGOT_PASSWORD: false,
+  REGISTER: false,
+  LOGIN_SOCIAL: false,
 };
 
 export const LOGO = LogoIcon;

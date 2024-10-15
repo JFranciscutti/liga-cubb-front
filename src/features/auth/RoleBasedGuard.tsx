@@ -3,8 +3,7 @@
 // assets
 //
 import { Navigate, useLocation } from 'react-router';
-import { useAuthContext } from './useAuthContext';
-import { isPathAuthorized } from './utils';
+import { useAuth } from './BasicContext';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +13,7 @@ type RoleBasedGuardProp = {
 
 export default function RoleBasedGuard({ children }: RoleBasedGuardProp) {
   // Logic here to get current user role
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
   if (!isAuthenticated) {
     return <Navigate to="/not-allowed" />;

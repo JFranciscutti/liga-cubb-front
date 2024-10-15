@@ -170,16 +170,6 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     [setSettings, settings]
   );
 
-  useLayoutEffect(() => {
-    if (settings.mockServer) {
-      worker.start({
-        onUnhandledRequest: 'bypass',
-      });
-    } else {
-      worker.stop();
-    }
-  }, [settings.mockServer]);
-
   const value = useMemo(
     () => ({
       ...settings,

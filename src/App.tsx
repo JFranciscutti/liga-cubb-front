@@ -13,9 +13,9 @@ import { MotionLazyContainer } from './components/animate';
 import { ConfirmActionProvider } from './components/confirm-action/ConfirmAction';
 import ScrollToTop from './components/scroll-to-top';
 import SnackbarProvider from './components/snackbar/SnackbarProvider';
-import { AuthProvider } from './features/auth/JwtContext';
 import SpanishLang from './lang/es.json';
 import { SettingsProvider } from './components/settings';
+import { AuthProvider } from './features/auth/BasicContext';
 moment.locale('es');
 // ----------------------------------------------------------------------
 
