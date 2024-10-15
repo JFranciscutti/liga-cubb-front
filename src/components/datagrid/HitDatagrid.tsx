@@ -10,7 +10,6 @@ import {
 } from '@mui/x-data-grid';
 import { createContext, useContext, useState } from 'react';
 import { FieldValues, FormProvider, UseFormReturn, useFormContext } from 'react-hook-form';
-import noresults from 'src/assets/noresults.png';
 
 type HitDatagridProps<TValue extends FieldValues> = DataGridProps & {
   filter: {
@@ -162,7 +161,6 @@ export const HitDatagrid = <TValue extends FieldValues>({
             toolbar: CustomToolbar,
             noResultsOverlay: () => (
               <Stack height="100%" alignItems="center" justifyContent="center">
-                <img src={noresults} alt="Sin Resultados" />
                 <Typography>No hay resultados para tu búsqueda</Typography>
               </Stack>
             ),
