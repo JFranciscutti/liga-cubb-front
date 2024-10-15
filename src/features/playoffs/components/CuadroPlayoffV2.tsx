@@ -17,7 +17,7 @@ const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
 
   return (
     <>
-      <Box className="bg-[url('/assets/background/soccer_background.jpg')] bg-cover overflow-auto relative h-[950px] w-[1100px]">
+      <Box className="bg-[url('/assets/background/soccer_background.jpg')] bg-cover overflow-x-scroll relative h-[950px] w-full">
         {/* Round of 16 - Left */}
         {matches.r16.map((match, i) => (
           <Box

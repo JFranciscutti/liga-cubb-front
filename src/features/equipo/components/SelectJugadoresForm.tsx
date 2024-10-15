@@ -48,7 +48,7 @@ const SelectJugadoresForm: React.FC<CargarJugadorFormProps> = ({ onSubmit, jugad
               <HitMultiAutocompleteField
                 {...field}
                 options={jugadores.map((jugador) => ({
-                  label: jugador.nombre + ' ' + jugador.apellido,
+                  label: jugador.nombre + ' ' + jugador.apellido + ' (' + jugador.nro_socio + ')',
                   value: jugador.nro_socio,
                 }))}
                 label="Jugadores disponibles"

@@ -59,15 +59,7 @@ const LazyNewPasswordPage = withLoadingScreen(
 const LazyVerifyCodePage = withLoadingScreen(
   lazy(() => import('src/features/auth/verify-code/VerifyCodePage'))
 );
-const LazyAdminUsersListPage = withLoadingSpinner(
-  lazy(() => import('src/features/admin-user-crud/AdminUserListPage'))
-);
-const LazyAdminUsersCreatePage = withLoadingSpinner(
-  lazy(() => import('src/features/admin-user-crud/AdminUserCreatePage'))
-);
-const LazyAdminUsersEditPage = withLoadingSpinner(
-  lazy(() => import('src/features/admin-user-crud/AdminUserEditPage'))
-);
+
 const LazyCategoriaListPage = withLoadingSpinner(
   lazy(() => import('src/features/categoria/CategoriaListPage'))
 );
@@ -179,15 +171,6 @@ const ROUTES: RouteObject[] = [
         children: [
           { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
           {
-            path: 'usuarios',
-            children: [
-              { element: <Navigate to="/dashboard/usuarios/list" replace />, index: true },
-              { path: 'list', element: <LazyAdminUsersListPage /> },
-              { path: 'create', element: <LazyAdminUsersCreatePage /> },
-              { path: 'edit/:id', element: <LazyAdminUsersEditPage /> },
-            ],
-          },
-          {
             path: 'categorias',
             children: [
               { element: <Navigate to="/dashboard/categorias/list" replace />, index: true },
@@ -265,4 +248,4 @@ const ROUTES: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter(ROUTES, { basename: '/liga-cubb-front' });
+export const router = createBrowserRouter(ROUTES);

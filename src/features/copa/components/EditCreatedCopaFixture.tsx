@@ -90,7 +90,9 @@ export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({ partidos, 
           setEditModalOpen(false);
           currentMatchSelected.current = undefined;
         }}
-        handleSave={() => {}}
+        handleSave={(data) => {
+          console.log(data);
+        }}
       />
     </>
   );

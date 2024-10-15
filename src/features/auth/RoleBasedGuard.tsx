@@ -14,10 +14,9 @@ type RoleBasedGuardProp = {
 
 export default function RoleBasedGuard({ children }: RoleBasedGuardProp) {
   // Logic here to get current user role
-  const { roles: currentRoles } = useAuthContext();
+  const { isAuthenticated } = useAuthContext();
   const location = useLocation();
-  const isAuthorized = isPathAuthorized(currentRoles, location.pathname);
-  if (!isAuthorized) {
+  if (!isAuthenticated) {
     return <Navigate to="/not-allowed" />;
   }
 

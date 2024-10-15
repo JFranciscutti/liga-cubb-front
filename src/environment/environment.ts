@@ -1,5 +1,5 @@
 const dev = {
-  backEnd: 'https://a4b6-190-109-48-252.ngrok-free.app/',
+  backEnd: 'https://league-458o.onrender.com/',
   production: false,
 };
 

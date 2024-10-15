@@ -16,25 +16,21 @@ export type Role = 'super_admin' | 'admin';
 export type AuthStateType = {
   isAuthenticated: boolean;
   isInitialized: boolean;
-  userId: string | number | undefined;
-  user: LoggedUser;
+  username?: string;
+  password?: string;
 };
 
 export type LoggedUser = {
-  displayName: string;
-  email: string;
+  username: string;
 };
 
 // ----------------------------------------------------------------------
 
-export type JWTContextType = {
-  method: 'jwt';
+export type BasicContextType = {
+  method: 'basic';
   isAuthenticated: boolean;
   isInitialized: boolean;
   login: (x: { email: string; password: string }) => Promise<any>;
   logout: () => void;
-  roles: Role[];
-  userId: string | number | undefined;
-  isSuperAdmin: () => boolean;
-  user: LoggedUser;
+  username?: string;
 };

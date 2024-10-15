@@ -23,9 +23,8 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
           ? team?.logo
           : 'https://www.citypng.com/public/uploads/preview/gray-outline-soccer-ball-icon-transparent-background-701751694971930nnc2aptsvc.png'
       }
-      height={logo_size}
-      width={logo_size}
-      className={!!team ? 'bg-gray-200' : 'bg-black'}
+      style={{ height: logo_size, width: logo_size }}
+      className={!!team ? 'bg-gray-200 object-contain' : 'bg-black object-contain'}
       alt={''}
     />
     <Typography
@@ -59,9 +58,8 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
           ? team?.logo
           : 'https://www.citypng.com/public/uploads/preview/gray-outline-soccer-ball-icon-transparent-background-701751694971930nnc2aptsvc.png'
       }
-      height={logo_size}
-      width={logo_size}
-      className={!!team ? 'bg-gray-200' : 'bg-black'}
+      style={{ height: logo_size, width: logo_size }}
+      className={!!team ? 'bg-gray-200 object-contain' : 'bg-black object-contain'}
       alt={''}
     />
     <Typography

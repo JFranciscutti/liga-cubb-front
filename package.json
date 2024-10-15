@@ -59,6 +59,7 @@
     "autoprefixer": "^10.4.13",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.1.2",
+    "caniuse-lite": "^1.0.30001668",
     "change-case": "^4.1.2",
     "compressorjs": "^1.1.1",
     "csv-import-react": "^1.0.11",

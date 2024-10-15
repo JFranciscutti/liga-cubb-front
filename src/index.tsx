@@ -39,11 +39,9 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false, retry: false } },
   mutationCache: new MutationCache({
     onError: (error, mutation) => {
-      const { messages } = (error as AxiosError).response?.data as { messages: string[] };
-      let errorMsg = 'Something went wrong';
-      if (messages) {
-        errorMsg = messages.join('\n');
-      }
+      console.log(error);
+      let errorMsg = ((error as AxiosError).response?.data as string) || 'Algo salió mal';
+
       enqueueSnackbar({
         variant: 'error',
         message: errorMsg,

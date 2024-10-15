@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useOnePartidoQuery } from 'src/api/CategoriaRepository';
 import DialogHeader from 'src/components/DialogHeader';
 import {
   HitDateTimePickerField,
@@ -30,11 +29,13 @@ import * as Yup from 'yup';
 import canchasData from 'src/mocks/canchas.json';
 import { MatchData } from 'src/features/fixtures/components/EditMatchModal';
 import { useOnePartidoCopaQuery } from 'src/api/CampeonatoRepository';
+import { useEffect } from 'react';
+import { parse } from 'date-fns';
 interface EditMatchModalProps {
   open: boolean;
   match: any;
   handleClose: () => void;
-  handleSave: () => void;
+  handleSave: (data: MatchData) => void;
 }
 
 //@ts-ignore
@@ -89,6 +90,35 @@ const EditMatchCupModal: React.FC<EditMatchModalProps> = ({
     !!match?.homeTeam && !!match.awayTeam
   );
 
+  //   const parsedData: MatchData | undefined = data
+  //     ? {
+  //         date: data.date || moment(),
+  //         dateNumber: data.dateNumber,
+  //         homeTeam: data.homeTeam.name,
+  //         awayTeam: data.awayTeam.name,
+  //         field: data.field || '',
+  //         linemenTeam: data.linemenTeam || '',
+  //         scorer: data.scorer || '',
+  //         comments: data.comments || '',
+  //         homeTeamGoals: data.homeTeamGoals?.toString() || '0',
+  //         awayTeamGoals: data.awayTeamGoals?.toString() || '0',
+  //         homeTeamPlayerGoals: data.homeTeamPlayerGoals.map((goal: any) => ({
+  //           playerId: goal.playerId,
+  //           goals: goal.goals,
+  //         })),
+  //         awayTeamPlayerGoals: data.awayTeamPlayerGoals.map((goal: any) => ({
+  //           playerId: goal.playerId,
+  //           goals: goal.goals,
+  //         })),
+  //         homeTeamYellowCards: data.homeTeamYellowCards,
+  //         awayTeamYellowCards: data.awayTeamYellowCards,
+  //         homeTeamRedCards: data.homeTeamRedCards,
+  //         awayTeamRedCards: data.awayTeamRedCards,
+  //       }
+  //     : undefined;
+
+  //   console.log(parsedData);
+
   const hf = useForm<MatchData>({
     resolver: yupResolver(PartidoSchema),
     defaultValues: initialData,
@@ -107,7 +137,7 @@ const EditMatchCupModal: React.FC<EditMatchModalProps> = ({
   });
 
   const onSubmit = async (data: MatchData) => {
-    console.log(data);
+    handleSave(data);
   };
 
   if (!data) {
@@ -167,7 +197,12 @@ const EditMatchCupModal: React.FC<EditMatchModalProps> = ({
                           {...field}
                           label="Jugador"
                           floatingLabel={false}
-                          options={[]}
+                          options={
+                            data.homeTeam.players.map((p: any) => ({
+                              value: p.membershipNumber,
+                              label: p.name + ' ' + p.lastName,
+                            })) || []
+                          }
                         />
                       )}
                     />
@@ -223,7 +258,12 @@ const EditMatchCupModal: React.FC<EditMatchModalProps> = ({
                           {...field}
                           label="Jugador"
                           floatingLabel={false}
-                          options={[]}
+                          options={
+                            data.awayTeam.players.map((p: any) => ({
+                              value: p.membershipNumber,
+                              label: p.name + ' ' + p.lastName,
+                            })) || []
+                          }
                         />
                       )}
                     />

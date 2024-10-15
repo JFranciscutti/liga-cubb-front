@@ -143,7 +143,7 @@ export const Rounds = ({ partido, index }: { partido: RoundMatch; index: number 
       >
         {isHome && (
           <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-            <Image src={teamLogo} className="h-10 w-10 min-w-10" />
+            <Image src={teamLogo} className="h-10 w-10 min-w-10 object-contain" />
           </Box>
         )}
         <p
@@ -154,7 +154,7 @@ export const Rounds = ({ partido, index }: { partido: RoundMatch; index: number 
         </p>
         {!isHome && (
           <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-            <Image src={teamLogo} className="h-10 w-10 min-w-10" />
+            <Image src={teamLogo} className="h-10 w-10 min-w-10 object-contain" />
           </Box>
         )}
       </Grid>

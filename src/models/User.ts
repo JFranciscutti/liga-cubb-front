@@ -3,7 +3,6 @@ import { ColorSchema } from 'src/theme/palette';
 export interface User {
   id: number;
   email: string;
-  roles: UserRoles[];
 }
 
 export type LoginCredentials = {

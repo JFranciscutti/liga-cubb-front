@@ -1,22 +1,17 @@
-import jwtDecode from 'jwt-decode';
-import moment from 'moment';
 import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 // utils
 import { AuthRepository, useLoginMutation } from 'src/api/AuthRepository';
-import { AuthStateType, JWTContextType, Role } from './types';
+import { AuthStateType, BasicContextType } from './types';
 import { setSession } from './utils';
 
 const initialState: AuthStateType = {
   isInitialized: false,
   isAuthenticated: false,
-  userId: undefined,
-  user: {
-    displayName: '',
-    email: '',
-  },
+  username: undefined,
+  password: undefined,
 };
 
-export const AuthContext = createContext<JWTContextType | null>(null);
+export const AuthContext = createContext<BasicContextType | null>(null);
 
 // ----------------------------------------------------------------------
 
@@ -31,12 +26,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const loginMutation = useLoginMutation();
   const tokenExpirationTimeoutRef = useRef<NodeJS.Timeout>();
 
-  const setStateFromToken = async (accessToken: string) => {
-    const decodedUser = jwtDecode<{ user_id: number; roles: Role[] }>(accessToken);
+  const setStateFromToken = async () => {
     const { data: user } = await userRepo.getLoggedUser();
     let loggedUser = {
       displayName: user.email,
-      role: 'Estudiante',
       photoURL: '',
       email: user.email,
     };
@@ -44,8 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setState((x) => ({
       ...x,
       isAuthenticated: true,
-      userId: decodedUser.user_id,
-      roles: decodedUser.roles,
+      userId: user.id,
       isInitialized: true,
       user: loggedUser,
     }));
@@ -56,7 +48,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       ...x,
       isAuthenticated: true,
       userId: 1,
-      roles: ['super_admin'],
       isInitialized: true,
     }));
 
@@ -65,28 +56,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initializeState();
   }, []);
 
-  const setTokenExpirationCallback = useCallback(
-    (accessToken: string) => {
-      const { exp } = jwtDecode<{ exp: string }>(accessToken);
-      const expirationDate = moment.unix(Number(exp));
-      const expiration = expirationDate.diff(moment(), 'milliseconds');
-      if (expiration < 0) {
-        logout();
-      }
-      tokenExpirationTimeoutRef.current = setTimeout(() => {
-        logout();
-      }, expiration);
-    },
-    [logout]
-  );
-
   const initialize = useCallback(async () => {
     try {
-      const accessToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
-      setSession(accessToken);
-      if (accessToken) {
-        setTokenExpirationCallback(accessToken);
-        setStateFromToken(accessToken);
+      const username = typeof window !== 'undefined' ? localStorage.getItem('username') : '';
+      if (username) {
+        setStateFromToken();
       } else {
         initializeState();
       }
@@ -96,7 +70,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
     return () =>
       tokenExpirationTimeoutRef.current && clearTimeout(tokenExpirationTimeoutRef.current);
-  }, [setTokenExpirationCallback]);
+  }, []);
 
   useEffect(() => {
     initialize();
@@ -104,23 +78,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // LOGIN
   const login = async ({ email, password }: { email: string; password: string }) => {
-    const {
-      data: { token },
-    } = await loginMutation.mutateAsync({ email, password });
-    setSession(token);
-    setStateFromToken(token);
+    const { data } = await loginMutation.mutateAsync({ email, password });
+    const { token } = data;
+    localStorage.setItem('token', token);
+    setStateFromToken();
   };
-
-  const isSuperAdmin = () => (state.roles ?? []).includes('super_admin');
 
   return (
     <AuthContext.Provider
       value={{
         ...state,
-        method: 'jwt',
+        method: 'basic',
         login,
         logout,
-        isSuperAdmin,
       }}
     >
       {children}

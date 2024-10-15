@@ -145,12 +145,14 @@ const EquipoCopaEditPage = () => {
         </DialogTitle>
         <DialogContent sx={{ mb: 4, width: '100%' }}>
           <SelectJugadoresForm
-            onSubmit={async (values) =>
+            onSubmit={async (values) => {
               await cargarJugadoresMutation.mutateAsync({
                 teamId: params.idEquipo || '',
                 players: values.ids,
-              })
-            }
+              });
+              enqueueSnackbar('Jugadores cargados correctamente', { variant: 'success' });
+              setLoadOpen(false);
+            }}
             jugadores={jugadoresData}
           />
         </DialogContent>

@@ -8,7 +8,7 @@ import { useLocales } from '../../../locales';
 // ----------------------------------------------------------------------
 
 export default function NavDocs() {
-  const { user } = useAuthContext();
+  const { username } = useAuthContext();
 
   const { translate } = useLocales();
 
@@ -28,7 +28,7 @@ export default function NavDocs() {
 
       <div>
         <Typography gutterBottom variant="subtitle1">
-          {translate('docs.hi')}, {user?.displayName}
+          {translate('docs.hi')}, {username}
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary', whiteSpace: 'pre-line' }}>

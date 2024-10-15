@@ -6,6 +6,7 @@ import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
 import { Moment } from 'moment';
 import moment from 'moment';
+import { Jugador } from 'src/models/Jugador';
 
 interface ICreateCategoria {
   name: string;
@@ -25,6 +26,13 @@ export interface Team {
   logo: string;
   categoryName: string | null;
   leagueName: string | null;
+  players: {
+    gender: string;
+    name: string;
+    lastName: string;
+    membershipNumber: string;
+    id: string;
+  }[];
 }
 
 export interface Round {

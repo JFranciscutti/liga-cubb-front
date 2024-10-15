@@ -64,11 +64,10 @@ const useNavConfig = () => {
   const authCtx = useAuthContext();
   const visibleNavConfig: typeof navConfig = [];
   navConfig.forEach((nav) => {
-    const visibleItems = nav.items.filter((item) => isPathAuthorized(authCtx.roles, item.path));
-    if (visibleItems.length > 0) {
+    if (nav.items.length > 0) {
       visibleNavConfig.push({
         ...nav,
-        items: visibleItems,
+        items: nav.items,
       });
     }
   });
