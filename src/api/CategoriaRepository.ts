@@ -37,6 +37,7 @@ export interface Team {
 
 export interface Round {
   matchesPlayoff: RoundMatch[];
+  roundNumber: number;
 }
 
 export enum MatchStatus {
@@ -100,7 +101,7 @@ export const partidoMapper = (x: any): Match => ({
 });
 
 export const playoffFaseMapper = (data: any): Round => {
-  const matchesPlayoff = data.matchesPlayoff.map((x: any) => ({
+  const matchesPlayoff: RoundMatch[] = data.matchesPlayoff.map((x: any) => ({
     id: x.id,
     awayMatch: partidoMapper(x.awayMatch),
     homeMatch: partidoMapper(x.homeMatch),
@@ -110,6 +111,7 @@ export const playoffFaseMapper = (data: any): Round => {
 
   return {
     matchesPlayoff: matchesPlayoff,
+    roundNumber: data.roundNumber,
   };
 };
 
@@ -182,7 +184,7 @@ export class CategoriaRepository {
 
   createFasePlayoff = async ({ partidos, categoryId }: { partidos: any[]; categoryId: string }) =>
     await httpClient.post(`tournament/league/categories/create-phase-playoff`, {
-      categoryId: categoryId,
+      competitionId: categoryId,
       round: { roundNumber: partidos.length, matchesPlayoff: partidos },
     });
 

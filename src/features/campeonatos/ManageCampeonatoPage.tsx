@@ -95,7 +95,7 @@ const ManageCampeonatoPage = () => {
             <Card
               className="bg-sky-800"
               sx={{ p: 2, cursor: 'pointer' }}
-              onClick={() => navigate(PATHS.dashboard.categorias.createFasePlayoff(id || ''))}
+              onClick={() => navigate(PATHS.dashboard.campeonatos.createPlayoff(id || ''))}
             >
               <div className="flex flex-col gap-2">
                 <Typography fontSize={18}>Fase Playoff</Typography>

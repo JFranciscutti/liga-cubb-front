@@ -123,6 +123,15 @@ const LazyEquipoCopaEditPage = withLoadingSpinner(
 const LazyEditFaseGruposCopa = withLoadingSpinner(
   lazy(() => import('src/features/campeonatos/EditFaseGruposCopa'))
 );
+
+const LazyManagePlayoffCopaPage = withLoadingSpinner(
+  lazy(() => import('src/features/playoffs/PlayoffCopaPage'))
+);
+
+const LazyEditPlayoffCopaPage = withLoadingSpinner(
+  lazy(() => import('src/features/playoffs/EditPlayoffCopaPage'))
+);
+
 const ROUTES: RouteObject[] = [
   {
     path: '/',
@@ -196,10 +205,17 @@ const ROUTES: RouteObject[] = [
                 element: <LazyEditFaseGruposCopa />,
               },
               {
+                path: 'manage/:idCampeonato/edit-fase-playoff/:idFase',
+                element: <LazyEditPlayoffCopaPage />,
+              },
+              {
                 path: 'manage/:idCampeonato/equipos-copa/:idEquipo',
                 element: <LazyEquipoCopaEditPage />,
               },
               { path: 'manage/:id/equipos-copa', element: <LazyManageEquiposCopaPage /> },
+
+              { path: 'manage/:id/playoff-copa', element: <LazyManagePlayoffCopaPage /> },
+
               { path: 'manage/:id/grupos-copa', element: <LazyManageGruposCopaPage /> },
               {
                 path: 'manage/:idCampeonato/categoria/:idCategoria/equipos/:idEquipo',

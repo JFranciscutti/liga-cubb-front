@@ -1,5 +1,6 @@
 import { Box, Typography, Divider } from '@mui/material';
-import { Team } from './CuadroPlayoff';
+import { LOGO_DEFAULT_TEAM } from 'src/utils/constants';
+import { Team } from './CuadroPlayoffV2';
 
 interface ResultBoxProps {
   team?: Team;
@@ -18,11 +19,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({
 }) => (
   <Box className="flex gap-2 items-center">
     <img
-      src={
-        !!team
-          ? team?.logo
-          : 'https://www.citypng.com/public/uploads/preview/gray-outline-soccer-ball-icon-transparent-background-701751694971930nnc2aptsvc.png'
-      }
+      src={!!team ? team?.logo : LOGO_DEFAULT_TEAM}
       style={{ height: logo_size, width: logo_size }}
       className={!!team ? 'bg-gray-200 object-contain' : 'bg-black object-contain'}
       alt={''}
@@ -53,11 +50,7 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
 }) => (
   <Box className="flex flex-row-reverse gap-2 items-center">
     <img
-      src={
-        !!team
-          ? team?.logo
-          : 'https://www.citypng.com/public/uploads/preview/gray-outline-soccer-ball-icon-transparent-background-701751694971930nnc2aptsvc.png'
-      }
+      src={!!team ? team?.logo : LOGO_DEFAULT_TEAM}
       style={{ height: logo_size, width: logo_size }}
       className={!!team ? 'bg-gray-200 object-contain' : 'bg-black object-contain'}
       alt={''}

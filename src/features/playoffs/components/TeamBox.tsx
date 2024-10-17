@@ -1,6 +1,6 @@
 import { Box, Divider } from '@mui/material';
-import { Team } from './CuadroPlayoff';
 import { ResultBox, InvertedResultBox } from './ResultBox';
+import { Team } from './CuadroPlayoffV2';
 
 interface TeamBoxProps {
   homeTeam?: Team;

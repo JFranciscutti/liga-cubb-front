@@ -70,6 +70,7 @@ export const PATHS = {
       manageOneEquipoCopa: (id: string, idEquipo: string) =>
         `/dashboard/campeonatos/manage/${id}/equipos-copa/${idEquipo}`,
       createFaseGrupos: (id: number | string) => `/dashboard/campeonatos/manage/${id}/grupos-copa`,
+      createPlayoff: (id: number | string) => `/dashboard/campeonatos/manage/${id}/playoff-copa`,
       manageFixtureGroupsCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/fixture-grupos-copa`,
       editFaseGrupos: (idCampeonato: string, idFase: string) =>

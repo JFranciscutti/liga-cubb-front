@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Campeonato, CAMPEONATOS_MOCK } from 'src/models/Campeonato';
 import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
-import { Match, Team } from './CategoriaRepository';
+import { Match, playoffFaseMapper, Round, Team } from './CategoriaRepository';
 import moment from 'moment';
 
 interface ICreateCampeonato {
@@ -99,6 +99,19 @@ export class CampeonatoRepository {
     //const data = partidoData;
     return partidoMapper(data);
   };
+
+  createFasePlayoff = async ({ partidos, cupId }: { partidos: any[]; cupId: string }) =>
+    await httpClient.post(`tournament/cup/create-phase-playoff`, {
+      competitionId: cupId,
+      round: { roundNumber: partidos.length, matchesPlayoff: partidos },
+    });
+
+  getOneFasePlayoff = async (faseId: string) => {
+    const { data } = await httpClient.get<Round[]>(
+      `tournament/league/categories/phase-playoff/get-rounds?phaseId=${faseId}`
+    );
+    return data.map(playoffFaseMapper);
+  };
 }
 
 const repo = new CampeonatoRepository();
@@ -166,4 +179,20 @@ export const useOnePartidoCopaQuery = (
     queryKey: repo.keys.partido(localId + awayId + faseId),
     queryFn: () => repo.getOnePartido({ homeTeamId: localId, awayTeamId: awayId, faseId: faseId }),
     enabled: enabled,
+  });
+
+export const useCreateFasePlayoffCopaMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.createFasePlayoff,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries(repo.keys.one(vars.cupId));
+    },
+  });
+};
+
+export const useOneFasePlayoffCopaQuery = (id: string) =>
+  useSuspenseQuery({
+    queryKey: repo.keys.oneFase(id),
+    queryFn: () => repo.getOneFasePlayoff(id),
   });

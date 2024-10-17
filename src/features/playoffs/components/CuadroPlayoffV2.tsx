@@ -1,7 +1,54 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { FinalTeamBox, TeamBox } from './TeamBox';
-import { MatchStatus, Round } from './CuadroPlayoff';
+import { Moment } from 'moment';
+
+export enum MatchStatus {
+  PENDING = 'Upcoming',
+  PLAYED = 'Played',
+  IN_PROGRESS = 'Suspended',
+}
+
+export interface Match {
+  date: Moment;
+  dateNumber: number;
+  field: string;
+  linemenTeam: string;
+  scorer: string;
+  comments: string;
+  homeTeam: Team;
+  awayTeam: Team;
+  homeTeamGoals: number | null;
+  awayTeamGoals: number | null;
+  homeTeamPlayerGoals: any[];
+  awayTeamPlayerGoals: any[];
+  homeTeamYellowCards: any[];
+  awayTeamYellowCards: any[];
+  homeTeamRedCards: any[];
+  awayTeamRedCards: any[];
+  status: MatchStatus;
+}
+
+export interface Team {
+  id: string;
+  name: string;
+  gender: string;
+  logo: string;
+  categoryName: string | null;
+  leagueName: string | null;
+}
+
+export interface RoundMatch {
+  id: string;
+  awayMatch: Match;
+  homeMatch: Match;
+  teamWinner?: Team | null;
+  nextMatchId: string;
+}
+
+export interface Round {
+  matchesPlayoff: RoundMatch[];
+}
 
 interface CuadroPlayoffProps {
   rondas: Round[];
@@ -9,10 +56,10 @@ interface CuadroPlayoffProps {
 
 const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
   const matches = {
-    r16: rondas[3].matchesPlayoff,
-    qf: rondas[2].matchesPlayoff,
-    sf: rondas[1].matchesPlayoff,
-    f: rondas[0].matchesPlayoff[0],
+    r16: rondas[3]?.matchesPlayoff || [],
+    qf: rondas[2]?.matchesPlayoff || [],
+    sf: rondas[1]?.matchesPlayoff || [],
+    f: rondas[0]?.matchesPlayoff[0] || { homeMatch: {}, awayMatch: {} },
   };
 
   return (
