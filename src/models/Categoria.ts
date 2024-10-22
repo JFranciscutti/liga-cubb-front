@@ -4,7 +4,7 @@ import { Equipo } from './Equipo';
 export interface Categoria {
   id: string;
   name: string;
-  gender: GeneroEnum;
+  gender: string;
 }
 
 export interface CategoriaConEquipos extends Categoria {

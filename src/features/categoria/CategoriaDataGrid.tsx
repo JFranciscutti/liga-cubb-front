@@ -15,6 +15,7 @@ import Iconify from 'src/components/iconify';
 import MenuPopover from 'src/components/menu-popover';
 import { Categoria } from 'src/models/Categoria';
 import { PATHS } from 'src/routes/paths';
+import { GeneroEnum } from 'src/utils/enums';
 
 interface Props {
   data: Categoria[];
@@ -56,11 +57,14 @@ export const CategoriaDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, 
       headerName: 'Género',
       type: 'string',
       renderHeader: () => <div className="px-2">{'Género'}</div>,
-      renderCell: (params) => (
-        <div className="w-full px-2">
-          <Typography>{capitalize(params.row.gender)}</Typography>
-        </div>
-      ),
+      renderCell: (params) => {
+        const gender = params.row.gender === 'female' ? GeneroEnum.FEMENINO : GeneroEnum.MASCULINO;
+        return (
+          <div className="w-full px-2">
+            <Typography>{capitalize(gender)}</Typography>
+          </div>
+        );
+      },
     },
     {
       field: 'action',
