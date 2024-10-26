@@ -1,5 +1,5 @@
 const dev = {
-  backEnd: 'https://league-458o.onrender.com/',
+  backEnd: 'http://localhost:8080/',
   production: false,
 };
 
@@ -8,5 +8,4 @@ const _prod = {
   production: true,
 };
 
-export const environment = _prod;
-//export const environment = dev;
+export const environment = import.meta.env.VITE_PRODUCTION ? _prod : dev;

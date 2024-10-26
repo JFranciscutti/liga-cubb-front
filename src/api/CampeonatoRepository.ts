@@ -4,6 +4,7 @@ import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
 import { Match, playoffFaseMapper, Round, Team } from './CategoriaRepository';
 import moment from 'moment';
+import { GeneroEnum } from 'src/utils/enums';
 
 interface ICreateCampeonato {
   name: string;

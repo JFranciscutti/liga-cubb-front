@@ -195,7 +195,7 @@ export default function JugadoresListPage() {
               ({ values }): ICreateJugador => ({
                 nombre: values.nombre,
                 apellido: values.apellido,
-                gender: values.genero === 'F' ? GeneroEnum.FEMENINO : GeneroEnum.MASCULINO,
+                gender: values.genero === 'F' ? 'female' : 'male',
                 nro_socio: values.nro_socio,
               })
             ),

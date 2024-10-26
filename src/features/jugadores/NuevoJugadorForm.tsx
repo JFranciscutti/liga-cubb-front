@@ -5,18 +5,12 @@ import { Controller, useForm } from 'react-hook-form';
 import {
   HitFormActions,
   HitFormSubmitButton,
-  HitImageField,
-  HitPasswordField,
   HitSelectField,
   HitTextField,
 } from 'src/components/form';
 import { HitForm } from 'src/components/form/HitForm';
-import { fileSizeExceeded } from 'src/utils/fileSizeExceeded';
-import { testValidExtensionFileIfFileOrURL } from 'src/utils/testValidExtensionsFileIfFileOrUrl';
 import { Grid, capitalize } from '@mui/material';
 import { GeneroEnum } from 'src/utils/enums';
-import { Categoria } from 'src/models/Categoria';
-import { useEffect } from 'react';
 
 export type NuevoJugadorFormType = {
   name: string;
@@ -104,11 +98,11 @@ export const NuevoJugadorForm: React.FC<NuevoJugadorFormProps> = ({
                 floatingLabel={false}
                 options={[
                   {
-                    value: "male",
+                    value: 'male',
                     label: capitalize(GeneroEnum.MASCULINO),
                   },
                   {
-                    value: "female",
+                    value: 'female',
                     label: capitalize(GeneroEnum.FEMENINO),
                   },
                 ]}
