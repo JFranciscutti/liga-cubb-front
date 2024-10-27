@@ -30,12 +30,12 @@ import Iconify from 'src/components/iconify';
 import Image from 'src/components/image';
 import * as Yup from 'yup';
 import canchasData from 'src/mocks/canchas.json';
-import { useAllEquiposByCategory } from 'src/api/EquipoRepository';
 interface EditMatchModalProps {
   open: boolean;
   match: any;
   handleClose: () => void;
   handleSave: () => void;
+  categoryTeams: any[];
 }
 
 //@ts-ignore
@@ -77,9 +77,17 @@ const initialData = {
   awayTeamRedCards: [],
 };
 
+const selectorMapper = (p: any) => {
+  return {
+    label: p.name + ' ' + p.lastName,
+    value: p.membershipNumber,
+  };
+};
+
 const EditMatchModal: React.FC<EditMatchModalProps> = ({
   open,
   match,
+  categoryTeams,
   handleClose,
   handleSave,
 }) => {
@@ -89,16 +97,6 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
     match?.phaseId || '',
     !!match?.homeTeam && !!match.awayTeam
   );
-
-  const params = useParams<{ id: string }>();
-  console.log(params);
-  
-  // const {
-  //   data: allEquipos,
-  //   isLoading: allEquiposLoading,
-  //   isError: allEquiposError,
-  //   refetch,
-  // } = useAllEquiposByCategory(params.id || '');
 
   const hf = useForm<MatchData>({
     resolver: yupResolver(PartidoSchema),
@@ -121,15 +119,9 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
     console.log(data);
   };
 
-  const homeTeamPlayersSelector =  data?.homeTeam.players.map((p) => ({
-    label: p.name + ' ' + p.lastName,
-    value: p.membershipNumber,
-  }));
+  const homeTeamPlayersSelector = data?.homeTeam.players.map(selectorMapper);
 
-  const awayTeamPlayersSelector = data?.awayTeam.players.map((p) => ({
-    label: p.name + ' ' + p.lastName,
-    value: p.membershipNumber,
-  }));
+  const awayTeamPlayersSelector = data?.awayTeam.players.map(selectorMapper);
 
   if (!data) {
     return <></>;
@@ -245,7 +237,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                           label="Jugador"
                           floatingLabel={false}
                           options={awayTeamPlayersSelector || []}
-                          />
+                        />
                       )}
                     />
                     <Controller
@@ -296,7 +288,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       label="Tarjetas amarillas - Local"
                       floatingLabel={false}
                       options={homeTeamPlayersSelector || []}
-                      />
+                    />
                   )}
                 />
               </Grid>
@@ -326,7 +318,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       label="Tarjetas rojas - Local"
                       floatingLabel={false}
                       options={homeTeamPlayersSelector || []}
-                      />
+                    />
                   )}
                 />
               </Grid>
@@ -392,10 +384,12 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       {...field}
                       label="Equipo linea"
                       floatingLabel={false}
-                      options={[
-                        { value: 'ajsdjas', label: 'ajsdjas' },
-                        { value: 'jajdsfjas', label: 'jajdsfjas' },
-                      ]}
+                      options={
+                        categoryTeams.map((team) => ({
+                          value: team.id,
+                          label: team.name,
+                        })) || []
+                      }
                     />
                   )}
                 />
@@ -410,10 +404,12 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       {...field}
                       label="Equipo planillero"
                       floatingLabel={false}
-                      options={[
-                        { value: 'ajsdjas', label: 'ajsdjas' },
-                        { value: 'jajdsfjas', label: 'jajdsfjas' },
-                      ]}
+                      options={
+                        categoryTeams.map((team) => ({
+                          value: team.id,
+                          label: team.name,
+                        })) || []
+                      }
                     />
                   )}
                 />

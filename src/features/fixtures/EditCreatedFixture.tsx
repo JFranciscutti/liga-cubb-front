@@ -4,6 +4,7 @@ import Image from 'src/components/image';
 import EditMatchModal from './components/EditMatchModal';
 import { LoadingSpinner } from 'src/components/loading-spinner';
 import { useParams } from 'react-router-dom';
+import { useAllEquiposByCategory } from 'src/api/EquipoRepository';
 
 interface FixtureManagerBaseProps {
   fecha: any[];
@@ -19,9 +20,11 @@ type MapeoPartido = {
 
 export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoading }) => {
   const currentMatchSelected = useRef<any | undefined>();
-  const { faseId } = useParams();
+  const { idFase, idCategoria } = useParams();
 
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+
+  const { data: equipos } = useAllEquiposByCategory(idCategoria || '');
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -74,14 +77,13 @@ export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoadi
                   currentMatchSelected.current = {
                     homeTeam: partido.equipoLocal.id,
                     awayTeam: partido.equipoVisitante.id,
-                    phaseId: faseId || '',
+                    phaseId: idFase || '',
                   };
                   setEditModalOpen(true);
                 }}
               >
                 Editar
               </Button>
-              <Button variant="contained">Ver</Button>
             </Grid>
           </Grid>
         ))}
@@ -94,6 +96,7 @@ export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoadi
           currentMatchSelected.current = undefined;
         }}
         handleSave={() => {}}
+        categoryTeams={equipos.teams || []}
       />
     </>
   );
