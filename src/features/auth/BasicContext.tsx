@@ -13,7 +13,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const token = getCookie('token');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!token); // Estado inicial basado en el token
   const loginMutation = useLoginMutation();
 
   const login = async (username: string, password: string) => {
@@ -31,14 +32,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     removeCookie('token');
   };
 
-  const username = getCookie('token') ? atob(getCookie('token') || '')?.split(':')[0] : undefined;
+  const username = token ? atob(token)?.split(':')[0] : undefined;
 
   useEffect(() => {
-    const token = getCookie('token');
     if (token) {
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [token]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout, username }}>
@@ -46,6 +46,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
 
 const useAuth = () => {
   const context = useContext(AuthContext);

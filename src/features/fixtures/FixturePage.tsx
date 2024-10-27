@@ -3,29 +3,27 @@ import { Helmet } from 'react-helmet-async';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useNavigate, useParams } from 'react-router';
 import { PATHS } from 'src/routes/paths';
-import { Fecha } from 'src/hooks/useGenerateEquipos';
-import { GeneroEnum } from 'src/utils/enums';
-import CreateFixture from './CreateFixtureV1';
+import CreateFixture from './CreateFixture';
 import { useSaveFaseMutation } from 'src/api/CategoriaRepository';
 import { useAllEquiposByCategory } from 'src/api/EquipoRepository';
 import { enqueueSnackbar } from 'notistack';
 
 export default function FixturePage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams();
   const navigate = useNavigate();
   const {
     data: allEquipos,
     isLoading: allEquiposLoading,
     isError: allEquiposError,
     refetch,
-  } = useAllEquiposByCategory(params.id || '');
+  } = useAllEquiposByCategory(params.idCategoria || '');
 
   const saveFaseMutation = useSaveFaseMutation();
 
   const handleSave = async (fechas: any[]) => {
-    await saveFaseMutation.mutateAsync({ fechas: fechas, categoryId: params.id || '' });
+    await saveFaseMutation.mutateAsync({ fechas: fechas, categoryId: params.idCategoria || '' });
     enqueueSnackbar({ message: 'Fase creada con éxito', variant: 'success' });
-    navigate(PATHS.dashboard.categorias.edit(params.id || ''));
+    navigate(PATHS.dashboard.categorias.edit(params.idCategoria || ''));
   };
 
   return (
@@ -38,8 +36,17 @@ export default function FixturePage() {
         <CustomBreadcrumbs
           heading={`Fixture - Categoria`}
           links={[
-            { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: 'Administrar', href: PATHS.dashboard.categorias.edit(params.id || '') },
+            {
+              name: 'Listado',
+              href: PATHS.dashboard.campeonatos.manage(params.idCampeonato || ''),
+            },
+            {
+              name: 'Administrar',
+              href: PATHS.dashboard.campeonatos.manageCategoria(
+                params.idCampeonato || '',
+                params.idCategoria || ''
+              ),
+            },
             { name: 'Fixture' },
           ]}
         />

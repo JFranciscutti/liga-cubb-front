@@ -9,11 +9,8 @@ import CuadroPlayoffV2 from './components/CuadroPlayoffV2';
 import PlayoffFixtureNavigator from './components/PlayoffFixtureNavigator';
 
 const EditPlayoffPage: React.FC = () => {
-  const params = useParams<{ id: string }>();
+  const params = useParams();
   const { data, isLoading, isError } = useOneFasePlayoffQuery(params.id || '');
-
-  const idCampeonato = localStorage.getItem('idCampeonato') || '';
-  const idCategoria = localStorage.getItem('idCategoria') || '';
 
   return (
     <>
@@ -28,7 +25,10 @@ const EditPlayoffPage: React.FC = () => {
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
             {
               name: 'Administrar',
-              href: PATHS.dashboard.campeonatos.manageCategoria(idCampeonato, idCategoria),
+              href: PATHS.dashboard.campeonatos.manageCategoria(
+                params.idCampeonato || '',
+                params.idCategoria || ''
+              ),
             },
             { name: 'Playoff' },
           ]}

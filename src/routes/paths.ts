@@ -65,6 +65,16 @@ export const PATHS = {
         `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/equipos`,
       manageEquipoFromCategoria: (idCampeonato: string, idCategoria: string, idEquipo: string) =>
         `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/equipos/${idEquipo}`,
+
+      createFaseRegularCategoria: (idCampeonato: string, idCategoria: string,) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/create-fase-regular`,
+      createFasePlayoffCategoria: (idCampeonato: string, idCategoria: string,) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/create-fase-playoff`,
+      createFaseGruposCategoria: (idCampeonato: string, idCategoria: string,) =>
+        `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/create-fase-grupos`,
+
+      editFaseRegularCategoria: (idCampeonato: string, idCategoria: string, idFase: string) => `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/edit-fase-regular/${idFase}`,
+      editFasePlayoffCategoria: (idCampeonato: string, idCategoria: string, idFase: string) => `/dashboard/campeonatos/manage/${idCampeonato}/categoria/${idCategoria}/edit-fase-playoff/${idFase}`,
       manageEquiposCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/equipos-copa`,
       manageOneEquipoCopa: (id: string, idEquipo: string) =>

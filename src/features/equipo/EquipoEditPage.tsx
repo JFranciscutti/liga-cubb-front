@@ -30,6 +30,7 @@ import { useState } from 'react';
 import SelectJugadoresForm, { CargarJugadorFormType } from './components/SelectJugadoresForm';
 import { useAllJugadoresQuery } from 'src/api/JugadoresRepository';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
+import { Helmet } from 'react-helmet-async';
 
 const EquipoEditPage = () => {
   const navigate = useNavigate();
@@ -70,6 +71,9 @@ const EquipoEditPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{equipoData.name} | LIGA CUBB</title>
+      </Helmet>
       <Container
         maxWidth={themeStretch ? false : 'lg'}
         sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
@@ -159,12 +163,14 @@ const EquipoEditPage = () => {
         </DialogTitle>
         <DialogContent sx={{ mb: 4, width: '100%' }}>
           <SelectJugadoresForm
-            onSubmit={async (values) =>
+            onSubmit={async (values) => {
               await cargarJugadoresMutation.mutateAsync({
                 teamId: params.idEquipo || '',
                 players: values.ids,
-              })
-            }
+              });
+              enqueueSnackbar('Lista actualizada');
+              setLoadOpen(false);
+            }}
             jugadores={jugadoresData}
           />
         </DialogContent>

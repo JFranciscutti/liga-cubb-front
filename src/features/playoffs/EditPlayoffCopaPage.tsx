@@ -1,17 +1,17 @@
-import { Container, Card, Box, Button, Grid, Typography, Divider, IconButton } from '@mui/material';
-import React, { useRef, useState } from 'react';
+import { Container, Card } from '@mui/material';
+import React, {  } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { PATHS } from 'src/routes/paths';
 import CuadroPlayoffV2 from './components/CuadroPlayoffV2';
 import { useOneFasePlayoffCopaQuery } from 'src/api/CampeonatoRepository';
-import Iconify from 'src/components/iconify';
 import PlayoffFixtureNavigator from './components/PlayoffFixtureNavigator';
+import CuadroPlayoffV3 from './components/CuadroPlaoffV3';
 
 const EditPlayoffCopaPage: React.FC = () => {
   const params = useParams<{ idCampeonato: string; idFase: string }>();
-  const { data, isLoading, isError } = useOneFasePlayoffCopaQuery(params.idFase || '');
+  const { data } = useOneFasePlayoffCopaQuery(params.idFase || '');
 
   return (
     <>
@@ -40,7 +40,7 @@ const EditPlayoffCopaPage: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          <CuadroPlayoffV2 rondas={data || []} />
+          <CuadroPlayoffV3 rondas={data || []} />
           <PlayoffFixtureNavigator rounds={data || []} />
         </Card>
       </Container>

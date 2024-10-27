@@ -9,11 +9,9 @@ import { useState } from 'react';
 import Iconify from 'src/components/iconify';
 
 export default function EditFixturePage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams();
   const [selectedFecha, setSelectedFecha] = useState<number>(1);
-  const { data, isLoading, isError } = useOneFaseQuery(params.id || '', selectedFecha);
-  const idCampeonato = localStorage.getItem('idCampeonato') || '';
-  const idCategoria = localStorage.getItem('idCategoria') || '';
+  const { data, isLoading, isError } = useOneFaseQuery(params.idFase || '', selectedFecha);
 
   return (
     <>
@@ -28,7 +26,10 @@ export default function EditFixturePage() {
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
             {
               name: 'Administrar',
-              href: PATHS.dashboard.campeonatos.manageCategoria(idCampeonato, idCategoria),
+              href: PATHS.dashboard.campeonatos.manageCategoria(
+                params.idCampeonato || '',
+                params.idCategoria || ''
+              ),
             },
             { name: 'Fixture' },
           ]}

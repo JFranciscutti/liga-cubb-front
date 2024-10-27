@@ -15,14 +15,14 @@ import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import FaseGruposGenerator from './components/FaseGruposGenerator';
 
 const ManageGruposCopaPage = () => {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{idCampeonato: string, idCategoria: string }>();
   const { themeStretch } = useSettingsContext();
   const confirm = useConfirm();
   const { data: campeonatoData, isLoading: campeonatoLoading } = useCampeonatoQuery(
-    localStorage.getItem('idCampeonato') || ''
+    params.idCampeonato || ''
   );
 
-  const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposByCopa(params.id || '');
+  const { data: allEquipos, isLoading: allEquiposLoading } = useAllEquiposByCopa(params.idCampeonato || '');
 
   if (campeonatoLoading || allEquiposLoading) {
     return <LoadingScreen />;
@@ -34,8 +34,8 @@ const ManageGruposCopaPage = () => {
         <CustomBreadcrumbs
           heading={`${campeonatoData.name} - Fase de grupos`}
           links={[
-            { name: 'Listado', href: PATHS.dashboard.categorias.list },
-            { name: 'Administrar', href: PATHS.dashboard.campeonatos.manage(params.id || '') },
+            { name: 'Listado', href: PATHS.dashboard.campeonatos.list },
+            { name: 'Administrar', href: PATHS.dashboard.campeonatos.manage(params.idCampeonato || '') },
             { name: 'Fase de grupos' },
           ]}
         />

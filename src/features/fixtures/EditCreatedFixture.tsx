@@ -19,7 +19,7 @@ type MapeoPartido = {
 
 export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoading }) => {
   const currentMatchSelected = useRef<any | undefined>();
-  const { id } = useParams();
+  const { faseId } = useParams();
 
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
@@ -74,7 +74,7 @@ export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoadi
                   currentMatchSelected.current = {
                     homeTeam: partido.equipoLocal.id,
                     awayTeam: partido.equipoVisitante.id,
-                    phaseId: id || '',
+                    phaseId: faseId || '',
                   };
                   setEditModalOpen(true);
                 }}

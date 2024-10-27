@@ -85,19 +85,18 @@ const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
     };
 
     const calculateScreenHeight = () => {
-        const initialRoundMatches = Math.pow(2, totalRounds - 1);
-        const matchHeight = 81;
+        const initialRoundMatches = totalRounds === 1 ? 2 : Math.pow(2, totalRounds - 1);
+        const matchHeight = 120;
 
         return initialRoundMatches * matchHeight + (matchHeight / 2);
     }
 
     const screenHeight = calculateScreenHeight();
-    const screenClassName = `bg-[url('/assets/background/soccer_background.jpg')] bg-cover overflow-x-scroll overflow-y-scroll relative h-[${screenHeight}px] w-full`;
-    console.log(screenHeight);
+    const screenClassName = `bg-[url('/assets/background/soccer_background.jpg')] bg-cover overflow-x-scroll overflow-y-scroll relative w-full`;
 
     return (
         <>
-        <Box className={screenClassName}>
+        <Box className={screenClassName} style={{height: `${screenHeight}px`}}>
             {otherRounds.map((matches, roundIndex) =>
             matches.map((match, matchIndex) => (
                 <Box

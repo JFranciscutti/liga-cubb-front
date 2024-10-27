@@ -7,11 +7,10 @@ import { useCampeonatoQuery, useOneFaseCampeonatoQuery } from 'src/api/Campeonat
 import EditCreatedCopaFixture from '../copa/components/EditCreatedCopaFixture';
 
 const EditFaseGruposCopa: React.FC = () => {
-  const params = useParams<{ idFase: string }>();
+  const params = useParams<{ idCampeonato: string; idFase: string }>();
   const { data: faseData, isLoading, isError } = useOneFaseCampeonatoQuery(params.idFase || '');
-  const idCampeonato = localStorage.getItem('idCampeonato') || '';
 
-  const { data: campeonatoData } = useCampeonatoQuery(idCampeonato);
+  const { data: campeonatoData } = useCampeonatoQuery(params.idCampeonato || '');
 
   return (
     <>
@@ -26,7 +25,7 @@ const EditFaseGruposCopa: React.FC = () => {
             { name: 'Listado', href: PATHS.dashboard.categorias.list },
             {
               name: 'Administrar',
-              href: PATHS.dashboard.campeonatos.manage(idCampeonato),
+              href: PATHS.dashboard.campeonatos.manage(params.idCampeonato || ''),
             },
             { name: 'Fase de Grupos' },
           ]}

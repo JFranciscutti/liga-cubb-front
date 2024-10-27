@@ -77,6 +77,8 @@ const CreatePlayoff: React.FC<CreatePlayoffProps> = ({ equipos, handleSave }) =>
   }, [hf.watch('selectedPhase')]);
 
   const handleSubmit = async (values: { selectedPhase: number }) => {
+    console.log(values.selectedPhase, equipos.length);
+
     if (values.selectedPhase > equipos.length / 2) {
       hf.setError('selectedPhase', {
         type: 'manual',

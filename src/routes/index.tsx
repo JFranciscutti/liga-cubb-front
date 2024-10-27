@@ -182,12 +182,12 @@ const ROUTES: RouteObject[] = [
             children: [
               { element: <Navigate to="/dashboard/categorias/list" replace />, index: true },
               { path: 'list', element: <LazyCategoriaListPage /> },
-              { path: 'edit/:id/create-fase-regular', element: <LazyFixturePage /> },
-              { path: 'edit/:id/create-fase-playoff', element: <LazyPlayoffPage /> },
-              { path: 'edit/:id/create-fase-grupos', element: <LazyManageGruposCopaPage /> },
+              // { path: 'edit/:id/create-fase-regular', element: <LazyFixturePage /> },
+              // { path: 'edit/:id/create-fase-playoff', element: <LazyPlayoffPage /> },
+              // { path: 'edit/:id/create-fase-grupos', element: <LazyManageGruposCopaPage /> },
 
-              { path: 'edit/:id/edit-fase-regular', element: <LazyEditFixturePage /> },
-              { path: 'edit/:id/edit-fase-playoff', element: <LazyEditPlayoffPage /> },
+              // { path: 'edit/:id/edit-fase-regular', element: <LazyEditFixturePage /> },
+              // { path: 'edit/:id/edit-fase-playoff', element: <LazyEditPlayoffPage /> },
               { path: 'edit/:id/equipos', element: <LazyManageEquiposCategoriaPage /> },
               {
                 path: 'edit/:id',
@@ -217,6 +217,12 @@ const ROUTES: RouteObject[] = [
               { path: 'manage/:id/playoff-copa', element: <LazyManagePlayoffCopaPage /> },
 
               { path: 'manage/:id/grupos-copa', element: <LazyManageGruposCopaPage /> },
+
+              { path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-regular/:idFase', element: <LazyEditFixturePage /> },
+              { path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-playoff/:idFase', element: <LazyEditPlayoffPage /> },
+              { path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-regular', element: <LazyFixturePage /> },
+              { path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-playoff', element: <LazyPlayoffPage /> },
+              { path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-grupos', element: <LazyManageGruposCopaPage /> },
               {
                 path: 'manage/:idCampeonato/categoria/:idCategoria/equipos/:idEquipo',
                 element: <LazyEquipoEditPage />,

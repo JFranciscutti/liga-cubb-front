@@ -30,6 +30,7 @@ import Iconify from 'src/components/iconify';
 import Image from 'src/components/image';
 import * as Yup from 'yup';
 import canchasData from 'src/mocks/canchas.json';
+import { useAllEquiposByCategory } from 'src/api/EquipoRepository';
 interface EditMatchModalProps {
   open: boolean;
   match: any;
@@ -89,6 +90,16 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
     !!match?.homeTeam && !!match.awayTeam
   );
 
+  const params = useParams<{ id: string }>();
+  console.log(params);
+  
+  // const {
+  //   data: allEquipos,
+  //   isLoading: allEquiposLoading,
+  //   isError: allEquiposError,
+  //   refetch,
+  // } = useAllEquiposByCategory(params.id || '');
+
   const hf = useForm<MatchData>({
     resolver: yupResolver(PartidoSchema),
     defaultValues: initialData,
@@ -109,6 +120,16 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
   const onSubmit = async (data: MatchData) => {
     console.log(data);
   };
+
+  const homeTeamPlayersSelector =  data?.homeTeam.players.map((p) => ({
+    label: p.name + ' ' + p.lastName,
+    value: p.membershipNumber,
+  }));
+
+  const awayTeamPlayersSelector = data?.awayTeam.players.map((p) => ({
+    label: p.name + ' ' + p.lastName,
+    value: p.membershipNumber,
+  }));
 
   if (!data) {
     return <></>;
@@ -167,7 +188,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                           {...field}
                           label="Jugador"
                           floatingLabel={false}
-                          options={[]}
+                          options={homeTeamPlayersSelector || []}
                         />
                       )}
                     />
@@ -223,8 +244,8 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                           {...field}
                           label="Jugador"
                           floatingLabel={false}
-                          options={[]}
-                        />
+                          options={awayTeamPlayersSelector || []}
+                          />
                       )}
                     />
                     <Controller
@@ -274,8 +295,8 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       {...field}
                       label="Tarjetas amarillas - Local"
                       floatingLabel={false}
-                      options={[]}
-                    />
+                      options={homeTeamPlayersSelector || []}
+                      />
                   )}
                 />
               </Grid>
@@ -289,7 +310,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       {...field}
                       label="Tarjetas amarillas - Visitante"
                       floatingLabel={false}
-                      options={[]}
+                      options={awayTeamPlayersSelector || []}
                     />
                   )}
                 />
@@ -304,8 +325,8 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       {...field}
                       label="Tarjetas rojas - Local"
                       floatingLabel={false}
-                      options={[]}
-                    />
+                      options={homeTeamPlayersSelector || []}
+                      />
                   )}
                 />
               </Grid>
@@ -319,7 +340,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                       {...field}
                       label="Tarjetas rojas - Visitante"
                       floatingLabel={false}
-                      options={[]}
+                      options={awayTeamPlayersSelector || []}
                     />
                   )}
                 />

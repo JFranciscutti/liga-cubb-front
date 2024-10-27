@@ -54,10 +54,7 @@ const PlayoffCopaPage: React.FC = () => {
         />
 
         <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <CreatePlayoff
-            equipos={allEquipos.teams.filter((_: any, i: number) => i < 12) || []}
-            handleSave={handleSave}
-          />
+          <CreatePlayoff equipos={allEquipos.teams || []} handleSave={handleSave} />
         </Card>
       </Container>
     </>

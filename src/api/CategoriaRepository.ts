@@ -194,6 +194,9 @@ export class CategoriaRepository {
     );
     return data.map(playoffFaseMapper);
   };
+
+  editOnePartido = async (partido: any) => await httpClient.post(`tournament/league/categories/phase-general/edit-match`, partido);
+  
 }
 
 const repo = new CategoriaRepository();

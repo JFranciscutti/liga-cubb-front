@@ -12,10 +12,6 @@ const ManageCopaPage: React.FC<ManageCopaPageProps> = ({ id }) => {
 
   const { data: fases } = useAllFasesByCampeonato(id);
 
-  useEffect(() => {
-    localStorage.setItem('idCampeonato', id || '');
-  }, [id]);
-
   return (
     <>
       <Grid container spacing={3}>

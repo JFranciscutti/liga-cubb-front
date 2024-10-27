@@ -18,8 +18,10 @@ import ManageCategoriaPage from './ManageCategoriaPage';
 import LoadingScreen from 'src/components/loading-screen/LoadingScreen';
 import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import Iconify from 'src/components/iconify';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DialogHeader from 'src/components/DialogHeader';
+import { Helmet } from 'react-helmet-async';
+import { APP_NAME } from 'src/config';
 
 const CategoriaEditPage = () => {
   const params = useParams<{ idCampeonato: string; idCategoria: string }>();
@@ -38,13 +40,13 @@ const CategoriaEditPage = () => {
     return <LoadingScreen />;
   }
 
-  useEffect(() => {
-    localStorage.setItem('idCampeonato', params.idCampeonato || '');
-    localStorage.setItem('idCategoria', params.idCategoria || '');
-  }, [params.idCampeonato]);
-
   return (
     <>
+      <Helmet>
+        <title>
+          Categoria {categoriaName} | {APP_NAME}
+        </title>
+      </Helmet>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading={`Categoria ${categoriaName}`}
@@ -87,7 +89,12 @@ const CategoriaEditPage = () => {
               className="bg-sky-800"
               sx={{ p: 2, cursor: 'pointer' }}
               onClick={() =>
-                navigate(PATHS.dashboard.categorias.createFaseRegular(params.idCategoria || ''))
+                navigate(
+                  PATHS.dashboard.campeonatos.createFaseRegularCategoria(
+                    params.idCampeonato || '',
+                    params.idCategoria || ''
+                  )
+                )
               }
             >
               <div className="flex flex-col gap-2">
@@ -103,7 +110,12 @@ const CategoriaEditPage = () => {
               className="bg-sky-800"
               sx={{ p: 2, cursor: 'pointer' }}
               onClick={() =>
-                navigate(PATHS.dashboard.categorias.createFaseGrupos(params.idCategoria || ''))
+                navigate(
+                  PATHS.dashboard.campeonatos.createFaseGruposCategoria(
+                    params.idCampeonato || '',
+                    params.idCategoria || ''
+                  )
+                )
               }
             >
               <div className="flex flex-col gap-2">
@@ -119,7 +131,12 @@ const CategoriaEditPage = () => {
               className="bg-sky-800"
               sx={{ p: 2, cursor: 'pointer' }}
               onClick={() =>
-                navigate(PATHS.dashboard.categorias.createFasePlayoff(params.idCategoria || ''))
+                navigate(
+                  PATHS.dashboard.campeonatos.createFasePlayoffCategoria(
+                    params.idCampeonato || '',
+                    params.idCategoria || ''
+                  )
+                )
               }
             >
               <div className="flex flex-col gap-2">
@@ -127,23 +144,6 @@ const CategoriaEditPage = () => {
                 <Typography variant="subtitle1" className="line-clamp-1">
                   Cruces playoff
                 </Typography>
-              </div>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card className="bg-sky-800" sx={{ p: 2, cursor: 'pointer' }} onClick={() => {}}>
-              <div className="flex flex-col gap-2">
-                <Typography fontSize={18}>Fase Cuadrangular</Typography>
-                <Typography variant="subtitle1" className="line-clamp-1">
-                  Cuadrangular de descenso
-                </Typography>
-              </div>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card className="bg-sky-800" sx={{ p: 2, cursor: 'pointer' }} onClick={() => {}}>
-              <div className="flex flex-col gap-2">
-                <Typography fontSize={18}>Final del año</Typography>
               </div>
             </Card>
           </Grid>

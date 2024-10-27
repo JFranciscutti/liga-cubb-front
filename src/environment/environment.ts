@@ -8,4 +8,4 @@ const _prod = {
   production: true,
 };
 
-export const environment = import.meta.env.VITE_PRODUCTION ? _prod : dev;
+export const environment = false ? _prod : dev;
