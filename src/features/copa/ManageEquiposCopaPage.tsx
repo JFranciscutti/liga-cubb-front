@@ -94,6 +94,7 @@ const ManageEquiposCopaPage = () => {
         </DialogTitle>
         <DialogContent sx={{ mb: 4, width: '100%' }}>
           <NuevoEquipoForm
+            gender={"male"}
             onSubmit={async (values) =>
               await createEquipoMutation.mutateAsync(
                 {

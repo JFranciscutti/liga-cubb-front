@@ -1,5 +1,5 @@
 import { Container, Card } from '@mui/material';
-import React, {  } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
@@ -40,6 +40,7 @@ const EditPlayoffCopaPage: React.FC = () => {
             alignItems: 'center',
           }}
         >
+          {/*@ts-ignore */}
           <CuadroPlayoffV3 rondas={data || []} />
           <PlayoffFixtureNavigator rounds={data || []} />
         </Card>

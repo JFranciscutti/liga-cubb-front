@@ -97,12 +97,12 @@ export const faseMapper = (data: any) => {
 
 export const partidoMapper = (x: any): Match => ({
   ...x,
-  homeTeamPlayerGoals: x.homeTeamPlayerGoals.map((p: any)=> p.id) || [],
-  homeTeamYellowCards: x.homeTeamYellowCards.map((p: any)=> p.id) || [],
-  homeTeamRedCards: x.homeTeamRedCards.map((p: any)=> p.id) || [],
-  awayTeamPlayerGoals: x.awayTeamPlayerGoals.map((p: any)=> p.id) || [],
-  awayTeamYellowCards: x.awayTeamYellowCards.map((p: any)=> p.id) || [],
-  awayTeamRedCards: x.awayTeamRedCards.map((p: any)=> p.id) || [],
+  homeTeamPlayerGoals: x?.homeTeamPlayerGoals?.map((p: any)=> p.id) || [],
+  homeTeamYellowCards: x?.homeTeamYellowCards?.map((p: any)=> p.id) || [],
+  homeTeamRedCards: x?.homeTeamRedCards?.map((p: any)=> p.id) || [],
+  awayTeamPlayerGoals: x?.awayTeamPlayerGoals?.map((p: any)=> p.id) || [],
+  awayTeamYellowCards: x?.awayTeamYellowCards?.map((p: any)=> p.id) || [],
+  awayTeamRedCards: x?.awayTeamRedCards?.map((p: any)=> p.id) || [],
   date: !!x?.date ? moment(x?.date) : null,
 });
 

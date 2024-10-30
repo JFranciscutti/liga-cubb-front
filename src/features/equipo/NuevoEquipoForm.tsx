@@ -27,14 +27,14 @@ interface NuevoEquipoFormProps {
   onSubmit: (value: NuevoEquipoFormType) => Promise<any>;
   initialValues?: NuevoEquipoFormType;
   edit?: boolean;
-  gender: 'male' | 'female';
+  gender?: 'male' | 'female';
 }
 
 export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
   onSubmit,
   initialValues,
   edit = false,
-  gender,
+  gender = 'male',
 }) => {
   const hf = useForm<NuevoEquipoFormType>({
     resolver: yupResolver(NuevoEquipoSchema),
