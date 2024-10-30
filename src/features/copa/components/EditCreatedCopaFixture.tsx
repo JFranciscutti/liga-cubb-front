@@ -1,24 +1,39 @@
 import { Box, Button, Card, Grid, Typography } from '@mui/material';
 import { FC, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Match } from 'src/api/CategoriaRepository';
 import Image from 'src/components/image';
 import { LoadingSpinner } from 'src/components/loading-spinner';
 import EditMatchModal from 'src/features/fixtures/components/EditMatchModal';
-import EditMatchCupModal from './EditMatchCupModal';
+import { useAllEquiposByCopa } from 'src/api/EquipoRepository';
+import { enqueueSnackbar } from 'notistack';
+import moment from 'moment';
+import { useEditPartidoCopaMutation, useOnePartidoCopaQuery } from 'src/api/CampeonatoRepository';
 
 interface FixtureManagerBaseProps {
-  partidos: Match[];
+  partidos: any[];
   exists?: boolean;
   isLoading: boolean;
+  groupName: string;
 }
 
-export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({ partidos, isLoading }) => {
-  const currentMatchSelected = useRef<
-    { homeTeam: string; awayTeam: string; phaseId: string } | undefined
-  >();
-  const { idFase } = useParams();
+export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({
+  partidos,
+  isLoading,
+  groupName,
+}) => {
+  const currentMatchSelected = useRef<any | undefined>();
+  const { idFase, idCampeonato } = useParams();
+  const { data: equipos } = useAllEquiposByCopa(idCampeonato || '');
+
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const editPartidoMutation = useEditPartidoCopaMutation();
+
+  const { data: match, isLoading: matchLoading } = useOnePartidoCopaQuery(
+    currentMatchSelected.current?.homeTeam,
+    currentMatchSelected.current?.awayTeam,
+    currentMatchSelected.current?.phaseId || '',
+    !!currentMatchSelected.current
+  );
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -33,7 +48,7 @@ export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({ partidos, 
               {/* Contenedor del equipo local */}
               <Grid item className="flex items-center gap-2" style={{ flex: 1 }}>
                 <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                  <Image src={partido.homeTeam.logo} className="h-10 w-10 min-w-10" />
+                  <Image src={partido.homeTeam.logoUrl} className="h-10 w-10 min-w-10" />
                 </Box>
                 <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
                   {partido.homeTeam.name}
@@ -59,7 +74,7 @@ export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({ partidos, 
                   {partido.awayTeam.name}
                 </p>
                 <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                  <Image src={partido.awayTeam.logo} className="h-10 w-10 min-w-10" />
+                  <Image src={partido.awayTeam.logoUrl} className="h-10 w-10 min-w-10" />
                 </Box>
               </Grid>
             </Grid>
@@ -78,21 +93,30 @@ export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({ partidos, 
               >
                 Editar
               </Button>
-              <Button variant="contained">Ver</Button>
             </Grid>
           </Grid>
         ))}
       </Card>
-      <EditMatchCupModal
+      <EditMatchModal
         open={editModalOpen}
-        match={currentMatchSelected.current}
+        match={match}
+        isLoading={matchLoading}
         handleClose={() => {
           setEditModalOpen(false);
           currentMatchSelected.current = undefined;
         }}
-        handleSave={(data) => {
-          console.log(data);
+        handleSave={async (values) => {
+          await editPartidoMutation.mutateAsync({
+            ...values,
+            date: moment(values.date).isValid() ? moment(values.date).format('YYYY-MM-DDTHH:mm:ss') : null,
+            phaseId: idFase || '',
+            groupName: groupName,
+          });
+          enqueueSnackbar('Partido editado correctamente', { variant: 'success' });
+          setEditModalOpen(false);
+          currentMatchSelected.current = undefined;
         }}
+        elegibleTeams={equipos.teams || []}
       />
     </>
   );

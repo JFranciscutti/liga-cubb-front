@@ -77,10 +77,10 @@ export const HitSelectField = <TValue extends FieldValues>({
           error={!!fieldState.error}
           displayEmpty={!floatingLabel}
           renderValue={(selected) => {
-            if (selected.length === 0 && !floatingLabel) {
-              return <Placeholder>{placeholder}</Placeholder>;
-            }
-            if (selected === 0) return <Placeholder>{placeholder}</Placeholder>;
+            // if (selected.length === 0 && !floatingLabel) {
+            //   return <Placeholder>{placeholder}</Placeholder>;
+            // }
+            if (selected === 0 || selected === null) return <Placeholder>{placeholder}</Placeholder>;
             return options.find((x) => x.value === selected)?.label;
           }}
         >

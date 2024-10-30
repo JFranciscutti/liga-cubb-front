@@ -13,7 +13,6 @@ import {
 import { FC, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from 'src/components/image';
-import EditMatchModal from './components/EditMatchModal';
 import { Fecha } from 'src/hooks/useGenerateEquipos';
 
 interface FixtureManagerBaseProps {
@@ -117,7 +116,6 @@ const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({ equipos, fechas, ex
                       >
                         Editar
                       </Button>
-                      <Button variant="contained">Ver</Button>
                     </Grid>
                   )}
                 </Grid>
@@ -126,7 +124,7 @@ const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({ equipos, fechas, ex
           </Accordion>
         ))}
       </Box>
-      <EditMatchModal
+      {/* <EditMatchModal
         open={editModalOpen}
         match={currentMatchSelected.current}
         handleClose={() => {
@@ -134,7 +132,8 @@ const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({ equipos, fechas, ex
           currentMatchSelected.current = undefined;
         }}
         handleSave={() => {}}
-      />
+        elegibleTeams={equipos || []}
+      /> */}
     </>
   );
 };

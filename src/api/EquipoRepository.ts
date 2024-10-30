@@ -37,6 +37,7 @@ export class EquipoRepository {
     oneById: (id: string) => ['one-equipo', id],
     allByCategoria: (id: string) => ['equipos-by-cat', id],
     allByCopa: (id: string) => ['equipos-by-copa', id],
+    allByGender: (gender: string) => [`equipos-by-${gender}`],
   };
 
   getAll = async () => {
@@ -77,6 +78,11 @@ export class EquipoRepository {
     const { data } = await httpClient.get<any>(`tournament/cup/get-teams-by-id?cupId=${id}`);
     //const data1 = { teams: EQUIPOS_MOCK.map(getEquipoMapper), categoryName: 'A' };
     return data;
+  };
+
+  getAllByGender = async (gender: 'male' | 'female') => {
+    const { data } = await httpClient.get<any>(`teams/get-teams?gender=${gender}`);
+    return data.map((x: any) => ({ name: x.name, logo: x.logo }));
   };
 }
 
@@ -147,4 +153,10 @@ export const useAllEquiposByCopa = (id: string) =>
   useSuspenseQuery({
     queryKey: repo.keys.allByCopa(id),
     queryFn: () => repo.getAllByCopaId(id),
+  });
+
+export const useAllTeamsByGender = (gender: 'male' | 'female') =>
+  useQuery({
+    queryKey: repo.keys.allByGender(gender),
+    queryFn: () => repo.getAllByGender(gender),
   });

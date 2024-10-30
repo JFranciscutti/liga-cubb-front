@@ -22,7 +22,7 @@ const EditPlayoffPage: React.FC = () => {
         <CustomBreadcrumbs
           heading={`Fixture - Categoria`}
           links={[
-            { name: 'Listado', href: PATHS.dashboard.categorias.list },
+            { name: 'Listado', href: PATHS.dashboard.campeonatos.list },
             {
               name: 'Administrar',
               href: PATHS.dashboard.campeonatos.manageCategoria(

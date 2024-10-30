@@ -14,7 +14,6 @@ import {
 import { FC, useEffect, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Image from 'src/components/image';
-import EditMatchModal from './components/EditMatchModal';
 import { Fecha, useGenerateEquipos } from 'src/hooks/useGenerateEquipos';
 
 interface FixtureManagerBaseProps {
@@ -33,14 +32,11 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
   const { fechas: generatedFechas, handleAutocompletar } = useGenerateEquipos(equipos);
   const [fechas, setFechas] = useState<Fecha[]>([]);
   const [expanded, setExpanded] = useState<number | false>(false);
-  const currentMatchSelected = useRef<any | undefined>();
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setFechas(generatedFechas);
   }, [generatedFechas]);
 
-  console.log(fechas);
 
   // Función para manejar la expansión de los accordions
   const handleChangeAccordion =
@@ -172,15 +168,6 @@ const CreateFixture: FC<FixtureManagerBaseProps> = ({ equipos, handleSave }) => 
           </Button>
         </Box>
       </Card>
-      <EditMatchModal
-        open={editModalOpen}
-        match={currentMatchSelected.current}
-        handleClose={() => {
-          setEditModalOpen(false);
-          currentMatchSelected.current = undefined;
-        }}
-        handleSave={() => {}}
-      />
     </>
   );
 };

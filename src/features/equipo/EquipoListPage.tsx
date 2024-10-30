@@ -13,6 +13,7 @@ import LoadingScreen from 'src/components/loading-screen';
 import ErrorPage from 'src/pages/ErrorPage';
 import { enqueueSnackbar } from 'notistack';
 import { NuevoEquipoForm } from './NuevoEquipoForm';
+import { useCampeonatoQuery } from 'src/api/CampeonatoRepository';
 
 export default function EquiposListPage() {
   const params = useParams<{ idCampeonato: string; idCategoria: string }>();
@@ -27,6 +28,9 @@ export default function EquiposListPage() {
     isError: allEquiposError,
     refetch
   } = useAllEquiposByCategory(params.idCategoria || '');
+
+  const {data: campeonato} = useCampeonatoQuery(params.idCampeonato || '');
+  const currentCategory = campeonato?.categories.find((c: any) => c.id === params.idCategoria);
 
   const createEquipoMutation = useCreateEquipoMutation();
 
@@ -106,6 +110,7 @@ export default function EquiposListPage() {
         </DialogTitle>
         <DialogContent sx={{ mb: 4, width: '100%' }}>
           <NuevoEquipoForm
+            gender={currentCategory.gender}
             onSubmit={async (values) =>
               await createEquipoMutation.mutateAsync(
                 {

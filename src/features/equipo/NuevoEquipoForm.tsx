@@ -4,7 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import { HitFormActions, HitFormSubmitButton, HitTextField } from 'src/components/form';
 import { HitForm } from 'src/components/form/HitForm';
-import { Grid } from '@mui/material';
+import { Grid, MenuItem, Select, Typography } from '@mui/material';
+import { useAllTeamsByGender } from 'src/api/EquipoRepository';
 
 export type NuevoEquipoFormType = {
   name: string;
@@ -26,12 +27,14 @@ interface NuevoEquipoFormProps {
   onSubmit: (value: NuevoEquipoFormType) => Promise<any>;
   initialValues?: NuevoEquipoFormType;
   edit?: boolean;
+  gender: 'male' | 'female';
 }
 
 export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
   onSubmit,
   initialValues,
   edit = false,
+  gender,
 }) => {
   const hf = useForm<NuevoEquipoFormType>({
     resolver: yupResolver(NuevoEquipoSchema),
@@ -40,9 +43,32 @@ export const NuevoEquipoForm: React.FC<NuevoEquipoFormProps> = ({
     values: initialValues,
   });
 
+  const { data: allEquiposByGender = [] } = useAllTeamsByGender(gender);
+
+  const handleSelectExistingTeam = (team: any) => {
+    hf.setValue('name', team.name);
+    hf.setValue('image', team.logo);
+  };
+
   return (
     <HitForm hf={hf} onSubmit={onSubmit}>
       <Grid container spacing={2} className="p-5">
+        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Typography color={'text.secondary'}>Elegir equipo existente (opcional)</Typography>
+
+          <Select
+            fullWidth
+            onChange={(e) => {
+              handleSelectExistingTeam(e.target.value);
+            }}
+          >
+            {allEquiposByGender.map((x: any) => (
+              <MenuItem value={x} key={x.name}>
+                {x.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
         <Grid item xs={12}>
           <Controller
             name="name"

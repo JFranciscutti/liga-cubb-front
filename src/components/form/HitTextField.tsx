@@ -13,7 +13,7 @@ export type HitTextFieldProps<
     field: {
       onChange: (...event: any[]) => void;
       onBlur: Noop;
-      value: string;
+      value: string | null;
       name: TName;
       ref: RefCallBack;
     };
@@ -62,6 +62,7 @@ export const HitTextField = <TValue extends FieldValues>({
         placeholder={placeholder}
         error={!!fieldState.error}
         helperText={fieldState.error?.message ?? ''}
+        value={field.value === null ? '' : field.value}
         {...props}
       />
     </GridItem>

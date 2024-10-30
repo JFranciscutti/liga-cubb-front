@@ -5,18 +5,15 @@ import EditMatchModal from './components/EditMatchModal';
 import { LoadingSpinner } from 'src/components/loading-spinner';
 import { useParams } from 'react-router-dom';
 import { useAllEquiposByCategory } from 'src/api/EquipoRepository';
+import { useEditPartidoMutation, useOnePartidoQuery } from 'src/api/CategoriaRepository';
+import moment from 'moment';
+import { enqueueSnackbar } from 'notistack';
 
 interface FixtureManagerBaseProps {
   fecha: any[];
   exists?: boolean;
   isLoading: boolean;
 }
-
-type MapeoPartido = {
-  dateNumber: number;
-  homeTeamId: string;
-  awayTeamId: string;
-};
 
 export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoading }) => {
   const currentMatchSelected = useRef<any | undefined>();
@@ -25,6 +22,14 @@ export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoadi
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const { data: equipos } = useAllEquiposByCategory(idCategoria || '');
+  const editPartidoMutation = useEditPartidoMutation();
+
+  const { data: match, isLoading: matchLoading } = useOnePartidoQuery(
+    currentMatchSelected.current?.homeTeam,
+    currentMatchSelected.current?.awayTeam,
+    currentMatchSelected.current?.phaseId || '',
+    !!currentMatchSelected.current
+  );
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -90,13 +95,23 @@ export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoadi
       </Card>
       <EditMatchModal
         open={editModalOpen}
-        match={currentMatchSelected.current}
+        match={match}
+        isLoading={matchLoading}
         handleClose={() => {
           setEditModalOpen(false);
           currentMatchSelected.current = undefined;
         }}
-        handleSave={() => {}}
-        categoryTeams={equipos.teams || []}
+        handleSave={async (values) => {
+          await editPartidoMutation.mutateAsync({
+            ...values,
+            date: moment(values.date).isValid() ? moment(values.date).toString() : null,
+            phaseId: idFase || '',
+          });
+          enqueueSnackbar('Partido editado correctamente', { variant: 'success' });
+          setEditModalOpen(false);
+          currentMatchSelected.current = undefined;
+        }}
+        elegibleTeams={equipos.teams || []}
       />
     </>
   );

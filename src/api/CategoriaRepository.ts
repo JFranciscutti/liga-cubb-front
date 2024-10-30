@@ -41,9 +41,9 @@ export interface Round {
 }
 
 export enum MatchStatus {
-  PENDING = 'Upcoming',
-  PLAYED = 'Played',
-  IN_PROGRESS = 'Suspended',
+  PENDIENTE = 'Upcoming',
+  JUGADO = 'Played',
+  SUSPENDIDO = 'Suspended',
 }
 
 export interface Match {
@@ -57,12 +57,12 @@ export interface Match {
   awayTeam: Team;
   homeTeamGoals: number | null;
   awayTeamGoals: number | null;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: any[];
-  awayTeamYellowCards: any[];
-  homeTeamRedCards: any[];
-  awayTeamRedCards: any[];
+  homeTeamPlayerGoals: string[];
+  awayTeamPlayerGoals: string[];
+  homeTeamYellowCards: string[];
+  awayTeamYellowCards: string[];
+  homeTeamRedCards: string[];
+  awayTeamRedCards: string[];
   status: MatchStatus;
 }
 
@@ -97,6 +97,12 @@ export const faseMapper = (data: any) => {
 
 export const partidoMapper = (x: any): Match => ({
   ...x,
+  homeTeamPlayerGoals: x.homeTeamPlayerGoals.map((p: any)=> p.id) || [],
+  homeTeamYellowCards: x.homeTeamYellowCards.map((p: any)=> p.id) || [],
+  homeTeamRedCards: x.homeTeamRedCards.map((p: any)=> p.id) || [],
+  awayTeamPlayerGoals: x.awayTeamPlayerGoals.map((p: any)=> p.id) || [],
+  awayTeamYellowCards: x.awayTeamYellowCards.map((p: any)=> p.id) || [],
+  awayTeamRedCards: x.awayTeamRedCards.map((p: any)=> p.id) || [],
   date: !!x?.date ? moment(x?.date) : null,
 });
 
@@ -281,3 +287,13 @@ export const useOneFasePlayoffQuery = (id: string) =>
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFasePlayoff(id),
   });
+
+export const useEditPartidoMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.editOnePartido,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({ queryKey: repo.keys.one(vars.categoryId) });
+    },
+  });
+}

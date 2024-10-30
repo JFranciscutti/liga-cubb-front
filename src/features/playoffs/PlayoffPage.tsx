@@ -43,9 +43,9 @@ const PlayoffPage: React.FC = () => {
 
       <Container>
         <CustomBreadcrumbs
-          heading={`Fixture - Categoria`}
+          heading={`Playoff - Categoria`}
           links={[
-            { name: 'Listado', href: PATHS.dashboard.categorias.list },
+            { name: 'Listado', href: PATHS.dashboard.campeonatos.list },
             { name: 'Administrar', href: PATHS.dashboard.categorias.edit(params.id || '') },
             { name: 'Fixture' },
           ]}

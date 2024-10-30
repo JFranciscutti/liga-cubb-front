@@ -113,6 +113,9 @@ export class CampeonatoRepository {
     );
     return data.map(playoffFaseMapper);
   };
+
+  editOnePartido = async (partido: any) => await httpClient.post(`tournament/cup/phase-group/edit-match`, partido);
+
 }
 
 const repo = new CampeonatoRepository();
@@ -197,3 +200,14 @@ export const useOneFasePlayoffCopaQuery = (id: string) =>
     queryKey: repo.keys.oneFase(id),
     queryFn: () => repo.getOneFasePlayoff(id),
   });
+
+  export const useEditPartidoCopaMutation = () => {
+    const qc = useQueryClient();
+    return useMutation({
+      mutationFn: repo.editOnePartido,
+      onSuccess: (_, vars) => {
+        qc.invalidateQueries({ queryKey: repo.keys.partido(vars.homeTeamId + vars.awayTeamId + vars.phaseId) });
+        qc.invalidateQueries({ queryKey: repo.keys.oneFase(vars.phaseId) });
+      },
+    });
+  }

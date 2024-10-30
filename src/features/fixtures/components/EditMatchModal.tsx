@@ -5,16 +5,16 @@ import {
   DialogContent,
   Typography,
   Grid,
-  Stack,
   IconButton,
   Box,
   Divider,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import moment from 'moment';
 import { Moment } from 'moment';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
-import { useOnePartidoQuery } from 'src/api/CategoriaRepository';
+import { Controller, useForm } from 'react-hook-form';
+import { Match, MatchStatus, useOnePartidoQuery } from 'src/api/CategoriaRepository';
 import DialogHeader from 'src/components/DialogHeader';
 import {
   HitDateTimePickerField,
@@ -22,7 +22,6 @@ import {
   HitFormActions,
   HitFormSubmitButton,
   HitMultiSelectField,
-  HitNumberField,
   HitSelectField,
   HitTextField,
 } from 'src/components/form';
@@ -30,134 +29,201 @@ import Iconify from 'src/components/iconify';
 import Image from 'src/components/image';
 import * as Yup from 'yup';
 import canchasData from 'src/mocks/canchas.json';
-interface EditMatchModalProps {
-  open: boolean;
-  match: any;
-  handleClose: () => void;
-  handleSave: () => void;
-  categoryTeams: any[];
-}
 
 //@ts-ignore
 const PartidoSchema: Yup.SchemaOf<MatchData> = Yup.object().shape({
-  date: Yup.string().required(),
+  date: Yup.string().notRequired() as any,
   dateNumber: Yup.number().required(),
-  homeTeam: Yup.string().required(),
-  awayTeam: Yup.string().required(),
-  field: Yup.string().required(),
-  linemenTeam: Yup.string().required(),
-  scorer: Yup.string().required(),
-  comments: Yup.string().optional(),
+  homeTeamId: Yup.string().required(),
+  awayTeamId: Yup.string().required(),
+  field: Yup.string().notRequired(),
+  linemenTeam: Yup.string().notRequired(),
+  scorer: Yup.string().notRequired(),
+  comments: Yup.string().notRequired(),
   homeTeamGoals: Yup.number().required().min(0),
   awayTeamGoals: Yup.number().required().min(0),
-  homeTeamPlayerGoals: Yup.array().of(Yup.string()).required(),
-  awayTeamPlayerGoals: Yup.array().of(Yup.string()).required(),
-  homeTeamYellowCards: Yup.array().of(Yup.string()).required(),
-  awayTeamYellowCards: Yup.array().of(Yup.string()).required(),
-  homeTeamRedCards: Yup.array().of(Yup.string()).required(),
-  awayTeamRedCards: Yup.array().of(Yup.string()).required(),
+  homeTeamPlayerGoals: Yup.array().of(Yup.string()).notRequired(),
+  awayTeamPlayerGoals: Yup.array().of(Yup.string()).notRequired(),
+  homeTeamYellowCards: Yup.array().of(Yup.string()).notRequired(),
+  awayTeamYellowCards: Yup.array().of(Yup.string()).notRequired(),
+  homeTeamRedCards: Yup.array().of(Yup.string()).notRequired(),
+  awayTeamRedCards: Yup.array().of(Yup.string()).notRequired(),
+  status: Yup.mixed<MatchStatus>().oneOf(Object.values(MatchStatus)).required(),
 });
 
-const initialData = {
-  date: moment(),
+const initialData: MatchData = {
+  date: '',
   dateNumber: 0,
-  homeTeam: '', // This would be set from props in a real scenario
-  awayTeam: '', // This would be set from props in a real scenario
+  homeTeamId: '', // This would be set from props in a real scenario
+  awayTeamId: '', // This would be set from props in a real scenario
   field: '',
-  linemenTeam: '',
-  scorer: '',
+  linemenTeamId: '',
+  scorerTeamId: '',
   comments: '',
   homeTeamGoals: '0',
   awayTeamGoals: '0',
-  homeTeamPlayerGoals: [{ playerId: '', goals: 0 }],
-  awayTeamPlayerGoals: [{ playerId: '', goals: 0 }],
-  homeTeamYellowCards: [],
-  homeTeamRedCards: [],
-  awayTeamYellowCards: [],
-  awayTeamRedCards: [],
+  homeTeamPlayerGoalsIds: [],
+  awayTeamPlayerGoalsIds: [],
+  homeTeamYellowCardsIds: [],
+  homeTeamRedCardsIds: [],
+  awayTeamYellowCardsIds: [],
+  awayTeamRedCardsIds: [],
+  status: MatchStatus.PENDIENTE,
 };
 
-const selectorMapper = (p: any) => {
+export const selectorMapper = (p: any) => {
   return {
     label: p.name + ' ' + p.lastName,
-    value: p.membershipNumber,
+    value: p.id,
   };
 };
+
+interface EditMatchModalProps {
+  open: boolean;
+  match?: Match;
+  handleClose: () => void;
+  handleSave: (values: MatchData) => void;
+  elegibleTeams: any[];
+  isLoading: boolean;
+}
 
 const EditMatchModal: React.FC<EditMatchModalProps> = ({
   open,
   match,
-  categoryTeams,
+  elegibleTeams,
   handleClose,
   handleSave,
+  isLoading,
 }) => {
-  const { data } = useOnePartidoQuery(
-    match?.homeTeam,
-    match?.awayTeam,
-    match?.phaseId || '',
-    !!match?.homeTeam && !!match.awayTeam
-  );
+  const parsedData: MatchData = match
+    ? {
+        date: moment(match.date).isValid() ? moment(match.date) : '',
+        dateNumber: match.dateNumber,
+        homeTeamId: match.homeTeam.id,
+        awayTeamId: match.awayTeam.id,
+        field: match.field || '',
+        linemenTeamId: match.linemenTeam || '',
+        scorerTeamId: match.scorer || '',
+        comments: match.comments || '',
+        homeTeamGoals: match.homeTeamGoals?.toString() || '0',
+        awayTeamGoals: match.awayTeamGoals?.toString() || '0',
+        homeTeamPlayerGoalsIds: match.homeTeamPlayerGoals || [],
+        awayTeamPlayerGoalsIds: match.awayTeamPlayerGoals || [],
+        homeTeamYellowCardsIds: match.homeTeamYellowCards || [],
+        awayTeamYellowCardsIds: match.awayTeamYellowCards || [],
+        homeTeamRedCardsIds: match.homeTeamRedCards || [],
+        awayTeamRedCardsIds: match.awayTeamRedCards || [],
+        status: match.status,
+      }
+    : initialData;
 
   const hf = useForm<MatchData>({
     resolver: yupResolver(PartidoSchema),
     defaultValues: initialData,
-    values: initialData,
+    values: parsedData,
     mode: 'onBlur',
   });
 
-  const homeTeamPlayerGoalsHelper = useFieldArray({
-    control: hf.control,
-    name: 'homeTeamPlayerGoals',
-  });
-
-  const awayTeamPlayerGoalsHelper = useFieldArray({
-    control: hf.control,
-    name: 'awayTeamPlayerGoals',
-  });
-
   const onSubmit = async (data: MatchData) => {
-    console.log(data);
+    // Call handleSave or any other function to save the data
+    handleSave(data);
   };
 
-  const homeTeamPlayersSelector = data?.homeTeam.players.map(selectorMapper);
+  const homeTeamPlayersSelector = match?.homeTeam.players.map(selectorMapper);
 
-  const awayTeamPlayersSelector = data?.awayTeam.players.map(selectorMapper);
+  const awayTeamPlayersSelector = match?.awayTeam.players.map(selectorMapper);
 
-  if (!data) {
+  if (!match) {
     return <></>;
   }
 
   return (
-    <Dialog open={open} onClose={handleClose} PaperProps={{ style: { width: '100%' } }}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      PaperProps={{ style: { width: '100%', maxWidth: '100%' } }}
+    >
       <DialogTitle>
-        <DialogHeader label={`Editar partido - Fecha ${data.dateNumber}`} onClick={handleClose} />
+        <DialogHeader label={`Editar partido - Fecha ${match.dateNumber}`} onClick={handleClose} />
       </DialogTitle>
       <DialogContent sx={{ width: '100%', height: '100%' }}>
         <Grid container sx={{ py: 5, px: 2 }}>
           <HitForm hf={hf} onSubmit={onSubmit}>
             <Grid container spacing={2} justifyContent={'center'}>
               {/* equipos */}
-              <Grid item xs={12} className="flex justify-between">
-                <Grid item xs={4} className="flex gap-2">
-                  <Grid item>
-                    <Image src={data.homeTeam.logo} />
+              <Grid item xs={12} className="flex justify-between items-center">
+                <Grid item xs={5} className="flex gap-2 items-center justify-between">
+                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain' }}>
+                    <Image src={match.homeTeam.logo} />
                   </Grid>
                   <Typography variant="h6" align="center">
-                    {data.homeTeam.name}
+                    {match.homeTeam.name}
                   </Typography>
+                  <Box display="flex" flexDirection="column" alignItems="center">
+                    <IconButton
+                      onClick={() => {
+                        const currentValue = hf.watch('homeTeamGoals');
+                        hf.setValue('homeTeamGoals', (parseInt(currentValue) + 1).toString());
+                      }}
+                    >
+                      <Iconify icon="mdi:plus" />
+                    </IconButton>
+                    <Box>
+                      <Typography variant="h6">{hf.watch('homeTeamGoals')}</Typography>
+                    </Box>
+                    <IconButton
+                      onClick={() => {
+                        const currentValue = hf.watch('homeTeamGoals');
+                        hf.setValue(
+                          'homeTeamGoals',
+                          Math.max(0, parseInt(currentValue) - 1).toString()
+                        );
+                      }}
+                    >
+                      <Iconify icon="mdi:minus" />
+                    </IconButton>
+                  </Box>
                 </Grid>
                 <Grid item xs={1}>
                   <Typography variant="h6" align="center">
                     VS
                   </Typography>
                 </Grid>
-                <Grid item xs={4} className="flex flex-row-reverse gap-2">
-                  <Grid item>
-                    <Image src={data.awayTeam.logo} />
+                <Grid
+                  item
+                  xs={5}
+                  className="flex flex-row-reverse gap-2 items-center justify-between"
+                >
+                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain' }}>
+                    <Image src={match.awayTeam.logo} />
                   </Grid>
                   <Typography variant="h6" align="center">
-                    {data.awayTeam.name}
+                    {match.awayTeam.name}
                   </Typography>
+                  <Box display="flex" flexDirection="column" alignItems="center">
+                    <IconButton
+                      onClick={() => {
+                        const currentValue = hf.watch('awayTeamGoals');
+                        hf.setValue('awayTeamGoals', (parseInt(currentValue) + 1).toString());
+                      }}
+                    >
+                      <Iconify icon="mdi:plus" />
+                    </IconButton>
+                    <Box>
+                      <Typography variant="h6">{hf.watch('awayTeamGoals')}</Typography>
+                    </Box>
+                    <IconButton
+                      onClick={() => {
+                        const currentValue = hf.watch('awayTeamGoals');
+                        hf.setValue(
+                          'awayTeamGoals',
+                          Math.max(0, parseInt(currentValue) - 1).toString()
+                        );
+                      }}
+                    >
+                      <Iconify icon="mdi:minus" />
+                    </IconButton>
+                  </Box>
                 </Grid>
               </Grid>
 
@@ -165,123 +231,59 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                 <Divider sx={{ bgcolor: 'gray' }} />
               </Grid>
 
-              <Grid item xs={12} className="flex flex-col gap-5">
-                <Box className="flex w-full justify-center">
-                  <Typography className="font-bold">Goles local</Typography>
-                </Box>
-                {homeTeamPlayerGoalsHelper.fields.map((field, index) => (
-                  <Stack key={field.id} spacing={2} direction="row">
-                    <Controller
-                      name={`homeTeamPlayerGoals.${index}.playerId`}
-                      control={hf.control}
-                      rules={{ required: true }}
-                      render={(field) => (
-                        <HitSelectField
-                          {...field}
-                          label="Jugador"
-                          floatingLabel={false}
-                          options={homeTeamPlayersSelector || []}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name={`homeTeamPlayerGoals.${index}.goals`}
-                      control={hf.control}
-                      rules={{ required: true }}
-                      render={(field) => (
-                        <HitNumberField {...field} label="Goles" floatingLabel={false} />
-                      )}
-                    />
-                    <Stack alignSelf={'flex-end'}>
-                      <IconButton
-                        disabled={homeTeamPlayerGoalsHelper.fields.length === 1}
-                        onClick={() => homeTeamPlayerGoalsHelper.remove(index)}
+              <Grid item sx={{ width: { xs: '48%', md: '49%' } }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, pb: 1 }}>
+                  <Typography color={'text.secondary'}>Goleadores - Local</Typography>
+                  {hf.watch('homeTeamPlayerGoalsIds')?.map((id, index) => {
+                    const playerData = homeTeamPlayersSelector?.find((p) => p.value === id);
+                    return (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          gap: 2,
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
                       >
-                        <Iconify style={{ width: 22, height: 22 }} icon={'ic:outline-delete'} />
-                      </IconButton>
-
-                      <Box className="flex justify-end w-full">
+                        <Typography>{playerData?.label}</Typography>
                         <IconButton
-                          onClick={() =>
-                            homeTeamPlayerGoalsHelper.append({ playerId: '', goals: 0 })
-                          }
+                          onClick={() => {
+                            hf.setValue(
+                              'homeTeamPlayerGoalsIds',
+                              hf.watch('homeTeamPlayerGoalsIds').filter((p, i) => index !== i)
+                            );
+                          }}
                         >
-                          <Iconify
-                            style={{ width: 22, height: 22 }}
-                            icon={'material-symbols:add-box-outline-rounded'}
-                          />
+                          <Iconify icon="zondicons:close-solid" width={24} />
                         </IconButton>
                       </Box>
-                    </Stack>
-                  </Stack>
-                ))}
-              </Grid>
-
-              <Grid item xs={12}>
-                <Divider sx={{ bgcolor: 'gray' }} />
-              </Grid>
-
-              <Grid item xs={12} className="flex flex-col gap-5">
-                <Box className="flex w-full justify-center">
-                  <Typography className="font-bold">Goles visitante</Typography>
-                </Box>
-                {awayTeamPlayerGoalsHelper.fields.map((field, index) => (
-                  <Stack key={field.id} spacing={2} direction="row">
-                    <Controller
-                      name={`awayTeamPlayerGoals.${index}.playerId`}
-                      control={hf.control}
-                      rules={{ required: true }}
-                      render={(field) => (
-                        <HitSelectField
-                          {...field}
-                          label="Jugador"
-                          floatingLabel={false}
-                          options={awayTeamPlayersSelector || []}
-                        />
-                      )}
-                    />
-                    <Controller
-                      name={`awayTeamPlayerGoals.${index}.goals`}
-                      control={hf.control}
-                      rules={{ required: true }}
-                      render={(field) => (
-                        <HitNumberField {...field} label="Goles" floatingLabel={false} />
-                      )}
-                    />
-                    <Stack alignSelf={'flex-end'}>
-                      <IconButton
-                        disabled={awayTeamPlayerGoalsHelper.fields.length === 1}
-                        onClick={() => awayTeamPlayerGoalsHelper.remove(index)}
+                    );
+                  })}
+                  <Select
+                    fullWidth
+                    renderValue={(value) => {
+                      return <></>;
+                    }}
+                  >
+                    {homeTeamPlayersSelector?.map((player) => (
+                      <MenuItem
+                        onClick={() => {
+                          hf.setValue('homeTeamPlayerGoalsIds', [
+                            ...hf.watch('homeTeamPlayerGoalsIds'),
+                            player.value,
+                          ]);
+                        }}
+                        value={player.value}
                       >
-                        <Iconify style={{ width: 22, height: 22 }} icon={'ic:outline-delete'} />
-                      </IconButton>
+                        {player.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
 
-                      <Box className="flex justify-end w-full">
-                        <IconButton
-                          onClick={() =>
-                            awayTeamPlayerGoalsHelper.append({ playerId: '', goals: 0 })
-                          }
-                        >
-                          <Iconify
-                            style={{ width: 22, height: 22 }}
-                            icon={'material-symbols:add-box-outline-rounded'}
-                          />
-                        </IconButton>
-                      </Box>
-                    </Stack>
-                  </Stack>
-                ))}
-              </Grid>
-
-              <Grid item xs={12}>
-                <Divider sx={{ bgcolor: 'gray' }} />
-              </Grid>
-
-              <Grid item xs={6}>
                 <Controller
-                  name="homeTeamYellowCards"
+                  name="homeTeamYellowCardsIds"
                   control={hf.control}
-                  rules={{ required: true }}
                   render={(field) => (
                     <HitMultiSelectField
                       {...field}
@@ -291,27 +293,10 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={6}>
+
                 <Controller
-                  name="awayTeamYellowCards"
+                  name="homeTeamRedCardsIds"
                   control={hf.control}
-                  rules={{ required: true }}
-                  render={(field) => (
-                    <HitMultiSelectField
-                      {...field}
-                      label="Tarjetas amarillas - Visitante"
-                      floatingLabel={false}
-                      options={awayTeamPlayersSelector || []}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="homeTeamRedCards"
-                  control={hf.control}
-                  rules={{ required: true }}
                   render={(field) => (
                     <HitMultiSelectField
                       {...field}
@@ -322,11 +307,77 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Divider orientation="vertical" />
+              </Grid>
+              <Grid item sx={{ width: { xs: '49%', md: '49%' } }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, pb: 1 }}>
+                  <Typography color={'text.secondary'}>Goleadores - Visitante</Typography>
+                  {hf.watch('awayTeamPlayerGoalsIds')?.map((player, index) => {
+                    const playerData = awayTeamPlayersSelector?.find((p) => p.value === player);
+                    console.log(playerData);
+
+                    return (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          gap: 2,
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Typography>{playerData?.label}</Typography>
+                        <IconButton
+                          onClick={() => {
+                            hf.setValue(
+                              'awayTeamPlayerGoalsIds',
+                              hf.watch('awayTeamPlayerGoalsIds').filter((p, i) => index !== i)
+                            );
+                          }}
+                        >
+                          <Iconify icon="zondicons:close-solid" width={24} />
+                        </IconButton>
+                      </Box>
+                    );
+                  })}
+                  <Select
+                    fullWidth
+                    renderValue={(value) => {
+                      return <></>;
+                    }}
+                  >
+                    {awayTeamPlayersSelector?.map((player) => (
+                      <MenuItem
+                        onClick={() => {
+                          hf.setValue('awayTeamPlayerGoalsIds', [
+                            ...hf.watch('awayTeamPlayerGoalsIds'),
+                            player.value,
+                          ]);
+                        }}
+                        value={player.value}
+                      >
+                        {player.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
+
                 <Controller
-                  name="awayTeamRedCards"
+                  name="awayTeamYellowCardsIds"
                   control={hf.control}
-                  rules={{ required: true }}
+                  render={(field) => (
+                    <HitMultiSelectField
+                      {...field}
+                      label="Tarjetas amarillas - Visitante"
+                      floatingLabel={false}
+                      options={awayTeamPlayersSelector || []}
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="awayTeamRedCardsIds"
+                  control={hf.control}
                   render={(field) => (
                     <HitMultiSelectField
                       {...field}
@@ -346,7 +397,6 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                 <Controller
                   name="date"
                   control={hf.control}
-                  rules={{ required: true }}
                   render={(field) => (
                     <HitDateTimePickerField
                       {...field}
@@ -363,7 +413,6 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                 <Controller
                   name="field"
                   control={hf.control}
-                  rules={{ required: true }}
                   render={(field) => (
                     <HitSelectField
                       {...field}
@@ -376,16 +425,15 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
               </Grid>
               <Grid item xs={6}>
                 <Controller
-                  name="linemenTeam"
+                  name="linemenTeamId"
                   control={hf.control}
-                  rules={{ required: true }}
                   render={(field) => (
                     <HitSelectField
                       {...field}
                       label="Equipo linea"
                       floatingLabel={false}
                       options={
-                        categoryTeams.map((team) => ({
+                        elegibleTeams.map((team) => ({
                           value: team.id,
                           label: team.name,
                         })) || []
@@ -396,16 +444,15 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
               </Grid>
               <Grid item xs={6}>
                 <Controller
-                  name="scorer"
+                  name="scorerTeamId"
                   control={hf.control}
-                  rules={{ required: true }}
                   render={(field) => (
                     <HitSelectField
                       {...field}
                       label="Equipo planillero"
                       floatingLabel={false}
                       options={
-                        categoryTeams.map((team) => ({
+                        elegibleTeams.map((team) => ({
                           value: team.id,
                           label: team.name,
                         })) || []
@@ -418,9 +465,25 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                 <Controller
                   name="comments"
                   control={hf.control}
-                  rules={{ required: true }}
                   render={(field) => (
                     <HitTextField {...field} label="Comentarios" floatingLabel={false} multiline />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="status"
+                  control={hf.control}
+                  render={(field) => (
+                    <HitSelectField
+                      {...field}
+                      label="Estado del partido"
+                      floatingLabel={false}
+                      options={Object.entries(MatchStatus).map(([key, value]) => ({
+                        value: value,
+                        label: key.charAt(0).toUpperCase() + key.slice(1).toLowerCase(),
+                      }))}
+                    />
                   )}
                 />
               </Grid>
@@ -436,55 +499,22 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
 };
 
 export default EditMatchModal;
-
-// const data = {
-//   date: null,
-//   dateNumber: 1,
-//   field: null,
-//   linemenTeam: null,
-//   scorer: null,
-//   comments: null,
-//   homeTeam: {
-//     id: '66d0f984684a731c7781781c',
-//     name: 'la masturbandeja',
-//     gender: 'male',
-//     logo: 'logodepruebarda.com',
-//     categoryName: null,
-//     leagueName: null,
-//   },
-//   awayTeam: {
-//     id: '66d0fc30f406d04e37770982',
-//     name: 'el rojo los putos del rojo',
-//     gender: 'male',
-//     logo: 'todorojo.com',
-//     categoryName: null,
-//     leagueName: null,
-//   },
-//   homeTeamGoals: 0,
-//   awayTeamGoals: 0,
-//   homeTeamPlayerGoals: [],
-//   awayTeamPlayerGoals: [],
-//   homeTeamYellowCards: [],
-//   awayTeamYellowCards: [],
-//   homeTeamRedCards: [],
-//   awayTeamRedCards: [],
-// };
-
 export interface MatchData {
-  date: Moment;
+  date: Moment | '';
   dateNumber: number;
-  field: string;
-  homeTeam: string;
-  awayTeam: string;
-  linemenTeam: string;
-  scorer: string; //planillero
-  comments: string;
+  field: string | null;
+  homeTeamId: string;
+  awayTeamId: string;
+  linemenTeamId: string | null;
+  scorerTeamId: string | null; //planillero
+  comments: string | null;
   homeTeamGoals: string;
   awayTeamGoals: string;
-  homeTeamPlayerGoals: any[];
-  awayTeamPlayerGoals: any[];
-  homeTeamYellowCards: string[];
-  awayTeamYellowCards: string[];
-  homeTeamRedCards: string[];
-  awayTeamRedCards: string[];
+  homeTeamPlayerGoalsIds: string[];
+  awayTeamPlayerGoalsIds: string[];
+  homeTeamYellowCardsIds: string[];
+  awayTeamYellowCardsIds: string[];
+  homeTeamRedCardsIds: string[];
+  awayTeamRedCardsIds: string[];
+  status: MatchStatus;
 }

@@ -1,0 +1,1 @@
+import{j as s,a as e,B as t,a9 as n}from"./index-e0ec8746.js";function l({label:i,onClick:o}){return s("div",{style:{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"center"},children:[e("p",{children:i}),e(t,{onClick:o,sx:{minWidth:0,px:1,color:"black"},children:e(n,{icon:"material-symbols:close",color:"white"})})]})}export{l as D};

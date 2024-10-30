@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { PATHS } from 'src/routes/paths';
 import { useCampeonatoQuery, useOneFaseCampeonatoQuery } from 'src/api/CampeonatoRepository';
 import EditCreatedCopaFixture from '../copa/components/EditCreatedCopaFixture';
+import { faseMapper } from 'src/api/CategoriaRepository';
 
 const EditFaseGruposCopa: React.FC = () => {
   const params = useParams<{ idCampeonato: string; idFase: string }>();
@@ -48,7 +49,7 @@ const EditFaseGruposCopa: React.FC = () => {
                   <Box key={equipo.id}>{equipo.name}</Box>
                 ))}
               </Box>
-              {<EditCreatedCopaFixture partidos={grupo.matches} isLoading={false} />}
+              {<EditCreatedCopaFixture partidos={grupo.matches} isLoading={false} groupName={grupo.name}/>}
             </>
           ))}
         </Card>
