@@ -7,13 +7,15 @@ import { enqueueSnackbar } from 'notistack';
 import DialogHeader from 'src/components/DialogHeader';
 import { useState } from 'react';
 import { CampeonatoForm } from './CampeonatoForm';
-import { useAllCampeonatosQuery, useCreateCampeonatoMutation } from 'src/api/CampeonatoRepository';
+import { useAllCampeonatosQuery, useCreateCampeonatoMutation, useMarkAsMainMutation, useSwitchStatusMutation } from 'src/api/CampeonatoRepository';
 
 const CampeonatosPage = () => {
   const { data: campeonatos } = useAllCampeonatosQuery();
   const [createOpen, setCreateOpen] = useState<boolean>(false);
 
   const createCampeonatoMutation = useCreateCampeonatoMutation();
+  const switchStatusMutation = useSwitchStatusMutation();
+  const markAsMainMutation = useMarkAsMainMutation();
 
   return (
     <>
@@ -40,8 +42,14 @@ const CampeonatosPage = () => {
           <CampeonatoDataGrid
             data={campeonatos}
             isLoading={false}
-            onDelete={(id: any) => {}}
-            onEdit={(id: any) => {}}
+            onDelete={async (id: any) => {
+              await switchStatusMutation.mutateAsync(id);
+              enqueueSnackbar('Estado actualizado correctamente', { variant: 'success' });
+            } }
+            onMarkAsMain={async(id: any) => {
+              await markAsMainMutation.mutateAsync(id);
+              enqueueSnackbar('Torneo regular marcado como principal', { variant: 'success' });
+            }}
           />
         </Card>
       </Container>
@@ -53,7 +61,7 @@ const CampeonatosPage = () => {
           <CampeonatoForm
             onSubmit={async (values) => {
               await createCampeonatoMutation.mutateAsync(
-                { ...values, year: Number(values.year) },
+                { ...values, year: Number(values.year)},
                 {
                   onSuccess: () => {
                     setCreateOpen(false);

@@ -20,7 +20,7 @@ interface Props {
   data: Campeonato[];
   isLoading: boolean;
   onDelete: (id: string) => any;
-  onEdit: (id: string) => any;
+  onMarkAsMain: (id: string) => any;
 }
 
 type CampeonatoFilterType = {
@@ -31,12 +31,12 @@ const defaultValues = {
   nombre: '',
 };
 
-export const CampeonatoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
+export const CampeonatoDataGrid: React.FC<Props> = ({ data, onDelete, onMarkAsMain }) => {
   const hf = useForm<CampeonatoFilterType>({
     defaultValues: defaultValues,
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
-  const selectedIdRef = useRef<string | undefined>();
+  const selectedIdRef = useRef<{id: string | undefined, enabled: boolean, type: CampeonatoTypeEnum}>();
 
   const columns = useColumns<typeof data[0]>([
     {
@@ -63,6 +63,30 @@ export const CampeonatoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete,
       ),
     },
     {
+      field: 'enabled',
+      headerName: 'Estado',
+      type: 'string',
+      renderCell: (params) => (
+        <div className="w-full px-2">
+          <Typography>
+            {!!params.row.enabled ? 'Visible' : 'No visible'}
+          </Typography>
+        </div>
+      ),
+    },
+    {
+      field: 'current',
+      headerName: '',
+      type: 'string',
+      renderCell: (params) => (
+        <div className="w-full px-2">
+          <Typography>
+            {!!params.row.current ? 'Principal' : ''}
+          </Typography>
+        </div>
+      ),
+    },
+    {
       field: 'action',
       headerName: 'Acciones',
       maxWidth: 200,
@@ -73,7 +97,7 @@ export const CampeonatoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete,
         <>
           <IconButton
             onClick={(e) => {
-              selectedIdRef.current = params.row.id;
+              selectedIdRef.current = { id: params.row.id, enabled: params.row.enabled, type: params.row.type };
               setOpenPopover(e.currentTarget);
             }}
           >
@@ -116,20 +140,34 @@ export const CampeonatoDataGrid: React.FC<Props> = ({ data, isLoading, onDelete,
         }}
         arrow="right-top"
       >
-        <MenuItem component={Link} to={PATHS.dashboard.campeonatos.manage(selectedIdRef.current!)}>
-          <Iconify icon="mdi:eye" />
+        <MenuItem
+          component={Link}
+          to={PATHS.dashboard.campeonatos.manage(selectedIdRef.current?.id!)}
+        >
+          <Iconify icon="mdi:pencil" />
           Administrar
         </MenuItem>
+
+        {selectedIdRef.current?.type === CampeonatoTypeEnum.REGULAR && (
+          <MenuItem
+            onClick={() => {
+              setOpenPopover(null);
+              onMarkAsMain(selectedIdRef.current?.id!);
+            }}
+          >
+            <Iconify icon={'mdi:trophy'} />
+            Marcar como torneo actual
+          </MenuItem>
+        )}
 
         <MenuItem
           onClick={() => {
             setOpenPopover(null);
-            onDelete(selectedIdRef.current!);
+            onDelete(selectedIdRef.current?.id!);
           }}
-          sx={{ color: 'error.main' }}
         >
-          <Iconify icon="eva:trash-2-outline" />
-          Eliminar
+          <Iconify icon={selectedIdRef.current?.enabled ? 'mdi:eye-off' : 'mdi:eye'} />
+          {selectedIdRef.current?.enabled ? 'Ocultar' : 'Mostrar'}
         </MenuItem>
       </MenuPopover>
     </Box>

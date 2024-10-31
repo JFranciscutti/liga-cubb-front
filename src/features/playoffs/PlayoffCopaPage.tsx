@@ -23,7 +23,7 @@ const PlayoffCopaPage: React.FC = () => {
 
   const saveFasePlayoff = useCreateFasePlayoffCopaMutation();
 
-  const handleSave = async (partidos: any[]) => {
+  const handleSave = async (partidos: any[], doubleMatch?: boolean) => {
     if (partidos.filter((p) => p.team1 === '' && p.team2 === '').length > 0) {
       enqueueSnackbar({ message: 'No se puede guardar una fase sin partidos', variant: 'error' });
       return;
@@ -32,6 +32,7 @@ const PlayoffCopaPage: React.FC = () => {
     await saveFasePlayoff.mutateAsync({
       partidos: partidos.map((p) => ({ homeTeamId: p.team1 || null, awayTeamId: p.team2 || null })),
       cupId: params.id || '',
+      doubleMatch: !!doubleMatch,
     });
     enqueueSnackbar({ message: 'Fase creada con éxito', variant: 'success' });
     navigate(-1);

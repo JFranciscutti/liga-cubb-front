@@ -144,7 +144,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
       PaperProps={{ style: { width: '100%', maxWidth: '100%' } }}
     >
       <DialogTitle>
-        <DialogHeader label={`Editar partido - Fecha ${match.dateNumber}`} onClick={handleClose} />
+        <DialogHeader label={`Editar partido ${match.dateNumber === 0 ? '':`- Fecha ${match.dateNumber}`}`} onClick={handleClose} />
       </DialogTitle>
       <DialogContent sx={{ width: '100%', height: '100%' }}>
         <Grid container sx={{ py: 5, px: 2 }}>
@@ -153,7 +153,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
               {/* equipos */}
               <Grid item xs={12} className="flex justify-between items-center">
                 <Grid item xs={5} className="flex gap-2 items-center justify-between">
-                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain' }}>
+                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain', overflow:'hidden' }}>
                     <Image src={match.homeTeam.logo} />
                   </Grid>
                   <Typography variant="h6" align="center">
@@ -194,8 +194,8 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                   xs={5}
                   className="flex flex-row-reverse gap-2 items-center justify-between"
                 >
-                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain' }}>
-                    <Image src={match.awayTeam.logo} />
+                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain', overflow:'hidden' }}>
+                  <Image src={match.awayTeam.logo} />
                   </Grid>
                   <Typography variant="h6" align="center">
                     {match.awayTeam.name}

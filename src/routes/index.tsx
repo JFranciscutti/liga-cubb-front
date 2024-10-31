@@ -216,7 +216,7 @@ const ROUTES: RouteObject[] = [
 
               { path: 'manage/:id/playoff-copa', element: <LazyManagePlayoffCopaPage /> },
 
-              { path: 'manage/:id/grupos-copa', element: <LazyManageGruposCopaPage /> },
+              { path: 'manage/:idCampeonato/grupos-copa', element: <LazyManageGruposCopaPage /> },
 
               { path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-regular/:idFase', element: <LazyEditFixturePage /> },
               { path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-playoff/:idFase', element: <LazyEditPlayoffPage /> },

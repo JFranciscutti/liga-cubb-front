@@ -24,7 +24,7 @@ import { useState } from 'react';
 import DialogHeader from 'src/components/DialogHeader';
 
 const ManageCampeonatoPage = () => {
-  const { id } = useParams();
+  const { id } = useParams();  
   const { data: campeonato, isLoading, isError } = useCampeonatoQuery(id || '');
   const { themeStretch } = useSettingsContext();
   const [loadOpen, setLoadOpen] = useState<boolean>(false);

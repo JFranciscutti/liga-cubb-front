@@ -1,7 +1,13 @@
 import { Grid, Box, Typography, Divider, Button } from '@mui/material';
+import moment from 'moment';
+import { enqueueSnackbar } from 'notistack';
 import React, { useRef, useState } from 'react';
-import { Round, RoundMatch } from 'src/api/CategoriaRepository';
+import { useParams } from 'react-router-dom';
+import { useEditPartidoCopaPlayoffMutation, useOneFasePlayoffCopaQuery, useOnePartidoCopaPlayoffQuery, useOnePartidoCopaQuery } from 'src/api/CampeonatoRepository';
+import { RoundMatch } from 'src/api/CategoriaRepository';
+import { useAllEquiposByCopa } from 'src/api/EquipoRepository';
 import Image from 'src/components/image';
+import EditMatchModal from 'src/features/fixtures/components/EditMatchModal';
 import { LOGO_DEFAULT_TEAM } from 'src/utils/constants';
 
 interface PlayoffRoundsFixtureProps {
@@ -10,8 +16,25 @@ interface PlayoffRoundsFixtureProps {
 }
 
 const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, index }) => {
+  const { idCampeonato, idFase } = useParams();
+  const { data: equipos } = useAllEquiposByCopa(idCampeonato || '');
+
+  const { data } = useOneFasePlayoffCopaQuery(idFase || '');
+
+  const isDoubleMatch = data[0].doubleMatch;
+
   const currentMatchSelected = useRef<any | undefined>();
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+
+  const { data: match, isLoading: matchLoading } = useOnePartidoCopaPlayoffQuery(
+    currentMatchSelected.current?.homeTeam,
+    currentMatchSelected.current?.awayTeam,
+    currentMatchSelected.current?.roundId || '',
+    currentMatchSelected.current?.phaseId || '',
+    !!currentMatchSelected.current
+  );
+
+  const editPartidoMutation = useEditPartidoCopaPlayoffMutation();
 
   const renderMatch = (match: any, isHome: boolean) => {
     const teamName = match
@@ -45,7 +68,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
     );
   };
 
-  if (!!partido.teamWinner) {
+  if (false) { // !!partido.teamWinner
     return (
       <>
         <Grid container className="flex items-center gap-2 justify-between" key={index}>
@@ -61,19 +84,21 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
             {renderMatch(partido.homeMatch, false)}
           </Grid>
         </Grid>
-        <Grid container className="flex items-center gap-2 justify-between" key={index}>
-          <Grid item xs={9} className="flex items-center justify-between w-full">
-            {renderMatch(partido.awayMatch, true)}
-            <Grid
-              item
-              className="flex items-center justify-center"
-              style={{ flexShrink: 0, minWidth: '50px' }}
-            >
-              <Typography>VS</Typography>
+        {isDoubleMatch && (
+          <Grid container className="flex items-center gap-2 justify-between" key={index}>
+            <Grid item xs={9} className="flex items-center justify-between w-full">
+              {renderMatch(partido.awayMatch, true)}
+              <Grid
+                item
+                className="flex items-center justify-center"
+                style={{ flexShrink: 0, minWidth: '50px' }}
+              >
+                <Typography>VS</Typography>
+              </Grid>
+              {renderMatch(partido.awayMatch, false)}
             </Grid>
-            {renderMatch(partido.awayMatch, false)}
           </Grid>
-        </Grid>
+        )}
         <Grid item xs={12}>
           <Divider sx={{ bgcolor: 'gray' }} />
         </Grid>
@@ -101,8 +126,10 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
             onClick={() => {
               if (!partido.homeMatch) return;
               currentMatchSelected.current = {
-                homeTeam: partido.homeMatch?.homeTeam?.id,
-                awayTeam: partido.homeMatch?.awayTeam?.id,
+                homeTeam: partido.homeMatch.homeTeam.id,
+                awayTeam: partido.homeMatch.awayTeam.id,
+                roundId: partido.id || '',
+                phaseId: idFase || '',
               };
               setEditModalOpen(true);
             }}
@@ -111,7 +138,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
           </Button>
         </Grid>
       </Grid>
-      <Grid container className="flex items-center gap-2 justify-between" key={index}>
+     {isDoubleMatch && <Grid container className="flex items-center gap-2 justify-between" key={index}>
         <Grid item xs={9} className="flex items-center justify-between w-full">
           {renderMatch(partido.awayMatch, true)}
           <Grid
@@ -138,10 +165,31 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
             Editar
           </Button>
         </Grid>
-      </Grid>
+      </Grid>}
       <Grid item xs={12}>
         <Divider sx={{ bgcolor: 'gray' }} />
       </Grid>
+      <EditMatchModal
+        open={editModalOpen}
+        match={match}
+        isLoading={matchLoading}
+        handleClose={() => {
+          setEditModalOpen(false);
+          currentMatchSelected.current = undefined;
+        }}
+        handleSave={async (values) => {
+          await editPartidoMutation.mutateAsync({
+            ...values,
+            date: moment(values.date).isValid() ? moment(values.date).format('YYYY-MM-DDTHH:mm:ss') : null,
+            phaseId: idFase || '',
+            matchId: currentMatchSelected.current?.roundId,
+          });
+          enqueueSnackbar('Partido editado correctamente', { variant: 'success' });
+          setEditModalOpen(false);
+          currentMatchSelected.current = undefined;
+        }}
+        elegibleTeams={equipos.teams || []}
+      />
     </>
   );
 };

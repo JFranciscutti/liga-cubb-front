@@ -74,7 +74,7 @@ const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({ equipos, fechas, ex
                         <MenuItem key={e.id} value={e.id}>
                           <Box className="flex items-center gap-2">
                             <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                              <Image src={e.logoUrl} className="h-10 w-10 min-w-10" />
+                              <Image src={e.logo} className="h-10 w-10 min-w-10" />
                             </Box>
                             <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
                               {e.name}
@@ -91,7 +91,7 @@ const CreateFixtureForCopa: FC<FixtureManagerBaseProps> = ({ equipos, fechas, ex
                         <MenuItem key={e.id} value={e.id}>
                           <Box className="flex items-center gap-2">
                             <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                              <Image src={e.logoUrl} className="h-10 w-10 min-w-10" />
+                              <Image src={e.logo} className="h-10 w-10 min-w-10" />
                             </Box>
                             <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
                               {e.name}

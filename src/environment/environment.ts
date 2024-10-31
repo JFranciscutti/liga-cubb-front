@@ -3,9 +3,14 @@ const dev = {
   production: false,
 };
 
+const ngrok = {
+  backEnd: 'https://7eee-190-246-216-183.ngrok-free.app/',
+  production: false,
+};
+
 const _prod = {
   backEnd: 'https://league-cubb.fly.dev/',
   production: true,
 };
 
-export const environment = import.meta.env.VITE_PRODUCTION ? dev : dev;
+export const environment = true ? ngrok : dev;

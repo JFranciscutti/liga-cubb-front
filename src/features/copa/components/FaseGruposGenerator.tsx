@@ -32,7 +32,7 @@ export interface Grupo {
 
 const FaseGruposGenerator = ({ equipos }: { equipos: Equipo[] }) => {
   const cantidades_validas_v2 = CANTIDADES_VALIDAS.filter((c) => equipos.length % Number(c) === 0);
-  const { id: campeonatoId } = useParams();
+  const { idCampeonato } = useParams();
   const [cantidadGrupos, setCantidadGrupos] = useState(cantidades_validas_v2[0]);
   const createFaseGruposMutation = useCreateFaseGruposCopaMutation();
   const navigate = useNavigate();
@@ -110,11 +110,11 @@ const FaseGruposGenerator = ({ equipos }: { equipos: Equipo[] }) => {
 
   const handleSaveFechas = async (grupos: any[]) => {
     await createFaseGruposMutation.mutateAsync({
-      campeonatoId: campeonatoId || '',
+      campeonatoId: idCampeonato || '',
       grupos: grupos,
     });
     enqueueSnackbar('Fase creada correctamente', { variant: 'success' });
-    navigate(PATHS.dashboard.campeonatos.manage(campeonatoId || ''));
+    navigate(PATHS.dashboard.campeonatos.manage(idCampeonato || ''));
   };
 
   // Crea una función para verificar si los grupos están llenos
@@ -163,7 +163,7 @@ const FaseGruposGenerator = ({ equipos }: { equipos: Equipo[] }) => {
             </Button>
           </Box>
         </Grid>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} >
           {grupos.map(
             (grupo) =>
               parseInt(cantidadGrupos) >= grupo.id + 1 && (

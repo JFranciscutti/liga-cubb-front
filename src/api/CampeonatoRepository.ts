@@ -1,10 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Campeonato, CAMPEONATOS_MOCK } from 'src/models/Campeonato';
+import { Campeonato } from 'src/models/Campeonato';
 import { httpClient } from 'src/utils/httpClient';
 import { useSuspenseQuery } from 'src/utils/useSupenseQuery';
-import { Match, playoffFaseMapper, Round, Team } from './CategoriaRepository';
+import { Match, RoundMatch, Team } from './CategoriaRepository';
 import moment from 'moment';
-import { GeneroEnum } from 'src/utils/enums';
 
 interface ICreateCampeonato {
   name: string;
@@ -15,6 +14,11 @@ interface ICreateCampeonato {
 interface IEditCampeonato {
   id: string;
   name: string;
+}
+interface RoundCup {
+  matchesPlayoff: RoundMatch[];
+  roundNumber: number;
+  doubleMatch: boolean;
 }
 
 export const getCampeonatoMapper = (x: any): Campeonato => x;
@@ -32,7 +36,29 @@ const faseCopaMapper = (x: any): { matches: Match[]; name: string; teams: Team[]
 export const partidoMapper = (x: any): Match => ({
   ...x,
   date: !!x?.date ? moment(x?.date) : null,
+  homeTeamPlayerGoals: x?.homeTeamPlayerGoals.map((p: any) => p.id) || [],
+  awayTeamPlayerGoals: x?.awayTeamPlayerGoals.map((p: any) => p.id) || [],
+  homeTeamYellowCards: x?.homeTeamYellowCards.map((p: any) => p.id) || [],
+  awayTeamYellowCards: x?.awayTeamYellowCards.map((p: any) => p.id) || [],
+  homeTeamRedCards: x?.homeTeamRedCards.map((p: any) => p.id) || [],
+  awayTeamRedCards: x?.awayTeamRedCards.map((p: any) => p.id) || [],
 });
+
+export const playoffFaseMapper = (data: any): RoundCup => {
+  const matchesPlayoff: RoundMatch[] = data.matchesPlayoff.map((x: any) => ({
+    id: x.id,
+    awayMatch: partidoMapper(x.awayMatch),
+    homeMatch: partidoMapper(x.homeMatch),
+    teamWinner: x.teamWinner,
+    nextMatchId: x.nextMatchId,
+  }));
+
+  return {
+    matchesPlayoff: matchesPlayoff,
+    roundNumber: data.roundNumber,
+    doubleMatch: data.doubleMatch,
+  };
+};
 
 export class CampeonatoRepository {
   keys = {
@@ -101,21 +127,58 @@ export class CampeonatoRepository {
     return partidoMapper(data);
   };
 
-  createFasePlayoff = async ({ partidos, cupId }: { partidos: any[]; cupId: string }) =>
+  getOnePartidoPlayoff = async ({
+    homeTeamId,
+    awayTeamId,
+    faseId,
+    matchPlayoffId,
+  }: {
+    homeTeamId: string;
+    awayTeamId: string;
+    faseId: string;
+    matchPlayoffId: string;
+  }) => {
+    const { data } = await httpClient.get<any>(
+      `tournament/cup/phase-playoff/get-match?phaseId=${faseId}&homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}&matchPlayoffId=${matchPlayoffId}`
+    );
+    return partidoMapper(data);
+  };
+
+  createFasePlayoff = async ({
+    partidos,
+    cupId,
+    doubleMatch,
+  }: {
+    partidos: any[];
+    cupId: string;
+    doubleMatch: boolean;
+  }) =>
     await httpClient.post(`tournament/cup/create-phase-playoff`, {
       competitionId: cupId,
       round: { roundNumber: partidos.length, matchesPlayoff: partidos },
+      doubleMatch: doubleMatch,
     });
 
   getOneFasePlayoff = async (faseId: string) => {
-    const { data } = await httpClient.get<Round[]>(
-      `tournament/league/categories/phase-playoff/get-rounds?phaseId=${faseId}`
+    const { data } = await httpClient.get<RoundCup[]>(
+      `tournament/cup/phase-playoff/get-rounds?phaseId=${faseId}`
     );
     return data.map(playoffFaseMapper);
   };
 
-  editOnePartido = async (partido: any) => await httpClient.post(`tournament/cup/phase-group/edit-match`, partido);
+  editOnePartido = async (partido: any) =>
+    await httpClient.post(`tournament/cup/phase-group/edit-match`, partido);
 
+  editOnePartidoPlayoff = async (partido: any) =>
+    await httpClient.post(`tournament/cup/phase-playoff/edit-match`, partido);
+
+  switchStatus = async (id: string) => {
+    await httpClient.post(`tournament/switch-tournament-state-by-id`, { tournamentId: id });
+  };
+
+  markAsMain = async (id: string) => {
+    await httpClient.post(`tournament/set-tournament-as-current`, { tournamentId: id });
+  };
 }
 
 const repo = new CampeonatoRepository();
@@ -185,6 +248,25 @@ export const useOnePartidoCopaQuery = (
     enabled: enabled,
   });
 
+export const useOnePartidoCopaPlayoffQuery = (
+  localId: string,
+  awayId: string,
+  roundId: string,
+  faseId: string,
+  enabled: boolean
+) =>
+  useQuery({
+    queryKey: repo.keys.partido(localId + awayId + faseId + roundId),
+    queryFn: () =>
+      repo.getOnePartidoPlayoff({
+        homeTeamId: localId,
+        awayTeamId: awayId,
+        faseId: faseId,
+        matchPlayoffId: roundId,
+      }),
+    enabled: enabled,
+  });
+
 export const useCreateFasePlayoffCopaMutation = () => {
   const qc = useQueryClient();
   return useMutation({
@@ -201,13 +283,48 @@ export const useOneFasePlayoffCopaQuery = (id: string) =>
     queryFn: () => repo.getOneFasePlayoff(id),
   });
 
-  export const useEditPartidoCopaMutation = () => {
-    const qc = useQueryClient();
-    return useMutation({
-      mutationFn: repo.editOnePartido,
-      onSuccess: (_, vars) => {
-        qc.invalidateQueries({ queryKey: repo.keys.partido(vars.homeTeamId + vars.awayTeamId + vars.phaseId) });
-        qc.invalidateQueries({ queryKey: repo.keys.oneFase(vars.phaseId) });
-      },
-    });
-  }
+export const useEditPartidoCopaMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.editOnePartido,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({
+        queryKey: repo.keys.partido(vars.homeTeamId + vars.awayTeamId + vars.phaseId),
+      });
+      qc.invalidateQueries({ queryKey: repo.keys.oneFase(vars.phaseId) });
+    },
+  });
+};
+
+export const useSwitchStatusMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.switchStatus,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries(repo.keys.all());
+    },
+  });
+};
+
+export const useMarkAsMainMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.markAsMain,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries(repo.keys.all());
+    },
+  });
+};
+
+export const useEditPartidoCopaPlayoffMutation = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: repo.editOnePartidoPlayoff,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({
+        queryKey: repo.keys.partido(vars.homeTeamId + vars.awayTeamId + vars.phaseId + vars.matchPlayoffId),
+      });
+      qc.invalidateQueries({ queryKey: repo.keys.oneFase(vars.phaseId) });
+    },
+  });
+};

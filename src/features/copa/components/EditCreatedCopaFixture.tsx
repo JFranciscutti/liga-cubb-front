@@ -48,7 +48,7 @@ export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({
               {/* Contenedor del equipo local */}
               <Grid item className="flex items-center gap-2" style={{ flex: 1 }}>
                 <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                  <Image src={partido.homeTeam.logoUrl} className="h-10 w-10 min-w-10" />
+                  <Image src={partido.homeTeam.logo} className="h-10 w-10 min-w-10" />
                 </Box>
                 <p className="line-clamp-1" style={{ whiteSpace: 'nowrap' }}>
                   {partido.homeTeam.name}
@@ -74,7 +74,7 @@ export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({
                   {partido.awayTeam.name}
                 </p>
                 <Box className="flex items-center justify-center h-10 min-w-10 rounded-full bg-gray-50">
-                  <Image src={partido.awayTeam.logoUrl} className="h-10 w-10 min-w-10" />
+                  <Image src={partido.awayTeam.logo} className="h-10 w-10 min-w-10" />
                 </Box>
               </Grid>
             </Grid>

@@ -17,12 +17,18 @@ export type CampeonatoFormType = {
   name: string;
   type: string;
   year: string;
+  gender?: string;
 };
 
 const CampeonatoSchema: Yup.SchemaOf<CampeonatoFormType> = Yup.object().shape({
   name: Yup.string().required('Nombre es requerido'),
   year: Yup.string().required('Año es requerido'),
   type: Yup.string().required('Tipo es requerido'),
+  gender: Yup.string().when('type', {
+    is: 'cup',
+    then: Yup.string().required('Género es requerido'),
+    otherwise: Yup.string().notRequired(),
+  }),
 });
 
 const defaultValues = {
@@ -33,13 +39,11 @@ const defaultValues = {
 interface CampeonatoFormProps {
   onSubmit: (value: CampeonatoFormType) => Promise<any>;
   initialValues?: CampeonatoFormType;
-  edit?: boolean;
 }
 
 export const CampeonatoForm: React.FC<CampeonatoFormProps> = ({
   onSubmit,
   initialValues,
-  edit = false,
 }) => {
   const hf = useForm<CampeonatoFormType>({
     resolver: yupResolver(CampeonatoSchema),
@@ -76,8 +80,26 @@ export const CampeonatoForm: React.FC<CampeonatoFormProps> = ({
         )}
       />
 
+      {hf.watch('type') === 'cup' && (
+        <Controller
+          name="gender"
+          control={hf.control}
+          render={(field) => (
+            <HitSelectField
+              {...field}
+              label="Género"
+              options={[
+                { label: 'Masculina', value: 'male' },
+                { label: 'Femenina', value: 'female' },
+              ]}
+              floatingLabel={false}
+            />
+          )}
+        />
+      )}
+
       <HitFormActions>
-        <HitFormSubmitButton>{edit ? 'Guardar' : 'Crear'}</HitFormSubmitButton>
+        <HitFormSubmitButton>{'Crear'}</HitFormSubmitButton>
       </HitFormActions>
     </HitForm>
   );

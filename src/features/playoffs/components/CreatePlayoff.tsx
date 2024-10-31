@@ -11,7 +11,13 @@ import {
   Box,
   Button,
 } from '@mui/material';
-import { HitForm, HitFormActions, HitFormSubmitButton, HitSelectField } from 'src/components/form';
+import {
+  HitCheckboxField,
+  HitForm,
+  HitFormActions,
+  HitFormSubmitButton,
+  HitSelectField,
+} from 'src/components/form';
 import { Controller, useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,12 +29,14 @@ type Match = {
 
 interface CreatePlayoffProps {
   equipos: any[];
-  handleSave: (fechas: any[]) => void;
+  handleSave: (fechas: any[], doubleMatch?: boolean) => void;
 }
 
-const selectPhaseSchema: Yup.SchemaOf<{ selectedPhase: number }> = Yup.object().shape({
-  selectedPhase: Yup.number().required(),
-});
+const selectPhaseSchema: Yup.SchemaOf<{ selectedPhase: number; doubleMatch: boolean }> =
+  Yup.object().shape({
+    selectedPhase: Yup.number().required(),
+    doubleMatch: Yup.boolean().required(),
+  });
 
 const CreatePlayoff: React.FC<CreatePlayoffProps> = ({ equipos, handleSave }) => {
   const [matches, setMatches] = useState<Match[]>();
@@ -58,6 +66,7 @@ const CreatePlayoff: React.FC<CreatePlayoffProps> = ({ equipos, handleSave }) =>
     resolver: yupResolver(selectPhaseSchema),
     defaultValues: {
       selectedPhase: 32,
+      doubleMatch: false,
     },
     mode: 'onBlur',
   });
@@ -77,8 +86,6 @@ const CreatePlayoff: React.FC<CreatePlayoffProps> = ({ equipos, handleSave }) =>
   }, [hf.watch('selectedPhase')]);
 
   const handleSubmit = async (values: { selectedPhase: number }) => {
-    console.log(values.selectedPhase, equipos.length);
-
     if (values.selectedPhase > equipos.length / 2) {
       hf.setError('selectedPhase', {
         type: 'manual',
@@ -112,6 +119,13 @@ const CreatePlayoff: React.FC<CreatePlayoffProps> = ({ equipos, handleSave }) =>
                   { value: 1, label: 'Final' },
                 ]}
               />
+            )}
+          />
+          <Controller
+            name={`doubleMatch`}
+            control={hf.control}
+            render={(field) => (
+              <HitCheckboxField {...field} label="Ida y vuelta?" floatingLabel={false} />
             )}
           />
           <HitFormActions>
@@ -176,7 +190,7 @@ const CreatePlayoff: React.FC<CreatePlayoffProps> = ({ equipos, handleSave }) =>
             ))}
           </Grid>
           <Box className="flex w-full items-end justify-center">
-            <Button onClick={() => handleSave(matches)} variant="contained">
+            <Button onClick={() => handleSave(matches, hf.watch('doubleMatch'))} variant="contained">
               Guardar
             </Button>
           </Box>

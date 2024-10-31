@@ -72,7 +72,7 @@ export class EquipoRepository {
     );
 
   createForCopa = (team: ICreateEquipoCopa) =>
-    httpClient.post('tournament/cup/phase-group/add-teams', team);
+    httpClient.post('tournament/cup/add-teams', team);
 
   getAllByCopaId = async (id: string) => {
     const { data } = await httpClient.get<any>(`tournament/cup/get-teams-by-id?cupId=${id}`);

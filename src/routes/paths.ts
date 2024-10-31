@@ -79,7 +79,7 @@ export const PATHS = {
         `/dashboard/campeonatos/manage/${id}/equipos-copa`,
       manageOneEquipoCopa: (id: string, idEquipo: string) =>
         `/dashboard/campeonatos/manage/${id}/equipos-copa/${idEquipo}`,
-      createFaseGrupos: (id: number | string) => `/dashboard/campeonatos/manage/${id}/grupos-copa`,
+      createFaseGrupos: (idCampeonato: number | string) => `/dashboard/campeonatos/manage/${idCampeonato}/grupos-copa`,
       createPlayoff: (id: number | string) => `/dashboard/campeonatos/manage/${id}/playoff-copa`,
       manageFixtureGroupsCopa: (id: number | string) =>
         `/dashboard/campeonatos/manage/${id}/fixture-grupos-copa`,
@@ -104,7 +104,7 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.campeonatos.create,
       PATHS.dashboard.campeonatos.manage(':id'),
       PATHS.dashboard.campeonatos.manageEquiposCopa(':id'),
-      PATHS.dashboard.campeonatos.createFaseGrupos(':id'),
+      PATHS.dashboard.campeonatos.createFaseGrupos(':idCampeonato'),
       PATHS.dashboard.campeonatos.manageFixtureGroupsCopa(':id'),
       PATHS.dashboard.categorias.root,
       PATHS.dashboard.categorias.list,
