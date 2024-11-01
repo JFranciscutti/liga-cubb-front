@@ -14,7 +14,7 @@ import {
 import moment from 'moment';
 import { Moment } from 'moment';
 import { Controller, useForm } from 'react-hook-form';
-import { Match, MatchStatus, useOnePartidoQuery } from 'src/api/CategoriaRepository';
+import { Match, MatchStatus } from 'src/api/CategoriaRepository';
 import DialogHeader from 'src/components/DialogHeader';
 import {
   HitDateTimePickerField,
@@ -102,8 +102,8 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
         homeTeamId: match.homeTeam.id,
         awayTeamId: match.awayTeam.id,
         field: match.field || '',
-        linemenTeamId: match.linemenTeam || '',
-        scorerTeamId: match.scorer || '',
+        linemenTeamId: match?.linemenTeam?.id || '',
+        scorerTeamId: match?.scorer?.id || '',
         comments: match.comments || '',
         homeTeamGoals: match.homeTeamGoals?.toString() || '0',
         awayTeamGoals: match.awayTeamGoals?.toString() || '0',

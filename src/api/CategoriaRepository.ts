@@ -50,8 +50,8 @@ export interface Match {
   date: Moment;
   dateNumber: number;
   field: string;
-  linemenTeam: string;
-  scorer: string;
+  linemenTeam: Team;
+  scorer: Team;
   comments: string;
   homeTeam: Team;
   awayTeam: Team;
