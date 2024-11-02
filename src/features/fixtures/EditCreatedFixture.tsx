@@ -104,7 +104,7 @@ export const EditCreatedFixture: FC<FixtureManagerBaseProps> = ({ fecha, isLoadi
         handleSave={async (values) => {
           await editPartidoMutation.mutateAsync({
             ...values,
-            date: moment(values.date).isValid() ? moment(values.date).toString() : null,
+            date: moment(values.date).isValid() ? moment(values.date).format('YYYY-MM-DDTHH:mm:ss') : null,
             phaseId: idFase || '',
           });
           enqueueSnackbar('Partido editado correctamente', { variant: 'success' });
