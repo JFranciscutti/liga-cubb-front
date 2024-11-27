@@ -62,6 +62,6 @@ export const FinalTeamBox: React.FC<{
   <Box className="flex flex-col bg-[#24598f] text-white w-48 relative">
     <ResultBox team={nameHome} resultIda={resultHome} resultPenales={penaltyResultHome} />
     <Divider className="bg-white" />
-    <ResultBox team={nameAway} resultIda={resultAway} resultPenales={penaltyResultAway} />
+    <InvertedResultBox team={nameAway} resultIda={resultAway} resultPenales={penaltyResultAway} />
   </Box>
 );
