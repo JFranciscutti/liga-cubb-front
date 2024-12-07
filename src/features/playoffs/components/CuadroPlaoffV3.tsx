@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import { FinalTeamBox, InvertedTeamBox, TeamBox } from './TeamBox';
 import { Moment } from 'moment';
 import { calculateLeftPosition, calculateRightPosition, calculateScreenHeight, getFinalPosition } from './CuadroPlayoffUtils';
+import PlayoffArrows from './PlayoffArrows';
 
 export enum MatchStatus {
   PENDING = 'Upcoming',
@@ -101,6 +102,8 @@ const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         {leftRounds.map((matches, roundIndex) =>
           matches.map((match, matchIndex) => (
             <Box
+              component="div"
+              id={`match-${match.id}`}
               key={`round-${roundIndex}-match-${matchIndex}`}
               className="absolute"
               style={calculateLeftPosition(matchIndex, roundIndex)}
@@ -142,7 +145,12 @@ const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         )}
 
         {finalMatch && (
-          <Box className="absolute" style={getFinalPosition(leftRounds.length)}>
+          <Box
+            component="div"
+            id={`match-${finalMatch.id}`} 
+            className="absolute" 
+            style={getFinalPosition(leftRounds.length)}
+          >
             <FinalTeamBox
               nameHome={finalMatch.homeMatch?.homeTeam}
               nameAway={finalMatch.homeMatch?.awayTeam}
@@ -155,6 +163,8 @@ const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         {rightRounds.map((matches, roundIndex) =>
           matches.map((match, matchIndex) => (
             <Box
+              component="div"
+              id={`match-${match.id}`}
               key={`round-${roundIndex}-match-${matchIndex}`}
               className="absolute"
               style={calculateRightPosition(matchIndex, roundIndex, leftRounds.length)}
@@ -194,6 +204,8 @@ const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
             </Box>
           ))
         )}
+
+        <PlayoffArrows leftRounds={leftRounds} rightRounds={rightRounds}/>
       </Box>
     </>
   );

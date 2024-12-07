@@ -24,7 +24,7 @@ export const calculateRightPosition = (matchIndex: number, roundIndex: number, l
 export const getFinalPosition = (leftRoundsLength: number) => {
     const leftOffset = getFinalLeftOffset(leftRoundsLength); // Center horizontally the final
     const semiTopOffset = vertialSpacing * Math.pow(2, leftRoundsLength -2);
-    const topOffset = leftRoundsLength === 0 ? vertialSpacing : semiTopOffset + 150;// if there's only a final then 110 else ...
+    const topOffset = leftRoundsLength === 0 ? vertialSpacing : semiTopOffset + 158;// if there's only a final then 110 else ...
     return { left: `${leftOffset}px`, top: `${topOffset}px`};
 };
 
