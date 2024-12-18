@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom';
 import { useOneFasePlayoffQuery } from 'src/api/CategoriaRepository';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { PATHS } from 'src/routes/paths';
-import CuadroPlayoffV2 from './components/CuadroPlayoffV2';
 import PlayoffFixtureNavigator from './components/PlayoffFixtureNavigator';
+import CuadroPlayoff from './components/CuadroPlayoff';
 
 const EditPlayoffPage: React.FC = () => {
   const params = useParams();
@@ -42,7 +42,7 @@ const EditPlayoffPage: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          <CuadroPlayoffV2 rondas={data || []} />
+          <CuadroPlayoff rondas={data || []} />
           <PlayoffFixtureNavigator rounds={data || []} />
         </Card>
       </Container>

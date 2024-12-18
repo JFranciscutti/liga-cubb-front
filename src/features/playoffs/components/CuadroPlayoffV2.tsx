@@ -54,6 +54,7 @@ interface CuadroPlayoffProps {
   rondas: Round[];
 }
 
+//Deprecated using the v3 now, not deleted because maybe cutti is using something else from here
 const CuadroPlayoffV2: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
   const matches = {
     r16: rondas[3]?.matchesPlayoff || [],
