@@ -1,6 +1,6 @@
 import { Box, Typography, Divider } from '@mui/material';
 import { LOGO_DEFAULT_TEAM } from 'src/utils/constants';
-import { Team } from './CuadroPlayoffV2';
+import { Team } from './CuadroPlayoff';
 
 interface ResultBoxProps {
   team?: Team;

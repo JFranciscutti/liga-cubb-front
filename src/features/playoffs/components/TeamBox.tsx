@@ -1,6 +1,6 @@
 import { Box, Divider } from '@mui/material';
 import { ResultBox, InvertedResultBox } from './ResultBox';
-import { Team } from './CuadroPlayoffV2';
+import { Team } from './CuadroPlayoff';
 
 interface TeamBoxProps {
   homeTeam?: Team;
@@ -62,6 +62,6 @@ export const FinalTeamBox: React.FC<{
   <Box className="flex flex-col bg-[#24598f] text-white w-48 relative">
     <ResultBox team={nameHome} resultIda={resultHome} resultPenales={penaltyResultHome} />
     <Divider className="bg-white" />
-    <InvertedResultBox team={nameAway} resultIda={resultAway} resultPenales={penaltyResultAway} />
+    <ResultBox team={nameAway} resultIda={resultAway} resultPenales={penaltyResultAway} />
   </Box>
 );

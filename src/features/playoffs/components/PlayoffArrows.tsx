@@ -1,4 +1,4 @@
-import { RoundMatch } from "./CuadroPlaoffV3";
+import { RoundMatch } from "./CuadroPlayoff";
 import Xarrow from "react-xarrows";
 
 interface PlayoffArrowsProps {

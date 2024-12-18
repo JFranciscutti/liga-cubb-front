@@ -66,7 +66,7 @@ interface CuadroPlayoffProps {
     f: rondas[0]?.matchesPlayoff[0] || { homeMatch: {}, awayMatch: {} },
   };*/
 
-const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
+const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
   const finalMatch = rondas[0]?.matchesPlayoff[0] || { homeMatch: {}, awayMatch: {} }; // At least always will have the final
   const roundsWithoutFinal = rondas
     .slice(1)
@@ -96,9 +96,25 @@ const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
   const screenHeight = calculateScreenHeight(leftRounds.length);
   const screenClassName = `bg-[url('/assets/background/soccer_background.jpg')] bg-cover overflow-x-scroll overflow-y-scroll relative w-full`;
 
+  const getLeftForCenterElements = () => {
+    const options = {
+      semi: `${150}px`,
+      final: `${400}px`,
+    }
+
+    if (leftRounds.length === 1) {// semis
+      return options.semi;
+    } else if (leftRounds.length === 0) {// final
+      return options.final;
+    } else {
+      return ""
+    } 
+  }
+
   return (
     <>
       <Box className={screenClassName} style={{ height: `${screenHeight}px`}}>
+        <div style={{ position: "relative", display: "flex", justifyContent: "center", left: getLeftForCenterElements()}}>
         {leftRounds.map((matches, roundIndex) =>
           matches.map((match, matchIndex) => (
             <Box
@@ -206,9 +222,10 @@ const CuadroPlayoffV3: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
         )}
 
         <PlayoffArrows leftRounds={leftRounds} rightRounds={rightRounds}/>
+        </div>
       </Box>
     </>
   );
 };
 
-export default CuadroPlayoffV3;
+export default CuadroPlayoff;

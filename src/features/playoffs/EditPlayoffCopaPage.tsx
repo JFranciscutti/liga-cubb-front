@@ -4,10 +4,9 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import { PATHS } from 'src/routes/paths';
-import CuadroPlayoffV2 from './components/CuadroPlayoffV2';
 import { useOneFasePlayoffCopaQuery } from 'src/api/CampeonatoRepository';
 import PlayoffFixtureNavigator from './components/PlayoffFixtureNavigator';
-import CuadroPlayoffV3 from './components/CuadroPlaoffV3';
+import CuadroPlayoff from './components/CuadroPlayoff';
 
 const EditPlayoffCopaPage: React.FC = () => {
   const params = useParams<{ idCampeonato: string; idFase: string }>();
@@ -41,7 +40,7 @@ const EditPlayoffCopaPage: React.FC = () => {
           }}
         >
           {/*@ts-ignore */}
-          <CuadroPlayoffV3 rondas={data || []} />
+          <CuadroPlayoff rondas={data || []} />
           <PlayoffFixtureNavigator rounds={data || []} />
         </Card>
       </Container>
