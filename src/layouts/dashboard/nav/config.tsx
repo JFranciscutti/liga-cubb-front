@@ -21,11 +21,10 @@ const iconifyIcon = (name: string) => (
 );
 
 const ICONS = {
-  account: iconifyIcon('eva:person-outline'),
-  usuarios: iconifyIcon('mdi:people-group'),
-  equipos: iconifyIcon('entypo:sports-club'),
+  carrusel: iconifyIcon('material-symbols-light:view-carousel-outline'),
   categorias: iconifyIcon('mdi:soccer'),
   jugadores: iconifyIcon('mdi:people-group'),
+  novedades: iconifyIcon('bx:news'),
 };
 
 const navConfig = [
@@ -44,6 +43,16 @@ const navConfig = [
         path: PATHS.dashboard.jugadores.root,
         icon: ICONS.jugadores,
       },
+      {
+        title: 'Novedades',
+        path: PATHS.dashboard.novedades.root,
+        icon: ICONS.novedades,
+      },
+      // {
+      //   title: 'Carrusel de Imagenes',
+      //   path: PATHS.dashboard.carrusel.root,
+      //   icon: ICONS.carrusel,
+      // },
     ],
   },
 ];

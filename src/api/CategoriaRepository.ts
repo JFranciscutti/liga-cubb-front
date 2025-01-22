@@ -64,6 +64,8 @@ export interface Match {
   homeTeamRedCards: string[];
   awayTeamRedCards: string[];
   status: MatchStatus;
+  homeTeamPenaltyGoals: number | null;
+  awayTeamPenaltyGoals: number | null;
 }
 
 export interface RoundMatch {

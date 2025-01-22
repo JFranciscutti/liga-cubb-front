@@ -9,46 +9,54 @@ import {
   useColumns,
 } from 'src/components/datagrid';
 import { HitFormActions, HitFormGrid, HitTextField } from 'src/components/form';
+import Image from 'src/components/image';
 
 import Iconify from 'src/components/iconify';
 import MenuPopover from 'src/components/menu-popover';
-import { Jugador } from 'src/models/Jugador';
+import { Novedad } from 'src/models/Novedad';
 
 interface Props {
-  data: Jugador[];
+  data: Novedad[];
   isLoading: boolean;
   onDelete: (id: string) => any;
   onEdit?: (id: string) => any;
 }
 
-export const JugadorDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
+export const NovedadDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, onEdit }) => {
   const hf = useForm({
-    defaultValues: { email: '', roles: [] },
+    defaultValues: { title: '' },
   });
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
   const selectedIdRef = useRef<string | undefined>();
 
-  const columns = useColumns<typeof data[0]>([
+  const columns = useColumns<Novedad>([
     {
-      field: 'nombre',
-      headerName: 'Nombre',
-      type: 'string',
-      align: 'left',
-      headerAlign: 'left',
+        field: 'image',
+        type: 'avatar',
+        headerName: "Imagen",
+        renderCell: (params) => (
+              <Image src={params.row.image} className="w-10 h-10 rounded-full bg-gray-100 " />
+          ),
     },
     {
-      field: 'apellido',
-      headerName: 'Apellido',
+      field: 'title',
+      headerName: 'Titulo',
       type: 'string',
-      align: 'left',
-      headerAlign: 'left',
+    },
+   
+    {
+      field: 'created_at',
+      headerName: 'Fecha de creación',
+      type: 'string',
+      renderCell: (params) => params.value?.format('DD/MM/YYYY'),
     },
     {
-      field: 'nro_socio',
-      headerName: 'Nro de Socio',
+      field: 'visible',
+      headerName: '¿Está publicada?',
       type: 'string',
-      align: 'left',
-      headerAlign: 'left',
+      align:'center',
+      headerAlign:'center',
+      renderCell: (params) =>  params.value ? 'Si' : 'No',
     },
     {
       field: 'action',
@@ -80,16 +88,8 @@ export const JugadorDataGrid: React.FC<Props> = ({ data, isLoading, onDelete, on
           render: (
             <HitFormGrid>
               <Controller
-                name="nombre"
-                render={(field) => <HitTextField {...field} label="Nombre" />}
-              />
-              <Controller
-                name="apellido"
-                render={(field) => <HitTextField {...field} label="Apellido" />}
-              />
-              <Controller
-                name="nro_socio"
-                render={(field) => <HitTextField {...field} label="Número de Socio" />}
+                name="title"
+                render={(field) => <HitTextField {...field} label="Titulo" />}
               />
 
               <HitFormActions>

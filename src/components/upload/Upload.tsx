@@ -11,6 +11,7 @@ import { UploadProps } from './types';
 import RejectionFiles from './errors/RejectionFiles';
 import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -95,7 +96,7 @@ export default function Upload({
         {hasFile && <SingleFilePreview file={file} />}
       </StyledDropZone>
 
-      <RejectionFiles fileRejections={fileRejections} />
+      <RejectionFiles fileRejections={[...fileRejections]} />
 
       {hasFile && onDelete && (
         <IconButton
@@ -147,6 +148,8 @@ export default function Upload({
 // ----------------------------------------------------------------------
 
 function Placeholder({ sx, ...other }: StackProps) {
+  const { t } = useTranslation();
+  
   return (
     <Stack
       spacing={2}
@@ -170,12 +173,12 @@ function Placeholder({ sx, ...other }: StackProps) {
 
       <Box sx={{ p: 3 }}>
         <Typography gutterBottom variant="h5">
-          Drop or Select file
+          {t('field.drop_select_file')}
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Drop files here or click
-          <Typography
+        {t('field.drop_files')}
+        <Typography
             variant="body2"
             component="span"
             sx={{
@@ -184,9 +187,9 @@ function Placeholder({ sx, ...other }: StackProps) {
               textDecoration: 'underline',
             }}
           >
-            browse
+          {t('field.browse')}
           </Typography>
-          thorough your machine
+          {t('field.thorough_machine')}
         </Typography>
       </Box>
     </Stack>

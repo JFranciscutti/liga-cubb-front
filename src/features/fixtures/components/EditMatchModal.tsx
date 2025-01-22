@@ -85,6 +85,7 @@ interface EditMatchModalProps {
   handleSave: (values: MatchData) => void;
   elegibleTeams: any[];
   isLoading: boolean;
+  penaltiesEnabled?: boolean;
 }
 
 const EditMatchModal: React.FC<EditMatchModalProps> = ({
@@ -94,6 +95,7 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
   handleClose,
   handleSave,
   isLoading,
+  penaltiesEnabled,
 }) => {
   const parsedData: MatchData = match
     ? {
@@ -114,6 +116,8 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
         homeTeamRedCardsIds: match.homeTeamRedCards || [],
         awayTeamRedCardsIds: match.awayTeamRedCards || [],
         status: match.status,
+        homeTeamPenaltyGoals: match.homeTeamPenaltyGoals?.toString() || '0',
+        awayTeamPenaltyGoals: match.awayTeamPenaltyGoals?.toString() || '0',
       }
     : initialData;
 
@@ -144,7 +148,10 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
       PaperProps={{ style: { width: '100%', maxWidth: '100%' } }}
     >
       <DialogTitle>
-        <DialogHeader label={`Editar partido ${match.dateNumber === 0 ? '':`- Fecha ${match.dateNumber}`}`} onClick={handleClose} />
+        <DialogHeader
+          label={`Editar partido ${match.dateNumber === 0 ? '' : `- Fecha ${match.dateNumber}`}`}
+          onClick={handleClose}
+        />
       </DialogTitle>
       <DialogContent sx={{ width: '100%', height: '100%' }}>
         <Grid container sx={{ py: 5, px: 2 }}>
@@ -153,35 +160,75 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
               {/* equipos */}
               <Grid item xs={12} className="flex justify-between items-center">
                 <Grid item xs={5} className="flex gap-2 items-center justify-between">
-                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain', overflow:'hidden' }}>
+                  <Grid
+                    item
+                    sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain', overflow: 'hidden' }}
+                  >
                     <Image src={match.homeTeam.logo} />
                   </Grid>
                   <Typography variant="h6" align="center">
                     {match.homeTeam.name}
                   </Typography>
-                  <Box display="flex" flexDirection="column" alignItems="center">
-                    <IconButton
-                      onClick={() => {
-                        const currentValue = hf.watch('homeTeamGoals');
-                        hf.setValue('homeTeamGoals', (parseInt(currentValue) + 1).toString());
-                      }}
-                    >
-                      <Iconify icon="mdi:plus" />
-                    </IconButton>
-                    <Box>
-                      <Typography variant="h6">{hf.watch('homeTeamGoals')}</Typography>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                      <IconButton
+                        onClick={() => {
+                          const currentValue = hf.watch('homeTeamGoals');
+                          hf.setValue('homeTeamGoals', (parseInt(currentValue) + 1).toString());
+                        }}
+                      >
+                        <Iconify icon="mdi:plus" />
+                      </IconButton>
+                      <Box>
+                        <Typography variant="h6">{hf.watch('homeTeamGoals')}</Typography>
+                      </Box>
+                      <IconButton
+                        onClick={() => {
+                          const currentValue = hf.watch('homeTeamGoals');
+                          hf.setValue(
+                            'homeTeamGoals',
+                            Math.max(0, parseInt(currentValue) - 1).toString()
+                          );
+                        }}
+                      >
+                        <Iconify icon="mdi:minus" />
+                      </IconButton>
+                      <Typography variant="caption" color={'text.secondary'}>
+                        Goles
+                      </Typography>
                     </Box>
-                    <IconButton
-                      onClick={() => {
-                        const currentValue = hf.watch('homeTeamGoals');
-                        hf.setValue(
-                          'homeTeamGoals',
-                          Math.max(0, parseInt(currentValue) - 1).toString()
-                        );
-                      }}
-                    >
-                      <Iconify icon="mdi:minus" />
-                    </IconButton>
+                    {penaltiesEnabled && (
+                      <Box display="flex" flexDirection="column" alignItems="center">
+                        <IconButton
+                          onClick={() => {
+                            const currentValue = hf.watch('homeTeamPenaltyGoals');
+                            hf.setValue(
+                              'homeTeamPenaltyGoals',
+                              (parseInt(currentValue || '0') + 1).toString()
+                            );
+                          }}
+                        >
+                          <Iconify icon="mdi:plus" />
+                        </IconButton>
+                        <Box>
+                          <Typography variant="h6">{hf.watch('homeTeamPenaltyGoals')}</Typography>
+                        </Box>
+                        <IconButton
+                          onClick={() => {
+                            const currentValue = hf.watch('homeTeamPenaltyGoals');
+                            hf.setValue(
+                              'homeTeamPenaltyGoals',
+                              Math.max(0, parseInt(currentValue || '0') - 1).toString()
+                            );
+                          }}
+                        >
+                          <Iconify icon="mdi:minus" />
+                        </IconButton>
+                        <Typography variant="caption" color={'text.secondary'}>
+                          Penales
+                        </Typography>
+                      </Box>
+                    )}
                   </Box>
                 </Grid>
                 <Grid item xs={1}>
@@ -194,35 +241,75 @@ const EditMatchModal: React.FC<EditMatchModalProps> = ({
                   xs={5}
                   className="flex flex-row-reverse gap-2 items-center justify-between"
                 >
-                  <Grid item sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain', overflow:'hidden' }}>
-                  <Image src={match.awayTeam.logo} />
+                  <Grid
+                    item
+                    sx={{ maxHeight: 100, maxWidth: 100, objectFit: 'contain', overflow: 'hidden' }}
+                  >
+                    <Image src={match.awayTeam.logo} />
                   </Grid>
                   <Typography variant="h6" align="center">
                     {match.awayTeam.name}
                   </Typography>
-                  <Box display="flex" flexDirection="column" alignItems="center">
-                    <IconButton
-                      onClick={() => {
-                        const currentValue = hf.watch('awayTeamGoals');
-                        hf.setValue('awayTeamGoals', (parseInt(currentValue) + 1).toString());
-                      }}
-                    >
-                      <Iconify icon="mdi:plus" />
-                    </IconButton>
-                    <Box>
-                      <Typography variant="h6">{hf.watch('awayTeamGoals')}</Typography>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    {penaltiesEnabled && (
+                      <Box display="flex" flexDirection="column" alignItems="center">
+                        <IconButton
+                          onClick={() => {
+                            const currentValue = hf.watch('awayTeamPenaltyGoals');
+                            hf.setValue(
+                              'awayTeamPenaltyGoals',
+                              (parseInt(currentValue || '0') + 1).toString()
+                            );
+                          }}
+                        >
+                          <Iconify icon="mdi:plus" />
+                        </IconButton>
+                        <Box>
+                          <Typography variant="h6">{hf.watch('awayTeamPenaltyGoals')}</Typography>
+                        </Box>
+                        <IconButton
+                          onClick={() => {
+                            const currentValue = hf.watch('awayTeamPenaltyGoals');
+                            hf.setValue(
+                              'awayTeamPenaltyGoals',
+                              Math.max(0, parseInt(currentValue || '0') - 1).toString()
+                            );
+                          }}
+                        >
+                          <Iconify icon="mdi:minus" />
+                        </IconButton>
+                        <Typography variant="caption" color={'text.secondary'}>
+                          Penales
+                        </Typography>
+                      </Box>
+                    )}
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                      <IconButton
+                        onClick={() => {
+                          const currentValue = hf.watch('awayTeamGoals');
+                          hf.setValue('awayTeamGoals', (parseInt(currentValue) + 1).toString());
+                        }}
+                      >
+                        <Iconify icon="mdi:plus" />
+                      </IconButton>
+                      <Box>
+                        <Typography variant="h6">{hf.watch('awayTeamGoals')}</Typography>
+                      </Box>
+                      <IconButton
+                        onClick={() => {
+                          const currentValue = hf.watch('awayTeamGoals');
+                          hf.setValue(
+                            'awayTeamGoals',
+                            Math.max(0, parseInt(currentValue) - 1).toString()
+                          );
+                        }}
+                      >
+                        <Iconify icon="mdi:minus" />
+                      </IconButton>
+                      <Typography variant="caption" color={'text.secondary'}>
+                        Goles
+                      </Typography>
                     </Box>
-                    <IconButton
-                      onClick={() => {
-                        const currentValue = hf.watch('awayTeamGoals');
-                        hf.setValue(
-                          'awayTeamGoals',
-                          Math.max(0, parseInt(currentValue) - 1).toString()
-                        );
-                      }}
-                    >
-                      <Iconify icon="mdi:minus" />
-                    </IconButton>
                   </Box>
                 </Grid>
               </Grid>
@@ -517,4 +604,6 @@ export interface MatchData {
   homeTeamRedCardsIds: string[];
   awayTeamRedCardsIds: string[];
   status: MatchStatus;
+  homeTeamPenaltyGoals?: string;
+  awayTeamPenaltyGoals?: string;
 }

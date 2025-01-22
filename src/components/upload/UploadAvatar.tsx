@@ -8,6 +8,7 @@ import Iconify from '../iconify';
 import { UploadProps } from './types';
 import RejectionFiles from './errors/RejectionFiles';
 import AvatarPreview from './preview/AvatarPreview';
+import { useTranslation } from 'react-i18next';
 
 // ----------------------------------------------------------------------
 
@@ -63,6 +64,8 @@ export default function UploadAvatar({
 
   const isError = isDragReject || !!error;
 
+  const { t } = useTranslation();
+  
   return (
     <>
       <StyledDropZone
@@ -115,13 +118,13 @@ export default function UploadAvatar({
         >
           <Iconify icon="ic:round-add-a-photo" width={24} sx={{ mb: 1 }} />
 
-          <Typography variant="caption">{file ? 'Update photo' : 'Upload photo'}</Typography>
+          <Typography variant="caption">{file ? t("field.upload_file") : t("field.upload_photo")}</Typography>
         </StyledPlaceholder>
       </StyledDropZone>
 
       {helperText && helperText}
 
-      <RejectionFiles fileRejections={fileRejections} />
+      <RejectionFiles fileRejections={[...fileRejections]} />
     </>
   );
 }

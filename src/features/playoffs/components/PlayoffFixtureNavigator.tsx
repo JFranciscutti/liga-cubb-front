@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import Iconify from 'src/components/iconify';
 import { Round } from 'src/api/CategoriaRepository';
 import PlayoffRoundsFixture from './PlayoffRoundsFixture';
-import EditMatchModal, { MatchData } from 'src/features/fixtures/components/EditMatchModal';
 
 interface PlayoffFixtureNavigatorProps {
   rounds: Round[];

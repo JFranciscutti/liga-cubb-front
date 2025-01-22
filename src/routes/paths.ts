@@ -88,6 +88,18 @@ export const PATHS = {
       editFasePlayoff: (idCampeonato: string, idFase: string) =>
         `/dashboard/campeonatos/manage/${idCampeonato}/edit-fase-playoff/${idFase}`,
     },
+    novedades: {
+      root: '/dashboard/novedades',
+      list: '/dashboard/novedades/list',
+      create: '/dashboard/novedades/create',
+      edit: (id: number | string) => `/dashboard/novedades/edit/${id}`,
+    },
+    carrusel: {
+      root: '/dashboard/carrusel',
+      list: '/dashboard/carrusel/list',
+      create: '/dashboard/carrusel/create',
+      edit: (id: number | string) => `/dashboard/carrusel/edit/${id}`,
+    }
   },
 } as const;
 
@@ -134,6 +146,20 @@ export const PATHS_PER_ROLE = [
       PATHS.dashboard.campeonatos.manageOneEquipoCopa(':idCampeonato', ':idEquipo'),
       PATHS.dashboard.campeonatos.editFaseGrupos(':idCampeonato', ':idFase'),
       PATHS.dashboard.campeonatos.editFasePlayoff(':idCampeonato', ':idFase'),
+      PATHS.dashboard.campeonatos.createFaseGruposCategoria(':idCampeonato', ':idCategoria'),
+      PATHS.dashboard.campeonatos.createFasePlayoffCategoria(':idCampeonato', ':idCategoria'),
+      PATHS.dashboard.campeonatos.createFaseRegularCategoria(':idCampeonato', ':idCategoria'),
+      PATHS.dashboard.campeonatos.editFaseRegularCategoria(':idCampeonato', ':idCategoria', ':idFase'),
+      PATHS.dashboard.campeonatos.editFasePlayoffCategoria(':idCampeonato', ':idCategoria', ':idFase'),
+      PATHS.dashboard.campeonatos.createPlayoff(':id'),
+      PATHS.dashboard.novedades.root,
+      PATHS.dashboard.novedades.list,
+      PATHS.dashboard.novedades.create,
+      PATHS.dashboard.novedades.edit(':id'),
+      PATHS.dashboard.carrusel.root,
+      PATHS.dashboard.carrusel.list,
+      PATHS.dashboard.carrusel.create,
+      PATHS.dashboard.carrusel.edit(':id'),      
     ],
   },
 ];
