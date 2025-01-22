@@ -19,7 +19,6 @@ import App from 'src/App';
 import { ElementType, lazy, Suspense } from 'react';
 import LoadingScreen from 'src/components/loading-screen';
 import { LoadingSpinner } from 'src/components/loading-spinner';
-import RoleBasedGuard from 'src/features/auth/RoleBasedGuard';
 import ErrorPage from 'src/pages/ErrorPage';
 import NotAllowedPage from 'src/pages/NotAllowedPage';
 
@@ -132,6 +131,19 @@ const LazyEditPlayoffCopaPage = withLoadingSpinner(
   lazy(() => import('src/features/playoffs/EditPlayoffCopaPage'))
 );
 
+const LazyNovedadesListPage = withLoadingSpinner(
+  lazy(() => import('src/features/novedades/NovedadesListPage'))
+);
+
+const LazyNovedadesEditPage = withLoadingSpinner(
+  lazy(() => import('src/features/novedades/NovedadesEditPage'))
+);
+
+const LazyNovedadesCreatePage = withLoadingSpinner(
+  lazy(() => import('src/features/novedades/NovedadesCreatePage'))
+);
+
+
 const ROUTES: RouteObject[] = [
   {
     path: '/',
@@ -218,11 +230,26 @@ const ROUTES: RouteObject[] = [
 
               { path: 'manage/:idCampeonato/grupos-copa', element: <LazyManageGruposCopaPage /> },
 
-              { path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-regular/:idFase', element: <LazyEditFixturePage /> },
-              { path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-playoff/:idFase', element: <LazyEditPlayoffPage /> },
-              { path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-regular', element: <LazyFixturePage /> },
-              { path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-playoff', element: <LazyPlayoffPage /> },
-              { path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-grupos', element: <LazyManageGruposCopaPage /> },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-regular/:idFase',
+                element: <LazyEditFixturePage />,
+              },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria/edit-fase-playoff/:idFase',
+                element: <LazyEditPlayoffPage />,
+              },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-regular',
+                element: <LazyFixturePage />,
+              },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-playoff',
+                element: <LazyPlayoffPage />,
+              },
+              {
+                path: 'manage/:idCampeonato/categoria/:idCategoria/create-fase-grupos',
+                element: <LazyManageGruposCopaPage />,
+              },
               {
                 path: 'manage/:idCampeonato/categoria/:idCategoria/equipos/:idEquipo',
                 element: <LazyEquipoEditPage />,
@@ -252,6 +279,15 @@ const ROUTES: RouteObject[] = [
             children: [
               { element: <Navigate to="/dashboard/jugadores/list" replace />, index: true },
               { path: 'list', element: <LazyJugadoresListPage /> },
+            ],
+          },
+          {
+            path: 'novedades',
+            children: [
+              { element: <Navigate to="/dashboard/novedades/list" replace />, index: true },
+              { path: 'list', element: <LazyNovedadesListPage /> },
+              { path: 'create', element: <LazyNovedadesCreatePage /> },
+              { path: 'edit/:id', element: <LazyNovedadesEditPage /> },
             ],
           },
         ],

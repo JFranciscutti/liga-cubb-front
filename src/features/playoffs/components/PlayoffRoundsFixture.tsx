@@ -68,44 +68,6 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
     );
   };
 
-  if (false) { // !!partido.teamWinner
-    return (
-      <>
-        <Grid container className="flex items-center gap-2 justify-between" key={index}>
-          <Grid item xs={9} className="flex items-center justify-between w-full">
-            {renderMatch(partido.homeMatch, true)}
-            <Grid
-              item
-              className="flex items-center justify-center"
-              style={{ flexShrink: 0, minWidth: '50px' }}
-            >
-              <Typography>VS</Typography>
-            </Grid>
-            {renderMatch(partido.homeMatch, false)}
-          </Grid>
-        </Grid>
-        {isDoubleMatch && (
-          <Grid container className="flex items-center gap-2 justify-between" key={index}>
-            <Grid item xs={9} className="flex items-center justify-between w-full">
-              {renderMatch(partido.awayMatch, true)}
-              <Grid
-                item
-                className="flex items-center justify-center"
-                style={{ flexShrink: 0, minWidth: '50px' }}
-              >
-                <Typography>VS</Typography>
-              </Grid>
-              {renderMatch(partido.awayMatch, false)}
-            </Grid>
-          </Grid>
-        )}
-        <Grid item xs={12}>
-          <Divider sx={{ bgcolor: 'gray' }} />
-        </Grid>
-      </>
-    );
-  }
-
   return (
     <>
       <Grid container className="flex items-center gap-2 justify-between" key={index}>
@@ -172,6 +134,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
       <EditMatchModal
         open={editModalOpen}
         match={match}
+        penaltiesEnabled={true}
         isLoading={matchLoading}
         handleClose={() => {
           setEditModalOpen(false);

@@ -100,6 +100,7 @@ export const EditCreatedCopaFixture: FC<FixtureManagerBaseProps> = ({
       <EditMatchModal
         open={editModalOpen}
         match={match}
+        penaltiesEnabled={true}
         isLoading={matchLoading}
         handleClose={() => {
           setEditModalOpen(false);

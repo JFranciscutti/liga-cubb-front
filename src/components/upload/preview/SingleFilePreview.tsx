@@ -86,15 +86,17 @@ export default function SingleFilePreview({ file }: Props) {
   let fileBg = '';
   let fileExtension = '';
   if (file) {
-    if (file instanceof File) {
-      fileUrl = URL.createObjectURL(file);
-      fileExtension = getFileExtension(file.name);
-      fileName = file.name ?? 'File';
+    //@ts-ignore
+    let parsedFile = file instanceof Object ? file?.file : file;
+    if (parsedFile instanceof File) {
+      fileUrl = URL.createObjectURL(parsedFile);
+      fileExtension = getFileExtension(parsedFile.name);
+      fileName = parsedFile.name ?? 'File';
       fileLogo = getFileLogo(fileName).icon;
       fileBg = getFileLogo(fileName).bg;
     } else {
-      fileUrl = file;
-      const separatedUrl = file.split('/');
+      fileUrl = parsedFile;
+      const separatedUrl = parsedFile.split('/');
       fileName = separatedUrl[separatedUrl.length - 1];
       fileExtension = getFileExtension(fileUrl);
       fileLogo = getFileLogo(fileUrl).icon;

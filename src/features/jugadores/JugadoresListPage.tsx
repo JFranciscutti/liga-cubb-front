@@ -6,17 +6,9 @@ import Iconify from '../../components/iconify';
 import { useState } from 'react';
 import DialogHeader from 'src/components/DialogHeader';
 import { useNavigate } from 'react-router';
-import { PATHS } from 'src/routes/paths';
-// import { NuevoJugadorForm } from './NuevoJugadorForm';
-// import { JugadoresDataGrid } from './JugadoresDataGrid';
-// import {
-//   useAllJugadoresQuery,
-//   useCreateJugadorMutation,
-//   useEditJugadorMutation,
-// } from 'src/api/JugadorRepository';
+
 import LoadingScreen from 'src/components/loading-screen';
 import { enqueueSnackbar } from 'notistack';
-import { useAllCategoriasQuery } from 'src/api/CategoriaRepository';
 import ErrorPage from 'src/pages/ErrorPage';
 import { JugadorDataGrid } from './JugadoresDataGrid';
 import {
@@ -27,10 +19,7 @@ import {
   useEditJugadorMutation,
 } from 'src/api/JugadoresRepository';
 import { CargarJugadoresModal } from './CargarJugadoresModal';
-import { Jugador } from 'src/models/Jugador';
-import { GeneroEnum } from 'src/utils/enums';
 import { NuevoJugadorForm } from './NuevoJugadorForm';
-import { parse } from 'date-fns';
 
 export default function JugadoresListPage() {
   const confirm = useConfirm();
