@@ -114,7 +114,7 @@ const CuadroPlayoff: React.FC<CuadroPlayoffProps> = ({ rondas }) => {
   return (
     <>
       <Box className={screenClassName} style={{ height: `${screenHeight}px`}}>
-        <div style={{ position: "relative", display: "flex", justifyContent: "center", left: getLeftForCenterElements()}}>
+        <div style={{ position: "relative", display: "flex", justifyContent: "center", left: getLeftForCenterElements(), marginRight: '100px'}}>
         {leftRounds.map((matches, roundIndex) =>
           matches.map((match, matchIndex) => (
             <Box

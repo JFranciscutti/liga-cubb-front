@@ -10,7 +10,6 @@ import {
 } from 'src/components/form';
 import { HitForm } from 'src/components/form/HitForm';
 import { Grid } from '@mui/material';
-import { useState } from 'react';
 
 export type NovedadFormType = {
   title: string;
@@ -21,7 +20,7 @@ export type NovedadFormType = {
 const NovedadSchema: Yup.SchemaOf<NovedadFormType> = Yup.object().shape({
   title: Yup.string().required('El título es obligatorio'),
   description: Yup.string().required('La descripción es obligatoria'),
-  image: Yup.mixed<File | ''>().defined(),
+  image: Yup.mixed<File | ''>().defined().required('La imagen es obligatoria'),
 });
 
 const defaultValues: NovedadFormType = {
@@ -46,10 +45,7 @@ export const NovedadForm: React.FC<NovedadFormProps> = ({
     defaultValues,
     mode: 'onBlur',
     values: initialValues,
-  });
-
-  console.log(hf.getValues());
-  
+  });  
 
   return (
     <HitForm hf={hf} onSubmit={onSubmit}>

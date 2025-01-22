@@ -57,7 +57,7 @@ export const InvertedResultBox: React.FC<ResultBoxProps> = ({
     />
     <Typography
       variant="body2"
-      className="max-w-24 overflow-hidden text-ellipsis line-clamp-1 w-full"
+      className="max-w-24 overflow-hidden text-ellipsis line-clamp-1 w-full font-bold capitalize"
     >
       {team?.name}
     </Typography>

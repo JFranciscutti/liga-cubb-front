@@ -53,9 +53,13 @@ export default function Upload({
     multiple,
     disabled,
     ...other,
-  });
+  });  
 
-  const hasFile = !!file && !multiple;
+  console.log(file);
+  
+
+  //@ts-ignore
+  const hasFile = file instanceof Object ? !!file.file : !!file && !multiple;
 
   const hasFiles = files && multiple && files.length > 0;
 
@@ -93,7 +97,10 @@ export default function Upload({
           }}
         />
 
-        {hasFile && <SingleFilePreview file={file} />}
+          { 
+            //@ts-ignore
+            hasFile && <SingleFilePreview file={file} />
+          }
       </StyledDropZone>
 
       <RejectionFiles fileRejections={[...fileRejections]} />
@@ -173,11 +180,11 @@ function Placeholder({ sx, ...other }: StackProps) {
 
       <Box sx={{ p: 3 }}>
         <Typography gutterBottom variant="h5">
-          {t('field.drop_select_file')}
+          Suelta o selecciona archivo
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {t('field.drop_files')}
+        Suelta los archivos aquí o haz clic para
         <Typography
             variant="body2"
             component="span"
@@ -187,9 +194,9 @@ function Placeholder({ sx, ...other }: StackProps) {
               textDecoration: 'underline',
             }}
           >
-          {t('field.browse')}
+          buscar
           </Typography>
-          {t('field.thorough_machine')}
+          a través de tu máquina
         </Typography>
       </Box>
     </Stack>

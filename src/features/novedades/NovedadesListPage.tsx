@@ -10,7 +10,8 @@ import LoadingScreen from 'src/components/loading-screen';
 import ErrorPage from 'src/pages/ErrorPage';
 import { NovedadDataGrid } from './NovedadesDataGrid';
 import { PATHS } from 'src/routes/paths';
-import { useAllNovedadesQuery } from 'src/api/NovedadesRepository';
+import { useAllNovedadesQuery, useDeleteNovedadMutation } from 'src/api/NovedadesRepository';
+import { enqueueSnackbar } from 'notistack';
 
 export default function JugadoresListPage() {
   const confirm = useConfirm();
@@ -21,7 +22,8 @@ export default function JugadoresListPage() {
     isLoading: allNovedadesLoading,
     isError: allNovedadesError,
   } = useAllNovedadesQuery();
- 
+
+  const { mutateAsync: deleteNovedad } = useDeleteNovedadMutation(); 
 
   if (allNovedadesLoading) {
     return <LoadingScreen />;
@@ -58,7 +60,10 @@ export default function JugadoresListPage() {
             isLoading={allNovedadesLoading}
             onDelete={(id: any) =>
               confirm({
-                action: async () => {},
+                action: async () => {
+                  await deleteNovedad(id);
+                  enqueueSnackbar({ message: 'Novedad eliminada correctamente' });
+                },
               })
             }
             onEdit={(id: string) => {

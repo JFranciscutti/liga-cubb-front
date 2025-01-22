@@ -95,9 +95,9 @@ export default function SingleFilePreview({ file }: Props) {
       fileLogo = getFileLogo(fileName).icon;
       fileBg = getFileLogo(fileName).bg;
     } else {
-      fileUrl = parsedFile;
-      const separatedUrl = parsedFile.split('/');
-      fileName = separatedUrl[separatedUrl.length - 1];
+      fileUrl = parsedFile || '';
+      const separatedUrl = parsedFile?.split('/');
+      fileName = separatedUrl?.[separatedUrl.length - 1] || 'File';
       fileExtension = getFileExtension(fileUrl);
       fileLogo = getFileLogo(fileUrl).icon;
       fileBg = getFileLogo(fileUrl).bg;
@@ -108,7 +108,7 @@ export default function SingleFilePreview({ file }: Props) {
     (format) => format === fileExtension
   );
 
-  if (isImage)
+  if (true)
     return (
       <Image
         alt="file preview"

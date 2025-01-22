@@ -23,7 +23,10 @@ const NovedadesEditPage: React.FC = () => {
   const {
     data: novedadQuery,
     isLoading: isNovedadLoading,
+    isFetching: isNovedadFetching,
+    isRefetching: isNovedadRefetching,
     isError: isNovedadError,
+    refetch: refetchNovedad,
   } = useNovedadQuery(novedadId!);
 
   const editarNovedadMutation = useEditNovedadMutation();
@@ -44,13 +47,18 @@ const NovedadesEditPage: React.FC = () => {
   const handleToggle = async () =>
     confirm({
         action: async () => {
-            await togglePublicarNovedad(novedadId!);
+            await togglePublicarNovedad(novedadId!, {
+                onSuccess: () => {
+                    enqueueSnackbar({ message: 'Estado actualizado correctamente' });
+                    refetchNovedad();
+                }
+            });
         },
         content: '¿Estás seguro que querés cambiar el estado de esta novedad?',
         actionLabel: novedadQuery?.visible ? 'Desactivar' : 'Activar',
     });
 
-  if (isNovedadLoading) {
+  if (isNovedadLoading || isNovedadFetching || isNovedadRefetching) {
     return <LoadingScreen />;
   }
 
@@ -86,6 +94,7 @@ const NovedadesEditPage: React.FC = () => {
 
         <Card sx={{ p: 2 }}>
           <NovedadForm
+            edit
             onSubmit={onSubmit}
             initialValues={{
               title: novedadQuery.title,

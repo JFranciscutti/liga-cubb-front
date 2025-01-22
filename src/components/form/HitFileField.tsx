@@ -26,7 +26,7 @@ export const HitFileField = <TValue extends FieldValues>({
       helperText={fieldState.error?.message ?? ''}
       file={field.value.file}
       onDrop={(value) => field.onChange({ file: value[0] })}
-      onDelete={() => field.onChange({ file: null })}
+      onDelete={() => field.onChange({ file: '' })}
       {...field}
     />
   </GridItem>

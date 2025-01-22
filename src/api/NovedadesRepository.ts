@@ -15,12 +15,12 @@ interface IEditNovedad extends ICreateNovedad {
 }
 
 export const getNovedadMapper = (x: any): Novedad => ({
-  id: x.id,
+  id: x.id || '',
   title: x.title,
   description: x.description,
-  image: x.image || '',
+  image: x.imageUrl || '',
   created_at: moment(x.created_at),
-  visible: false,
+  visible: x.enabled,
 });
 
 export const createNovedadMapper = (x: ICreateNovedad) => x;
@@ -32,46 +32,47 @@ export class NovedadesRepository {
   };
 
   getAll = async () => {
-    //const { data } = await httpClient.get<any[]>('players/get-all-players');
-    //    return data.map(getNovedadMapper);
-    return MOCK_NOVEDADES;
+    const { data } = await httpClient.get<any[]>('announcements/get-all-announcements');
+    return data.map(getNovedadMapper);
   };
 
   get = async (id: string) => {
-    //const { data } = await httpClient.get(`teams/${id}`);
-    const data = MOCK_NOVEDADES.find((c) => c.id === id);
+    const { data } = await httpClient.get(
+      `announcements/get-announcement-by-id?announcementId=${id}`
+    );
     return getNovedadMapper(data);
   };
 
-  create = (novedad: ICreateNovedad) => {
-    return httpClient.post('news/create-new', novedad, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  };
+  create = (novedad: ICreateNovedad) =>
+    httpClient.post(
+      'announcements/create-announcement',
+      //@ts-ignore
+      { ...novedad, image: novedad.image.file },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
 
-  edit = async (novedad: IEditNovedad) => {
-    return httpClient.put('news/create-new', novedad, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  };
+  edit = async (novedad: IEditNovedad) =>
+    httpClient.post(
+      `announcements/edit-announcement`,
+      //@ts-ignore
+      { ...novedad, image: novedad.image instanceof Object ? novedad.image.file : undefined },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
 
-  remove = async (id: string) => {
-    return new Promise((res) => {
-      setTimeout(() => res('OK'), 1000);
-    });
-    //httpClient.delete('teams/' + id);
-  };
+  remove = async (id: string) => httpClient.delete('announcements/' + id);
 
-  toggleStatus = async (id: string) => {
-    return new Promise((res) => {
-      setTimeout(() => res('OK'), 1000);
+  toggleStatus = async (id: string) =>
+    httpClient.post(`announcements/switch-announcement-state-by-id`, {
+      announcementId: id,
     });
-    //httpClient.delete('teams/' + id);
-  }
 }
 
 const repo = new NovedadesRepository();
@@ -118,47 +119,4 @@ export const usePublicarNovedadMutation = () => {
       qc.invalidateQueries(repo.keys.one(id));
     },
   });
-}
-
-const MOCK_NOVEDADES: Novedad[] = [
-  {
-    id: '1',
-    title: 'Novedad 1',
-    description: 'Descripción de la novedad 1',
-    image: '',
-    created_at: moment(),
-    visible: false,
-  },
-  {
-    id: '2',
-    title: 'Novedad 2',
-    description: 'Descripción de la novedad 2',
-    image: '',
-    created_at: moment(),
-    visible: false,
-  },
-  {
-    id: '3',
-    title: 'Novedad 3',
-    description: 'Descripción de la novedad 3',
-    image: '',
-    created_at: moment(),
-    visible: false,
-  },
-  {
-    id: '4',
-    title: 'Novedad 4',
-    description: 'Descripción de la novedad 4',
-    image: '',
-    created_at: moment(),
-    visible: false,
-  },
-  {
-    id: '5',
-    title: 'Novedad 5',
-    description: 'Descripción de la novedad 5',
-    image: '',
-    created_at: moment(),
-    visible: false,
-  },
-];
+};
