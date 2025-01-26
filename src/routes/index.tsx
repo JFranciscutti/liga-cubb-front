@@ -143,6 +143,7 @@ const LazyNovedadesCreatePage = withLoadingSpinner(
   lazy(() => import('src/features/novedades/NovedadesCreatePage'))
 );
 
+const LazyTestPage = withLoadingSpinner(lazy(() => import('src/pages/TestPage')));
 
 const ROUTES: RouteObject[] = [
   {
@@ -178,7 +179,10 @@ const ROUTES: RouteObject[] = [
           { element: <Navigate to="login" replace />, index: true },
         ],
       },
-
+      {
+        path: 'test',
+        element: <LazyTestPage />,
+      },
       {
         path: 'dashboard',
         errorElement: <ErrorPage />,

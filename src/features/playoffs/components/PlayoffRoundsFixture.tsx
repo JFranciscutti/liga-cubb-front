@@ -25,6 +25,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
 
   const currentMatchSelected = useRef<any | undefined>();
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [isAwayMatch, setIsAwayMatch] = useState<boolean>(false);
 
   const { data: match, isLoading: matchLoading } = useOnePartidoCopaPlayoffQuery(
     currentMatchSelected.current?.homeTeam,
@@ -93,6 +94,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
                 roundId: partido.id || '',
                 phaseId: idFase || '',
               };
+              setIsAwayMatch(false);
               setEditModalOpen(true);
             }}
           >
@@ -121,6 +123,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
                 homeTeam: partido.awayMatch?.homeTeam?.id,
                 awayTeam: partido.awayMatch?.awayTeam?.id,
               };
+              setIsAwayMatch(true);
               setEditModalOpen(true);
             }}
           >
@@ -134,7 +137,7 @@ const PlayoffRoundsFixture: React.FC<PlayoffRoundsFixtureProps> = ({ partido, in
       <EditMatchModal
         open={editModalOpen}
         match={match}
-        penaltiesEnabled={true}
+        penaltiesEnabled={isAwayMatch}
         isLoading={matchLoading}
         handleClose={() => {
           setEditModalOpen(false);
